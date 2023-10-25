@@ -1,13 +1,14 @@
-# JamaaSMPP
-Jamaa SMPP Client is a .NET implementation of the SMPP protocol that focuses on providing an easy-to-use and robust SMPP client library for .NET developers. This project is intended to be used by developers who want to integrate SMS functionalities in their applications as well as students who are learning the SMPP protocol.
+# Elyfe.Smpp
+Elyfe SMPP Client is a .NET implementation of the SMPP protocol that focuses on providing an easy-to-use and robust SMPP client library for .NET developers. This project is intended to be used by developers who want to integrate SMS functionalities in their applications as well as students who are learning the SMPP protocol.
+Based on JamaaSMPP
 
 ## Based On
-This is created based on  https://jamaasmpp.codeplex.com/
+This is created based on  https://www.nuget.org/packages/JammaSMPP
 
 ### [Wiki](https://github.com/AdhamAwadhi/JamaaSMPP/wiki)
 
-## [NuGet](https://www.nuget.org/packages/JamaaSMPP) ![#](https://img.shields.io/nuget/v/JamaaSMPP.svg)
-	Install-Package JamaaSMPP
+## [NuGet](https://www.nuget.org/packages/Elyfe.Smpp) ![#](https://img.shields.io/nuget/v/JamaaSMPP.svg)
+	Install-Package Elyfe.Smpp
 
 
 ## SMPP Server Simulator
@@ -15,6 +16,10 @@ This is created based on  https://jamaasmpp.codeplex.com/
 - Read User Guide [http://www.seleniumsoftware.com/user-guide.htm](http://www.seleniumsoftware.com/user-guide.htm)
 
 # What's new?
+### 2023.10.0
+
+- Improve handling of multiple messageIds in SmppClient
+
 ### v1.9.1
 
 - Modified: allow some methods to be overridden in `SmppClient`
