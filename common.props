@@ -1,15 +1,15 @@
 <Project>
   <PropertyGroup>
     <LangVersion>latest</LangVersion>
-    <Version>1.10.0</Version>
+    <Version>2023.10.0</Version>
     <NoWarn>$(NoWarn);CS1591</NoWarn>
-    <PackageProjectUrl>https://github.com/alfkonee/JamaaSMPP/</PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/alfkonee/JamaaSMPP</PackageProjectUrl>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>$(PackageProjectUrl)</RepositoryUrl>
     <Company>Jamaa Technologies</Company>
-    <Authors>AdhamAwadhi,JamaaTech,Alfred Neequaye</Authors>
+    <Authors>Alfred Neequaye,AdhamAwadhi,JamaaTech</Authors>
     <NeutralLanguage>en</NeutralLanguage>
-    <Owners>AdhamAwadhi,JamaaTech</Owners>
+    <Owners>Alfred Neequaye,AdhamAwadhi,JamaaTech</Owners>
     <Summary>HardwareAnalyzer</Summary>
     <PackageTags>.net smpp</PackageTags>
     <Title>Elyfe SMPP Client</Title>
