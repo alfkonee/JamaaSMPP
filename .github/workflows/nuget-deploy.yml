@@ -1,4 +1,4 @@
-name: Build and Deploy with Docker Images
+name: Build and Deploy Nuget Packages
 on:
     push:
       branches:
