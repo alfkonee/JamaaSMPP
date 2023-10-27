@@ -27,7 +27,7 @@ jobs:
       - name: Build
         run: dotnet build --no-restore ./JamaaTech.Smpp.Net.Client/Smpp.Net.Client.csproj
       - name: Pack
-        run: dotnet pack --no-build --configuration Release ./JamaaTech.Smpp.Net.Client/Smpp.Net.Client.csproj --output nupkgs
+        run: dotnet pack --configuration Release ./JamaaTech.Smpp.Net.Client/Smpp.Net.Client.csproj --output nupkgs
       - name: Upload artifact for Publish job
         uses: actions/upload-artifact@v2
         with:
