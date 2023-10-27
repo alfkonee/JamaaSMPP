@@ -1,0 +1,47 @@
+name: Build and Deploy with Docker Images
+on:
+    push:
+      branches:
+        - dev
+        - master
+      tags:
+        - v*
+    pull_request:
+      branches:
+        - dev
+        - master
+    workflow_dispatch:
+
+jobs:
+  build-package:
+    runs-on: ubuntu-latest
+    steps: 
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 7.0.x
+          source-url: https://api.nuget.org/v3/index.json
+      - name: Restore dependencies
+        run: dotnet restore JamaaTech.Smpp.Net.Client\Smpp.Net.Client.csproj
+      - name: Build
+        run: dotnet build --no-restore JamaaTech.Smpp.Net.Client\Smpp.Net.Client.csproj
+      - name: Pack
+        run: dotnet pack --no-build --configuration Release JamaaTech.Smpp.Net.Client\Smpp.Net.Client.csproj --output nupkgs
+      - name: Upload artifact for Publish job
+        uses: actions/upload-artifact@v2
+        with:
+          name: .nuget-package
+          path: nupkgs/*.nupkg
+  deploy-package:
+    runs-on: ubuntu-latest    
+    if: ${{ github.event_name != 'pull_request' && github.ref_type == 'tag' }}
+    steps:
+      - name: Download artifact from build job
+        id: download
+        uses: actions/download-artifact@v2
+        with:
+          name: .nuget-package
+      - name: Publish
+        run: dotnet nuget push ${{ steps.download.outputs.download-path }}/*.nupkg --api-key ${{secrets.NUGET_API_KEY}} --source https://api.nuget.org/v3/index.json
