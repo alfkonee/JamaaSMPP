@@ -1,16 +1,15 @@
 <Project>
   <PropertyGroup>
     <LangVersion>latest</LangVersion>
-    <Version>2023.10.0</Version>
     <NoWarn>$(NoWarn);CS1591</NoWarn>
     <PackageProjectUrl>https://github.com/alfkonee/JamaaSMPP</PackageProjectUrl>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>$(PackageProjectUrl)</RepositoryUrl>
-    <Company>Jamaa Technologies</Company>
+    <Company>Elyfe Innovations</Company>
     <Authors>Alfred Neequaye,AdhamAwadhi,JamaaTech</Authors>
     <NeutralLanguage>en</NeutralLanguage>
     <Owners>Alfred Neequaye,AdhamAwadhi,JamaaTech</Owners>
-    <Summary>HardwareAnalyzer</Summary>
+    <Summary>SMPP interface Library</Summary>
     <PackageTags>.net smpp</PackageTags>
     <Title>Elyfe SMPP Client</Title>
     <Description>Elyfe SMPP Client is a .NET implementation of the SMPP protocol that focuses on providing an easy-to-use and robust SMPP client library for .NET developers. This project is intended to be used by developers who want to integrate SMS functionalities in their applications as well as students who are learning the SMPP protocol.Based on JamaaSMPP</Description>
@@ -19,15 +18,11 @@
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageLicenseUrl>https://github.com/alfkonee/JamaaSMPP/blob/master/LICENSE</PackageLicenseUrl>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-    <ReleaseVersion>$(Version)</ReleaseVersion>
-    <Version>$(Version)</Version>
-    <AssemblyVersion>$(Version)</AssemblyVersion>
-    <FileVersion>$(Version)</FileVersion>
     <PackageReleaseNotes>
 		v2023.10.0
 
 		- Improve handling of multiple messageIds in SmppClient
-	</PackageReleaseNotes>
+    </PackageReleaseNotes>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -38,6 +33,10 @@
   <ItemGroup>
     <PackageReference Include="SourceLink.Create.CommandLine" Version="2.8.3" PrivateAssets="All" />
     <PackageReference Include="Common.Logging" Version="3.4.1" />
+    <PackageReference Include="MinVer" Version="4.3.0">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
   </ItemGroup>
 
 </Project>
