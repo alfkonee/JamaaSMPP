@@ -16,20 +16,26 @@
     <Copyright>Elyfe Innovations</Copyright>
     <RepositoryType>git</RepositoryType>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <PackageLicenseUrl>https://github.com/alfkonee/JamaaSMPP/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageLicense>MIT</PackageLicense>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <MinVerTagPrefix>v</MinVerTagPrefix>
     <PackageReleaseNotes>
 		v2023.10.0
 
 		- Improve handling of multiple messageIds in SmppClient
     </PackageReleaseNotes>
+    
   </PropertyGroup>
 
   <PropertyGroup>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\Jamaa Smpp Client.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
-
+  
+  <ItemGroup>
+    <None Include="..\README.md" Pack="true" PackagePath="\"/>
+  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="SourceLink.Create.CommandLine" Version="2.8.3" PrivateAssets="All" />
     <PackageReference Include="Common.Logging" Version="3.4.1" />
