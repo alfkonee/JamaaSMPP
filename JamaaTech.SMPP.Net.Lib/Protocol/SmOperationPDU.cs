@@ -14,28 +14,33 @@
  *
  ************************************************************************/
 
-namespace JamaaTech.Smpp.Net.Lib.Protocol
+namespace JamaaTech.Smpp.Net.Lib.Protocol;
+
+public abstract class SmOperationPDU : SmPDU
 {
-    public abstract class SmOperationPDU : SmPDU
-    {
-        #region Variables
-        protected string vMessageID;
-        #endregion
+  #region Variables
 
-        #region Constructors
-        internal SmOperationPDU(PDUHeader header, SmppEncodingService smppEncodingService)
-            : base(header, smppEncodingService)
-        {
-            vMessageID = "";
-        }
-        #endregion
+  protected string vMessageID;
 
-        #region Properties
-        public string MessageID
-        {
-            get { return vMessageID; }
-            set { vMessageID = value; }
-        }
-        #endregion
-    }
+  #endregion
+
+  #region Constructors
+
+  internal SmOperationPDU(PDUHeader header, SmppEncodingService smppEncodingService)
+    : base(header, smppEncodingService)
+  {
+    vMessageID = "";
+  }
+
+  #endregion
+
+  #region Properties
+
+  public string MessageID
+  {
+    get => vMessageID;
+    set => vMessageID = value;
+  }
+
+  #endregion
 }

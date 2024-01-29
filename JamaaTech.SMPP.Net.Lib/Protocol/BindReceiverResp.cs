@@ -14,13 +14,16 @@
  *
  ************************************************************************/
 
-namespace JamaaTech.Smpp.Net.Lib.Protocol
+namespace JamaaTech.Smpp.Net.Lib.Protocol;
+
+public sealed class BindReceiverResp : BindResponse
 {
-    public sealed class BindReceiverResp : BindResponse
-    {
-        #region Constructors
-        internal BindReceiverResp(PDUHeader header, SmppEncodingService smppEncodingService)
-            : base(header, smppEncodingService) { }
-        #endregion
-    }
+  #region Constructors
+
+  internal BindReceiverResp(PDUHeader header, SmppEncodingService smppEncodingService)
+    : base(header, smppEncodingService)
+  {
+  }
+
+  #endregion
 }

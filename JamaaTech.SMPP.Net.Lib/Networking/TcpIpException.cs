@@ -16,28 +16,37 @@
 
 using System;
 
-namespace JamaaTech.Smpp.Net.Lib.Networking
+namespace JamaaTech.Smpp.Net.Lib.Networking;
+
+[Serializable]
+public class TcpIpException : Exception
 {
-    [Serializable]
-    public class TcpIpException : Exception
-    {
-        #region Constructors
-        internal TcpIpException()
-            : base() { }
+  #region Constructors
 
-        internal TcpIpException(string message)
-            : base(message) { }
+  internal TcpIpException()
+    : base()
+  {
+  }
 
-        internal TcpIpException(string message, Exception innerException)
-            : base(message, innerException) { }
-        #endregion
+  internal TcpIpException(string message)
+    : base(message)
+  {
+  }
 
-        #region Methods
-        internal static void WrapAndThrow(Exception innerException)
-        {
-            if (innerException == null) { throw new ArgumentNullException("innerException"); }
-            throw new TcpIpException(innerException.Message, innerException);
-        }
-        #endregion
-    }
+  internal TcpIpException(string message, Exception innerException)
+    : base(message, innerException)
+  {
+  }
+
+  #endregion
+
+  #region Methods
+
+  internal static void WrapAndThrow(Exception innerException)
+  {
+    if (innerException == null) throw new ArgumentNullException("innerException");
+    throw new TcpIpException(innerException.Message, innerException);
+  }
+
+  #endregion
 }

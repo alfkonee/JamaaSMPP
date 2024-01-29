@@ -17,55 +17,58 @@
 using System;
 using JamaaTech.Smpp.Net.Lib.Util;
 
-namespace JamaaTech.Smpp.Net.Lib.Protocol
+namespace JamaaTech.Smpp.Net.Lib.Protocol;
+
+public sealed class QuerySm : SmOperationPDU
 {
-    public sealed class QuerySm : SmOperationPDU
-    {
-        #region Constructors
-        public QuerySm(SmppEncodingService smppEncodingService)
-            : base(new PDUHeader(CommandType.QuerySm), smppEncodingService) { }
+  #region Constructors
 
-        internal QuerySm(PDUHeader header, SmppEncodingService smppEncodingService)
-            : base(header, smppEncodingService) { }
-        #endregion
+  public QuerySm(SmppEncodingService smppEncodingService)
+    : base(new PDUHeader(CommandType.QuerySm), smppEncodingService)
+  {
+  }
 
-        #region Properties
-        public override SmppEntityType AllowedSource
-        {
-            get { return SmppEntityType.ESME; }
-        }
+  internal QuerySm(PDUHeader header, SmppEncodingService smppEncodingService)
+    : base(header, smppEncodingService)
+  {
+  }
 
-        public override SmppSessionState AllowedSession
-        {
-            get { return SmppSessionState.Transmitter; }
-        }
-        #endregion
+  #endregion
 
-        #region Methods
-        public override ResponsePDU CreateDefaultResponse()
-        {
-            PDUHeader header = new PDUHeader(CommandType.QuerySmResp, vHeader.SequenceNumber);
-            return new QuerySmResp(header, vSmppEncodingService);
-        }
+  #region Properties
 
-        protected override byte[] GetBodyData()
-        {
-            ByteBuffer buffer = new ByteBuffer(16);
-            buffer.Append(EncodeCString(vMessageID, vSmppEncodingService));
-            buffer.Append(vSourceAddress.GetBytes(vSmppEncodingService));
-            return buffer.ToBytes();
-        }
+  public override SmppEntityType AllowedSource => SmppEntityType.ESME;
 
-        protected override void Parse(ByteBuffer buffer)
-        {
-            if (buffer == null) { throw new ArgumentNullException("buffer"); }
-            vMessageID = DecodeCString(buffer, vSmppEncodingService);
-            vSourceAddress = SmppAddress.Parse(buffer, vSmppEncodingService);
-            //This pdu has no option parameters
-            //If there is still something in the buffer,
-            //we then have more than required bytes
-            if (buffer.Length > 0) { throw new TooManyBytesException(); }
-        }
-        #endregion
-    }
+  public override SmppSessionState AllowedSession => SmppSessionState.Transmitter;
+
+  #endregion
+
+  #region Methods
+
+  public override ResponsePDU CreateDefaultResponse()
+  {
+    var header = new PDUHeader(CommandType.QuerySmResp, vHeader.SequenceNumber);
+    return new QuerySmResp(header, vSmppEncodingService);
+  }
+
+  protected override byte[] GetBodyData()
+  {
+    var buffer = new ByteBuffer(16);
+    buffer.Append(EncodeCString(vMessageID, vSmppEncodingService));
+    buffer.Append(vSourceAddress.GetBytes(vSmppEncodingService));
+    return buffer.ToBytes();
+  }
+
+  protected override void Parse(ByteBuffer buffer)
+  {
+    if (buffer == null) throw new ArgumentNullException("buffer");
+    vMessageID = DecodeCString(buffer, vSmppEncodingService);
+    vSourceAddress = SmppAddress.Parse(buffer, vSmppEncodingService);
+    //This pdu has no option parameters
+    //If there is still something in the buffer,
+    //we then have more than required bytes
+    if (buffer.Length > 0) throw new TooManyBytesException();
+  }
+
+  #endregion
 }

@@ -18,38 +18,39 @@ using System;
 using System.Collections.Generic;
 using JamaaTech.Smpp.Net.Lib.Util;
 
-namespace JamaaTech.Smpp.Net.Lib.Protocol.Tlv
+namespace JamaaTech.Smpp.Net.Lib.Protocol.Tlv;
+
+public class TlvCollection : List<Tlv>
 {
-    public class TlvCollection : List<Tlv>
+  #region Methods
+
+  public byte[] GetBytes(SmppEncodingService smppEncodingService)
+  {
+    var buffer = new ByteBuffer(64); //Creates buffer with enough capacity
+    foreach (var tlv in this) buffer.Append(tlv.GetBytes(smppEncodingService));
+    return buffer.ToBytes();
+  }
+
+  public static TlvCollection Parse(ByteBuffer buffer, SmppEncodingService smppEncodingService)
+  {
+    if (buffer == null) throw new ArgumentNullException("buffer");
+    var tlvs = new TlvCollection();
+    while (buffer.Length > 0)
     {
-        #region Methods
-        public byte[] GetBytes(SmppEncodingService smppEncodingService)
-        {
-            ByteBuffer buffer = new ByteBuffer(64); //Creates buffer with enough capacity
-            foreach (Tlv tlv in this) { buffer.Append(tlv.GetBytes(smppEncodingService)); }
-            return buffer.ToBytes();
-        }
-
-        public static TlvCollection Parse(ByteBuffer buffer, SmppEncodingService smppEncodingService)
-        {
-            if (buffer == null) { throw new ArgumentNullException("buffer"); }
-            TlvCollection tlvs = new TlvCollection();
-            while (buffer.Length > 0)
-            {
-                Tlv tlv = Tlv.Parse(buffer, smppEncodingService);
-                tlvs.Add(tlv);
-            }
-            return tlvs;
-        }
-
-        public Tlv GetTlvByTag(Tag tag)
-        {
-            foreach (Tlv tlv in this)
-            {
-                if (tlv.Tag == tag) { return tlv; }
-            }
-            return null;
-        }
-        #endregion
+      var tlv = Tlv.Parse(buffer, smppEncodingService);
+      tlvs.Add(tlv);
     }
+
+    return tlvs;
+  }
+
+  public Tlv GetTlvByTag(Tag tag)
+  {
+    foreach (var tlv in this)
+      if (tlv.Tag == tag)
+        return tlv;
+    return null;
+  }
+
+  #endregion
 }

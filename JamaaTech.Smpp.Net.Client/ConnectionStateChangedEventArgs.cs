@@ -23,60 +23,66 @@ namespace JamaaTech.Smpp.Net.Client;
 /// </summary>
 public class ConnectionStateChangedEventArgs : EventArgs
 {
-    #region Variables
-    private SmppConnectionState _mNewState;
-    private SmppConnectionState _mOldState;
-    private int _mReconnectInteval;
-    #endregion
+  #region Variables
 
-    #region Constructors
-    /// <summary>
-    /// Creates a new instance of <see cref="ConnectionStateChangedEventArgs"/>
-    /// </summary>
-    /// <param name="newState">The current <see cref="SmppClient"/> connection state</param>
-    /// <param name="oldState">The previous <see cref="SmppClient"/> connection state</param>
-    public ConnectionStateChangedEventArgs(
-        SmppConnectionState newState,
-        SmppConnectionState oldState)
-    {
-        _mNewState = newState;
-        _mOldState = oldState;
-    }
+  private SmppConnectionState _mNewState;
+  private SmppConnectionState _mOldState;
+  private int _mReconnectInteval;
 
-    /// <summary>
-    /// Creates a new instance of <see cref="ConnnectionStateChangedEventArgs"/>
-    /// </summary>
-    /// <param name="newState">The current <see cref="SmppClient"/> state</param>
-    /// <param name="oldState">The previous <see cref="SmppClient"/> state</param>
-    /// <param name="reconnectInteval">Reconnect inteval</param>
-    public ConnectionStateChangedEventArgs(
-        SmppConnectionState newState,
-        SmppConnectionState oldState,
-        int reconnectInteval)
-        : this(newState, oldState)
-    {
-        _mReconnectInteval = reconnectInteval;
-    }
-    #endregion
+  #endregion
 
-    #region Properties
-    /// <summary>
-    /// Gets the previous <see cref="SmppClient"/> connection state
-    /// </summary>
-    public SmppConnectionState PreviousState => _mOldState;
+  #region Constructors
 
-    /// <summary>
-    /// Gets the current <see cref="SmppClient"/> connection state
-    /// </summary>
-    public SmppConnectionState CurrentState => _mNewState;
+  /// <summary>
+  /// Creates a new instance of <see cref="ConnectionStateChangedEventArgs"/>
+  /// </summary>
+  /// <param name="newState">The current <see cref="SmppClient"/> connection state</param>
+  /// <param name="oldState">The previous <see cref="SmppClient"/> connection state</param>
+  public ConnectionStateChangedEventArgs(
+    SmppConnectionState newState,
+    SmppConnectionState oldState)
+  {
+    _mNewState = newState;
+    _mOldState = oldState;
+  }
 
-    /// <summary>
-    /// Gets or sets a value indicating the amount of time in miliseconds after which <see cref="SmppClient"/> should attemp to reestablish a lost connection
-    /// </summary>
-    public int ReconnectInteval
-    {
-        get => _mReconnectInteval;
-        set => _mReconnectInteval = value;
-    }
-    #endregion
+  /// <summary>
+  /// Creates a new instance of <see cref="ConnnectionStateChangedEventArgs"/>
+  /// </summary>
+  /// <param name="newState">The current <see cref="SmppClient"/> state</param>
+  /// <param name="oldState">The previous <see cref="SmppClient"/> state</param>
+  /// <param name="reconnectInteval">Reconnect inteval</param>
+  public ConnectionStateChangedEventArgs(
+    SmppConnectionState newState,
+    SmppConnectionState oldState,
+    int reconnectInteval)
+    : this(newState, oldState)
+  {
+    _mReconnectInteval = reconnectInteval;
+  }
+
+  #endregion
+
+  #region Properties
+
+  /// <summary>
+  /// Gets the previous <see cref="SmppClient"/> connection state
+  /// </summary>
+  public SmppConnectionState PreviousState => _mOldState;
+
+  /// <summary>
+  /// Gets the current <see cref="SmppClient"/> connection state
+  /// </summary>
+  public SmppConnectionState CurrentState => _mNewState;
+
+  /// <summary>
+  /// Gets or sets a value indicating the amount of time in miliseconds after which <see cref="SmppClient"/> should attemp to reestablish a lost connection
+  /// </summary>
+  public int ReconnectInteval
+  {
+    get => _mReconnectInteval;
+    set => _mReconnectInteval = value;
+  }
+
+  #endregion
 }

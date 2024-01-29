@@ -16,7 +16,6 @@
 
 using JamaaTech.Smpp.Net.Lib.Protocol;
 
-namespace JamaaTech.Smpp.Net.Lib
-{
-    internal delegate ResponsePDU SendPduCallback(RequestPDU pdu, int timeout);
-}
+namespace JamaaTech.Smpp.Net.Lib;
+
+internal delegate ResponsePDU SendPduCallback(RequestPDU pdu, int timeout);

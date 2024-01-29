@@ -14,11 +14,10 @@
  *
  ************************************************************************/
 
-namespace JamaaTech.Smpp.Net.Lib.Protocol
+namespace JamaaTech.Smpp.Net.Lib.Protocol;
+
+public enum DestinationFlag : byte
 {
-    public enum DestinationFlag : byte
-    {
-        SMEAddress = 1,
-        DistributionListName = 2
-    }
+  SMEAddress = 1,
+  DistributionListName = 2
 }

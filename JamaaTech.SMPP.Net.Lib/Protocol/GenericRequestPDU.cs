@@ -14,25 +14,30 @@
  *
  ************************************************************************/
 
-namespace JamaaTech.Smpp.Net.Lib.Protocol
+namespace JamaaTech.Smpp.Net.Lib.Protocol;
+
+public abstract class GenericRequestPDU : RequestPDU
 {
-    public abstract class GenericRequestPDU : RequestPDU
-    {
-        #region Constructors
-        internal GenericRequestPDU(PDUHeader header, SmppEncodingService smppEncodingService)
-            : base(header, smppEncodingService) { }
-        #endregion
+  #region Constructors
 
-        #region Methods
-        protected override byte[] GetBodyData()
-        {
-            return null;
-        }
+  internal GenericRequestPDU(PDUHeader header, SmppEncodingService smppEncodingService)
+    : base(header, smppEncodingService)
+  {
+  }
 
-        protected override void Parse(JamaaTech.Smpp.Net.Lib.Util.ByteBuffer buffer)
-        {
-            if (buffer.Length > 0) { throw new TooManyBytesException(); }
-        }
-        #endregion
-    }
+  #endregion
+
+  #region Methods
+
+  protected override byte[] GetBodyData()
+  {
+    return null;
+  }
+
+  protected override void Parse(Util.ByteBuffer buffer)
+  {
+    if (buffer.Length > 0) throw new TooManyBytesException();
+  }
+
+  #endregion
 }

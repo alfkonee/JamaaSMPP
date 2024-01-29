@@ -21,16 +21,18 @@ namespace JamaaTech.Smpp.Net.Client;
 /// </summary>
 public enum SmppConnectionState : int
 {
-    /// <summary>
-    /// Indicates the <see cref="SmppClient"/> is connected to SMSC
-    /// </summary>
-    Connected = 1,
-    /// <summary>
-    /// Indicates the <see cref="SmppClient"/> is currently trying to establish a connection
-    /// </summary>
-    Connecting = 2,
-    /// <summary>
-    /// Indicates the <see cref="SmppClient"/> is not connected
-    /// </summary>
-    Closed = 3
+  /// <summary>
+  /// Indicates the <see cref="SmppClient"/> is connected to SMSC
+  /// </summary>
+  Connected = 1,
+
+  /// <summary>
+  /// Indicates the <see cref="SmppClient"/> is currently trying to establish a connection
+  /// </summary>
+  Connecting = 2,
+
+  /// <summary>
+  /// Indicates the <see cref="SmppClient"/> is not connected
+  /// </summary>
+  Closed = 3
 }

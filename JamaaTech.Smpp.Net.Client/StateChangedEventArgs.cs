@@ -23,15 +23,22 @@ namespace JamaaTech.Smpp.Net.Client;
 /// </summary>
 public class StateChangedEventArgs : EventArgs
 {
-    #region Constructors
-    public StateChangedEventArgs(bool started)
-    { this.Started = started; }
-    #endregion
+  #region Constructors
 
-    /// <summary>
-    /// Returns true if <see cref="SmppClient"/> is started or <value>false</value> otherwise
-    /// </summary>
-    #region Properties
-    public bool Started { private set; get; }
-    #endregion
+  public StateChangedEventArgs(bool started)
+  {
+    Started = started;
+  }
+
+  #endregion
+
+  /// <summary>
+  /// Returns true if <see cref="SmppClient"/> is started or <value>false</value> otherwise
+  /// </summary>
+
+  #region Properties
+
+  public bool Started { private set; get; }
+
+  #endregion
 }

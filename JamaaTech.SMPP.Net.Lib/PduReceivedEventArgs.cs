@@ -17,33 +17,35 @@
 using System;
 using JamaaTech.Smpp.Net.Lib.Protocol;
 
-namespace JamaaTech.Smpp.Net.Lib
+namespace JamaaTech.Smpp.Net.Lib;
+
+public class PduReceivedEventArgs : EventArgs
 {
-    public class PduReceivedEventArgs : EventArgs
-    {
-        #region Variables
-        private RequestPDU vRequest;
-        private ResponsePDU vResponse;
-        #endregion
+  #region Variables
 
-        #region Constructors
-        public PduReceivedEventArgs(RequestPDU request)
-        {
-            vRequest = request;
-        }
-        #endregion
+  private RequestPDU vRequest;
+  private ResponsePDU vResponse;
 
-        #region Properties
-        public RequestPDU Request
-        {
-            get { return vRequest; }
-        }
+  #endregion
 
-        public ResponsePDU Response
-        {
-            get { return vResponse; }
-            set { vResponse = value; }
-        }
-        #endregion
-    }
+  #region Constructors
+
+  public PduReceivedEventArgs(RequestPDU request)
+  {
+    vRequest = request;
+  }
+
+  #endregion
+
+  #region Properties
+
+  public RequestPDU Request => vRequest;
+
+  public ResponsePDU Response
+  {
+    get => vResponse;
+    set => vResponse = value;
+  }
+
+  #endregion
 }

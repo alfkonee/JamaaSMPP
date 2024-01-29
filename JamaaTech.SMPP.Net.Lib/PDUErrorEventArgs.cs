@@ -17,52 +17,45 @@
 using System;
 using JamaaTech.Smpp.Net.Lib.Protocol;
 
-namespace JamaaTech.Smpp.Net.Lib
+namespace JamaaTech.Smpp.Net.Lib;
+
+public class PDUErrorEventArgs : EventArgs
 {
-    public class PDUErrorEventArgs : EventArgs
-    {
-        #region Variable
-        private PDUException vException;
-        private byte[] vByteDump;
-        private PDUHeader vHeader;
-        private PDU vPdu;
-        #endregion
+  #region Variable
 
-        #region Constructors
-        public PDUErrorEventArgs(PDUException exception, byte[] byteDump, PDUHeader header)
-        {
-            vException = exception;
-            vByteDump = byteDump;
-            vHeader = header;
-        }
+  private PDUException vException;
+  private byte[] vByteDump;
+  private PDUHeader vHeader;
+  private PDU vPdu;
 
-        public PDUErrorEventArgs(PDUException exception, byte[] byteDump, PDUHeader header, PDU pdu)
-            :this(exception,byteDump,header)
-        {
-            vPdu = pdu;
-        }
-        #endregion
+  #endregion
 
-        #region Properties
-        public PDUException Exception
-        {
-            get { return vException; }
-        }
+  #region Constructors
 
-        public byte[] ByteDump
-        {
-            get { return vByteDump; }
-        }
+  public PDUErrorEventArgs(PDUException exception, byte[] byteDump, PDUHeader header)
+  {
+    vException = exception;
+    vByteDump = byteDump;
+    vHeader = header;
+  }
 
-        public PDUHeader Header
-        {
-            get { return vHeader; }
-        }
+  public PDUErrorEventArgs(PDUException exception, byte[] byteDump, PDUHeader header, PDU pdu)
+    : this(exception, byteDump, header)
+  {
+    vPdu = pdu;
+  }
 
-        public PDU Pdu
-        {
-            get { return vPdu; }
-        }
-        #endregion
-    }
+  #endregion
+
+  #region Properties
+
+  public PDUException Exception => vException;
+
+  public byte[] ByteDump => vByteDump;
+
+  public PDUHeader Header => vHeader;
+
+  public PDU Pdu => vPdu;
+
+  #endregion
 }

@@ -17,75 +17,75 @@
 using System;
 using JamaaTech.Smpp.Net.Lib.Util;
 
-namespace JamaaTech.Smpp.Net.Lib.Protocol
+namespace JamaaTech.Smpp.Net.Lib.Protocol;
+
+public class Outbind : RequestPDU
 {
-    public class Outbind : RequestPDU
-    {
-        #region Variables
-        private string vSystemID;
-        private string vPassword;
-        #endregion
+  #region Variables
 
-        #region Constructors
-        internal Outbind(PDUHeader header, SmppEncodingService smppEncodingService)
-            : base(header, smppEncodingService)
-        {
-            vSystemID = "";
-            vPassword = "";
-        }
-        #endregion
+  private string vSystemID;
+  private string vPassword;
 
-        #region Properties
+  #endregion
 
-        public override SmppEntityType AllowedSource
-        {
-            get { return SmppEntityType.SMSC; }
-        }
+  #region Constructors
 
-        public override SmppSessionState AllowedSession
-        {
-            get { return SmppSessionState.Open; }
-        }
+  internal Outbind(PDUHeader header, SmppEncodingService smppEncodingService)
+    : base(header, smppEncodingService)
+  {
+    vSystemID = "";
+    vPassword = "";
+  }
 
-        public string SystemID
-        {
-            get { return vSystemID; }
-            set { vSystemID = value; }
-        }
+  #endregion
 
-        public string Password
-        {
-            get { return vPassword; }
-            set { vPassword = value; }
-        }
-        #endregion
+  #region Properties
 
-        #region Methods
-        public override ResponsePDU CreateDefaultResponse()
-        {
-            PDUHeader header = new PDUHeader(CommandType.BindTransceiver, vHeader.SequenceNumber);
-            return new BindTransceiverResp(header, vSmppEncodingService);
-        }
+  public override SmppEntityType AllowedSource => SmppEntityType.SMSC;
 
-        protected override byte[] GetBodyData()
-        {
-            ByteBuffer buffer = new ByteBuffer(vSystemID.Length + vPassword.Length + 2);
-            buffer.Append(EncodeCString(vSystemID, vSmppEncodingService));
-            buffer.Equals(EncodeCString(vPassword, vSmppEncodingService));
-            return buffer.ToBytes();
-        }
+  public override SmppSessionState AllowedSession => SmppSessionState.Open;
 
-        protected override void Parse(ByteBuffer buffer)
-        {
-            if (buffer == null) { throw new ArgumentNullException("buffer"); }
-            //Outbind PDU requires at least 2 bytes
-            if (buffer.Length < 2) { throw new NotEnoughBytesException("Outbind PDU requires at least 2 bytes for body data"); }
-            vSystemID = DecodeCString(buffer, vSmppEncodingService);
-            vPassword = DecodeCString(buffer, vSmppEncodingService);
-            //This PDU has no optional parameters
-            //If we still have something in the buffer, we are having more bytes than we expected
-            if (buffer.Length > 0) { throw new TooManyBytesException(); }
-        }
-        #endregion
-    }
+  public string SystemID
+  {
+    get => vSystemID;
+    set => vSystemID = value;
+  }
+
+  public string Password
+  {
+    get => vPassword;
+    set => vPassword = value;
+  }
+
+  #endregion
+
+  #region Methods
+
+  public override ResponsePDU CreateDefaultResponse()
+  {
+    var header = new PDUHeader(CommandType.BindTransceiver, vHeader.SequenceNumber);
+    return new BindTransceiverResp(header, vSmppEncodingService);
+  }
+
+  protected override byte[] GetBodyData()
+  {
+    var buffer = new ByteBuffer(vSystemID.Length + vPassword.Length + 2);
+    buffer.Append(EncodeCString(vSystemID, vSmppEncodingService));
+    buffer.Equals(EncodeCString(vPassword, vSmppEncodingService));
+    return buffer.ToBytes();
+  }
+
+  protected override void Parse(ByteBuffer buffer)
+  {
+    if (buffer == null) throw new ArgumentNullException("buffer");
+    //Outbind PDU requires at least 2 bytes
+    if (buffer.Length < 2) throw new NotEnoughBytesException("Outbind PDU requires at least 2 bytes for body data");
+    vSystemID = DecodeCString(buffer, vSmppEncodingService);
+    vPassword = DecodeCString(buffer, vSmppEncodingService);
+    //This PDU has no optional parameters
+    //If we still have something in the buffer, we are having more bytes than we expected
+    if (buffer.Length > 0) throw new TooManyBytesException();
+  }
+
+  #endregion
 }

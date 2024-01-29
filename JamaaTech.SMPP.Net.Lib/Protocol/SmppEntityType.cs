@@ -14,12 +14,11 @@
  *
  ************************************************************************/
 
-namespace JamaaTech.Smpp.Net.Lib.Protocol
+namespace JamaaTech.Smpp.Net.Lib.Protocol;
+
+public enum SmppEntityType : int
 {
-    public enum SmppEntityType : int
-    {
-        SMSC = 1,
-        ESME = 2,
-        Any = SMSC | ESME
-    }
+  SMSC = 1,
+  ESME = 2,
+  Any = SMSC | ESME
 }

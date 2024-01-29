@@ -14,40 +14,40 @@
  *
  ************************************************************************/
 
-namespace JamaaTech.Smpp.Net.Lib.Protocol
+namespace JamaaTech.Smpp.Net.Lib.Protocol;
+
+public class Unbind : GenericRequestPDU
 {
-    public class Unbind : GenericRequestPDU
-    {
-        #region Constructors
-        internal Unbind(PDUHeader header, SmppEncodingService smppEncodingService)
-            : base(header, smppEncodingService) { }
+  #region Constructors
 
-        public Unbind(SmppEncodingService smppEncodingService)
-            : base(new PDUHeader(CommandType.UnBind), smppEncodingService)
-        {
-        }
-        #endregion
+  internal Unbind(PDUHeader header, SmppEncodingService smppEncodingService)
+    : base(header, smppEncodingService)
+  {
+  }
 
-        #region Properties
-        public override SmppEntityType AllowedSource
-        {
-            get { return SmppEntityType.Any; }
-        }
+  public Unbind(SmppEncodingService smppEncodingService)
+    : base(new PDUHeader(CommandType.UnBind), smppEncodingService)
+  {
+  }
 
-        public override SmppSessionState AllowedSession
-        {
-            get { return SmppSessionState.Transceiver; }
-        }
-        #endregion
+  #endregion
 
-        #region Methods
-        public override ResponsePDU CreateDefaultResponse()
-        {
-            PDUHeader header = new PDUHeader(CommandType.UnBindResp,vHeader.SequenceNumber);
-            UnbindResp resp = (UnbindResp)CreatePDU(header, vSmppEncodingService);
-            return resp;
-        }
-        #endregion
+  #region Properties
 
-    }
+  public override SmppEntityType AllowedSource => SmppEntityType.Any;
+
+  public override SmppSessionState AllowedSession => SmppSessionState.Transceiver;
+
+  #endregion
+
+  #region Methods
+
+  public override ResponsePDU CreateDefaultResponse()
+  {
+    var header = new PDUHeader(CommandType.UnBindResp, vHeader.SequenceNumber);
+    var resp = (UnbindResp)CreatePDU(header, vSmppEncodingService);
+    return resp;
+  }
+
+  #endregion
 }

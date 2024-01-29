@@ -14,13 +14,16 @@
  *
  ************************************************************************/
 
-namespace JamaaTech.Smpp.Net.Lib.Protocol
+namespace JamaaTech.Smpp.Net.Lib.Protocol;
+
+public class InvalidPDUCommandException : PDUException
 {
-    public class InvalidPDUCommandException : PDUException
-    {
-        #region Constructors
-        public InvalidPDUCommandException()
-            : base(SmppErrorCode.ESME_RINVCMDID, "Invalid command ID") { }
-        #endregion
-    }
+  #region Constructors
+
+  public InvalidPDUCommandException()
+    : base(SmppErrorCode.ESME_RINVCMDID, "Invalid command ID")
+  {
+  }
+
+  #endregion
 }

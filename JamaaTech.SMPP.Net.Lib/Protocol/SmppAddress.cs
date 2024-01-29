@@ -16,80 +16,89 @@
 
 using JamaaTech.Smpp.Net.Lib.Util;
 
-namespace JamaaTech.Smpp.Net.Lib.Protocol
+namespace JamaaTech.Smpp.Net.Lib.Protocol;
+
+public sealed class SmppAddress
 {
-    public sealed class SmppAddress
-    {
-        #region Variables
-        private TypeOfNumber vTon;
-        private NumberingPlanIndicator vNpi;
-        private string vAddress;
-        #endregion
+  #region Variables
 
-        #region Constructors
-        public SmppAddress()
-        {
-            vTon = TypeOfNumber.International;
-            vNpi = NumberingPlanIndicator.ISDN;
-            vAddress = "";
-        }
+  private TypeOfNumber vTon;
+  private NumberingPlanIndicator vNpi;
+  private string vAddress;
 
-        public SmppAddress(TypeOfNumber ton, NumberingPlanIndicator npi, string address)
-        {
-            vTon = ton;
-            vNpi = npi;
-            vAddress = address;
-        }
-        #endregion
+  #endregion
 
-        #region Properties
-        public TypeOfNumber Ton
-        {
-            get { return vTon; }
-            set { vTon = value; }
-        }
+  #region Constructors
 
-        public NumberingPlanIndicator Npi
-        {
-            get { return vNpi; }
-            set { vNpi = value; }
-        }
+  public SmppAddress()
+  {
+    vTon = TypeOfNumber.International;
+    vNpi = NumberingPlanIndicator.ISDN;
+    vAddress = "";
+  }
 
-        public string Address
-        {
-            get { return vAddress; }
-            set { vAddress = value; }
-        }
-        #endregion
+  public SmppAddress(TypeOfNumber ton, NumberingPlanIndicator npi, string address)
+  {
+    vTon = ton;
+    vNpi = npi;
+    vAddress = address;
+  }
 
-        #region Methods
-        internal static SmppAddress Parse(ByteBuffer buffer, SmppEncodingService smppEncodingService)
-        {
-            //We require at least 3 bytes for SMPPAddress instance to be craeted
-            if (buffer.Length < 3) { throw new NotEnoughBytesException("SMPPAddress requires at least 3 bytes"); }
-            TypeOfNumber ton = (TypeOfNumber)PDU.GetByte(buffer);
-            NumberingPlanIndicator npi = (NumberingPlanIndicator)PDU.GetByte(buffer);
-            string address = PDU.DecodeCString(buffer, smppEncodingService);
-            return new SmppAddress(ton, npi, address);
-        }
+  #endregion
 
-        public byte[] GetBytes(SmppEncodingService smppEncodingService)
-        {
-            //Approximate buffer required;
-            int capacity = 4 + vAddress == null ? 1 : vAddress.Length;
-            ByteBuffer buffer = new ByteBuffer(capacity);
-            buffer.Append((byte)vTon);
-            buffer.Append((byte)vNpi);
-            buffer.Append(PDU.EncodeCString(vAddress, smppEncodingService));
-            return buffer.ToBytes();
-        }
+  #region Properties
 
-        #region override
-        public override string ToString()
-        {
-            return string.Format("{{Address:{0}, Ton:{1}, Npi:{2}}}", Address, Ton, Npi);
-        }
-        #endregion
-        #endregion
-    }
+  public TypeOfNumber Ton
+  {
+    get => vTon;
+    set => vTon = value;
+  }
+
+  public NumberingPlanIndicator Npi
+  {
+    get => vNpi;
+    set => vNpi = value;
+  }
+
+  public string Address
+  {
+    get => vAddress;
+    set => vAddress = value;
+  }
+
+  #endregion
+
+  #region Methods
+
+  internal static SmppAddress Parse(ByteBuffer buffer, SmppEncodingService smppEncodingService)
+  {
+    //We require at least 3 bytes for SMPPAddress instance to be craeted
+    if (buffer.Length < 3) throw new NotEnoughBytesException("SMPPAddress requires at least 3 bytes");
+    var ton = (TypeOfNumber)PDU.GetByte(buffer);
+    var npi = (NumberingPlanIndicator)PDU.GetByte(buffer);
+    var address = PDU.DecodeCString(buffer, smppEncodingService);
+    return new SmppAddress(ton, npi, address);
+  }
+
+  public byte[] GetBytes(SmppEncodingService smppEncodingService)
+  {
+    //Approximate buffer required;
+    var capacity = 4 + vAddress == null ? 1 : vAddress.Length;
+    var buffer = new ByteBuffer(capacity);
+    buffer.Append((byte)vTon);
+    buffer.Append((byte)vNpi);
+    buffer.Append(PDU.EncodeCString(vAddress, smppEncodingService));
+    return buffer.ToBytes();
+  }
+
+  #region override
+
+  public override string ToString()
+  {
+    return string.Format("{{Address:{0}, Ton:{1}, Npi:{2}}}", Address, Ton, Npi);
+  }
+
+  #endregion
+
+  #endregion
 }

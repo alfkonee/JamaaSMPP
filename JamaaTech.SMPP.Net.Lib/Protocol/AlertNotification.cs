@@ -18,75 +18,70 @@ using System;
 using JamaaTech.Smpp.Net.Lib.Util;
 using JamaaTech.Smpp.Net.Lib.Protocol.Tlv;
 
-namespace JamaaTech.Smpp.Net.Lib.Protocol
+namespace JamaaTech.Smpp.Net.Lib.Protocol;
+
+public class AlertNotification : SmPDU
 {
-    public class AlertNotification : SmPDU
-    {
-        #region Variables
-        private SmppAddress vEsmeAddress;
-        #endregion
+  #region Variables
 
-        #region Constructors
-        public AlertNotification(SmppEncodingService smppEncodingService)
-            : base(new PDUHeader(CommandType.AlertNotification), smppEncodingService)
-        {
-            vEsmeAddress = new SmppAddress();
-        }
+  private SmppAddress vEsmeAddress;
 
-        internal AlertNotification(PDUHeader header, SmppEncodingService smppEncodingService)
-            : base(header, smppEncodingService)
-        {
-            vEsmeAddress = new SmppAddress();
-        }
-        #endregion
+  #endregion
 
-        #region Properties
-        public override bool HasResponse
-        {
-            get { return false; }
-        }
+  #region Constructors
 
-        public override SmppEntityType AllowedSource
-        {
-            get { return SmppEntityType.SMSC; }
-        }
+  public AlertNotification(SmppEncodingService smppEncodingService)
+    : base(new PDUHeader(CommandType.AlertNotification), smppEncodingService)
+  {
+    vEsmeAddress = new SmppAddress();
+  }
 
-        public override SmppSessionState AllowedSession
-        {
-            get { return SmppSessionState.Receiver; }
-        }
+  internal AlertNotification(PDUHeader header, SmppEncodingService smppEncodingService)
+    : base(header, smppEncodingService)
+  {
+    vEsmeAddress = new SmppAddress();
+  }
 
-        public SmppAddress ESMEAddress
-        {
-            get { return vEsmeAddress; }
-        }
-        #endregion
+  #endregion
 
-        #region Methods
-        public override ResponsePDU CreateDefaultResponse()
-        {
-            return null;
-        }
+  #region Properties
 
-        protected override byte[] GetBodyData()
-        {
-            byte[] sourceAddrBytes = vSourceAddress.GetBytes(vSmppEncodingService);
-            byte[] esmeAddresBytes = vEsmeAddress.GetBytes(vSmppEncodingService);
-            ByteBuffer buffer = new ByteBuffer(sourceAddrBytes.Length + esmeAddresBytes.Length);
-            buffer.Append(sourceAddrBytes);
-            buffer.Append(esmeAddresBytes);
-            return buffer.ToBytes();
-        }
+  public override bool HasResponse => false;
 
-        protected override void Parse(ByteBuffer buffer)
-        {
-            if (buffer == null) { throw new ArgumentNullException("buffer"); }
-            vSourceAddress = SmppAddress.Parse(buffer, vSmppEncodingService);
-            vEsmeAddress = SmppAddress.Parse(buffer, vSmppEncodingService);
-            //If there are some bytes left,
-            //construct a tlv collection
-            if (buffer.Length > 0) { vTlv = TlvCollection.Parse(buffer, vSmppEncodingService); }
-        }
-        #endregion
-    }
+  public override SmppEntityType AllowedSource => SmppEntityType.SMSC;
+
+  public override SmppSessionState AllowedSession => SmppSessionState.Receiver;
+
+  public SmppAddress ESMEAddress => vEsmeAddress;
+
+  #endregion
+
+  #region Methods
+
+  public override ResponsePDU CreateDefaultResponse()
+  {
+    return null;
+  }
+
+  protected override byte[] GetBodyData()
+  {
+    var sourceAddrBytes = vSourceAddress.GetBytes(vSmppEncodingService);
+    var esmeAddresBytes = vEsmeAddress.GetBytes(vSmppEncodingService);
+    var buffer = new ByteBuffer(sourceAddrBytes.Length + esmeAddresBytes.Length);
+    buffer.Append(sourceAddrBytes);
+    buffer.Append(esmeAddresBytes);
+    return buffer.ToBytes();
+  }
+
+  protected override void Parse(ByteBuffer buffer)
+  {
+    if (buffer == null) throw new ArgumentNullException("buffer");
+    vSourceAddress = SmppAddress.Parse(buffer, vSmppEncodingService);
+    vEsmeAddress = SmppAddress.Parse(buffer, vSmppEncodingService);
+    //If there are some bytes left,
+    //construct a tlv collection
+    if (buffer.Length > 0) vTlv = TlvCollection.Parse(buffer, vSmppEncodingService);
+  }
+
+  #endregion
 }

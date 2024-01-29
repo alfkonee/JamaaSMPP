@@ -23,26 +23,31 @@ namespace JamaaTech.Smpp.Net.Client;
 /// </summary>
 public class MessageEventArgs : EventArgs
 {
-    #region Variables
-    private ShortMessage _vShortMessage;
-    #endregion
+  #region Variables
 
-    #region Constructors
-    /// <summary>
-    /// Creates a new instance of <see cref="MessageEventArgs"/>
-    /// </summary>
-    /// <param name="message">The message associated with the message event</param>
-    public MessageEventArgs(ShortMessage message)
-    {
-        _vShortMessage = message;
-    }
-    #endregion
+  private ShortMessage _vShortMessage;
 
-    #region Properties
-    /// <summary>
-    /// Gets the message associated with this event
-    /// </summary>
-    public ShortMessage ShortMessage => _vShortMessage;
+  #endregion
 
-    #endregion
+  #region Constructors
+
+  /// <summary>
+  /// Creates a new instance of <see cref="MessageEventArgs"/>
+  /// </summary>
+  /// <param name="message">The message associated with the message event</param>
+  public MessageEventArgs(ShortMessage message)
+  {
+    _vShortMessage = message;
+  }
+
+  #endregion
+
+  #region Properties
+
+  /// <summary>
+  /// Gets the message associated with this event
+  /// </summary>
+  public ShortMessage ShortMessage => _vShortMessage;
+
+  #endregion
 }

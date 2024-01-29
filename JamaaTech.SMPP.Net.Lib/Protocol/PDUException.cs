@@ -16,30 +16,41 @@
 
 using System;
 
-namespace JamaaTech.Smpp.Net.Lib.Protocol
+namespace JamaaTech.Smpp.Net.Lib.Protocol;
+
+[Serializable]
+public class PDUException : Exception
 {
-    [Serializable]
-    public class PDUException : Exception
-    {
-        #region Variables
-        private SmppErrorCode vErrorCode;
-        #endregion
+  #region Variables
 
-        #region Constructors
-        public PDUException(SmppErrorCode errorCode) { vErrorCode = errorCode; }
+  private SmppErrorCode vErrorCode;
 
-        public PDUException(SmppErrorCode errorCode, string message)
-            : base(message) { vErrorCode = errorCode; }
+  #endregion
 
-        public PDUException(SmppErrorCode errorCode, string message, Exception innerException)
-            : base(message, innerException) { vErrorCode = errorCode; }
-        #endregion
+  #region Constructors
 
-        #region Properties
-        public SmppErrorCode ErrorCode
-        {
-            get { return vErrorCode; }
-        }
-        #endregion
-    }
+  public PDUException(SmppErrorCode errorCode)
+  {
+    vErrorCode = errorCode;
+  }
+
+  public PDUException(SmppErrorCode errorCode, string message)
+    : base(message)
+  {
+    vErrorCode = errorCode;
+  }
+
+  public PDUException(SmppErrorCode errorCode, string message, Exception innerException)
+    : base(message, innerException)
+  {
+    vErrorCode = errorCode;
+  }
+
+  #endregion
+
+  #region Properties
+
+  public SmppErrorCode ErrorCode => vErrorCode;
+
+  #endregion
 }

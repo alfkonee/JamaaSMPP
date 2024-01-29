@@ -14,19 +14,18 @@
  *
  ************************************************************************/
 
-namespace JamaaTech.Smpp.Net.Lib
+namespace JamaaTech.Smpp.Net.Lib;
+
+public enum NumberingPlanIndicator : byte
 {
-    public enum NumberingPlanIndicator : byte
-    {
-        Unknown = 0,
-        ISDN = 1,
-        Data = 3,
-        Telex = 4,
-        LandMobile = 6,
-        National = 8,
-        Private = 9,
-        ERMES = 10,
-        Internet = 14,
-        WapClient = 18
-    }
+  Unknown = 0,
+  ISDN = 1,
+  Data = 3,
+  Telex = 4,
+  LandMobile = 6,
+  National = 8,
+  Private = 9,
+  ERMES = 10,
+  Internet = 14,
+  WapClient = 18
 }

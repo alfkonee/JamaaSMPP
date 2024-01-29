@@ -14,25 +14,24 @@
  *
  ************************************************************************/
 
-namespace JamaaTech.Smpp.Net.Lib.Protocol
+namespace JamaaTech.Smpp.Net.Lib.Protocol;
+
+public class GenericNack : GenericResponsePDU
 {
-    public class GenericNack : GenericResponsePDU
-    {
-        #region Constructors
-        internal GenericNack(PDUHeader header, SmppEncodingService smppEncodingService)
-            : base(header, smppEncodingService) { }
-        #endregion
+  #region Constructors
 
-        #region Properties
-        public override SmppEntityType AllowedSource
-        {
-            get { return SmppEntityType.Any; }
-        }
+  internal GenericNack(PDUHeader header, SmppEncodingService smppEncodingService)
+    : base(header, smppEncodingService)
+  {
+  }
 
-        public override SmppSessionState AllowedSession
-        {
-            get { return SmppSessionState.Transceiver; }
-        }
-        #endregion
-    }
+  #endregion
+
+  #region Properties
+
+  public override SmppEntityType AllowedSource => SmppEntityType.Any;
+
+  public override SmppSessionState AllowedSession => SmppSessionState.Transceiver;
+
+  #endregion
 }

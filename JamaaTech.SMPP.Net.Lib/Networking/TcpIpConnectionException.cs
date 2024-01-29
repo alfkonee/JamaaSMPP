@@ -16,17 +16,22 @@
 
 using System;
 
-namespace JamaaTech.Smpp.Net.Lib.Networking
-{
-    [Serializable]
-    public class TcpIpConnectionException : TcpIpException
-    {
-        #region Constructors
-        public TcpIpConnectionException(string message)
-            : base(message) { }
+namespace JamaaTech.Smpp.Net.Lib.Networking;
 
-        public TcpIpConnectionException(Exception innerException)
-            : base(innerException.Message, innerException) { }
-        #endregion
-    }
+[Serializable]
+public class TcpIpConnectionException : TcpIpException
+{
+  #region Constructors
+
+  public TcpIpConnectionException(string message)
+    : base(message)
+  {
+  }
+
+  public TcpIpConnectionException(Exception innerException)
+    : base(innerException.Message, innerException)
+  {
+  }
+
+  #endregion
 }

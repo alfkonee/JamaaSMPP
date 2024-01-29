@@ -18,54 +18,55 @@ using System;
 using JamaaTech.Smpp.Net.Lib.Util;
 using JamaaTech.Smpp.Net.Lib.Protocol.Tlv;
 
-namespace JamaaTech.Smpp.Net.Lib.Protocol
+namespace JamaaTech.Smpp.Net.Lib.Protocol;
+
+public sealed class DataSmResp : ResponsePDU
 {
-    public sealed class DataSmResp : ResponsePDU
-    {
-        #region Variables
-        private string vMessageID;
-        #endregion
+  #region Variables
 
-        #region Constructors
-        internal DataSmResp(PDUHeader header, SmppEncodingService smppEncodingService)
-            : base(header, smppEncodingService)
-        {
-            vMessageID = "";
-        }
-        #endregion
+  private string vMessageID;
 
-        #region Properties
-        public string MessageID
-        {
-            get { return vMessageID; }
-            set { vMessageID = value; }
-        }
+  #endregion
 
-        public override SmppEntityType AllowedSource
-        {
-            get { return SmppEntityType.Any; }
-        }
+  #region Constructors
 
-        public override SmppSessionState AllowedSession
-        {
-            get { return SmppSessionState.Transceiver; }
-        }
-        #endregion
+  internal DataSmResp(PDUHeader header, SmppEncodingService smppEncodingService)
+    : base(header, smppEncodingService)
+  {
+    vMessageID = "";
+  }
 
-        #region Methods
-        protected override byte[] GetBodyData()
-        {
-            return EncodeCString(vMessageID, vSmppEncodingService);
-        }
+  #endregion
 
-        protected override void Parse(ByteBuffer buffer)
-        {
-            if (buffer == null) { throw new ArgumentNullException("buffer"); }
-            //We require at least 1 byte for this pdu
-            if (buffer.Length < 1) { throw new NotEnoughBytesException("data_sm_resp requires at least 1 byte of body data"); }
-            vMessageID = DecodeCString(buffer, vSmppEncodingService);
-            if (buffer.Length > 0) { vTlv = TlvCollection.Parse(buffer, vSmppEncodingService); }
-        }
-        #endregion
-    }
+  #region Properties
+
+  public string MessageID
+  {
+    get => vMessageID;
+    set => vMessageID = value;
+  }
+
+  public override SmppEntityType AllowedSource => SmppEntityType.Any;
+
+  public override SmppSessionState AllowedSession => SmppSessionState.Transceiver;
+
+  #endregion
+
+  #region Methods
+
+  protected override byte[] GetBodyData()
+  {
+    return EncodeCString(vMessageID, vSmppEncodingService);
+  }
+
+  protected override void Parse(ByteBuffer buffer)
+  {
+    if (buffer == null) throw new ArgumentNullException("buffer");
+    //We require at least 1 byte for this pdu
+    if (buffer.Length < 1) throw new NotEnoughBytesException("data_sm_resp requires at least 1 byte of body data");
+    vMessageID = DecodeCString(buffer, vSmppEncodingService);
+    if (buffer.Length > 0) vTlv = TlvCollection.Parse(buffer, vSmppEncodingService);
+  }
+
+  #endregion
 }

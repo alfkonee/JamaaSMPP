@@ -14,16 +14,21 @@
  *
  ************************************************************************/
 
-namespace JamaaTech.Smpp.Net.Lib.Protocol.Tlv
-{
-    public class TlvException : PDUException
-    {
-        #region Constructor
-        public TlvException()
-            :this("Error in the optional part of the pdu body") { }
+namespace JamaaTech.Smpp.Net.Lib.Protocol.Tlv;
 
-        public TlvException(string message)
-            : base(SmppErrorCode.ESME_RINVOPTPARSTREAM, message) { }
-        #endregion
-    }
+public class TlvException : PDUException
+{
+  #region Constructor
+
+  public TlvException()
+    : this("Error in the optional part of the pdu body")
+  {
+  }
+
+  public TlvException(string message)
+    : base(SmppErrorCode.ESME_RINVOPTPARSTREAM, message)
+  {
+  }
+
+  #endregion
 }

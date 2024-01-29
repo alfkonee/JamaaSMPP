@@ -16,38 +16,38 @@
 
 using System;
 
-namespace JamaaTech.Smpp.Net.Lib.Networking
+namespace JamaaTech.Smpp.Net.Lib.Networking;
+
+public class TcpIpSessionClosedEventArgs : EventArgs
 {
-    public class TcpIpSessionClosedEventArgs : EventArgs
-    {
-        #region Variables
-        private SessionCloseReason vReason;
-        private Exception vException;
-        #endregion
+  #region Variables
 
-        #region Constructors
-        public TcpIpSessionClosedEventArgs(SessionCloseReason reason, Exception exception)
-        {
-            vReason = reason;
-            vException = exception;
-        }
-        #endregion
+  private SessionCloseReason vReason;
+  private Exception vException;
 
-        #region Properties
-        /// <summary>
-        /// The reason that caused TcpIpSession to be closed
-        /// </summary>
-        public SessionCloseReason CloseReason
-        {
-            get { return vReason; }
-        }
-        /// <summary>
-        /// The exception, if any that caused a TcpIpSession to be terminated
-        /// </summary>
-        public Exception Exception
-        {
-            get { return vException; }
-        }
-        #endregion
-    }
+  #endregion
+
+  #region Constructors
+
+  public TcpIpSessionClosedEventArgs(SessionCloseReason reason, Exception exception)
+  {
+    vReason = reason;
+    vException = exception;
+  }
+
+  #endregion
+
+  #region Properties
+
+  /// <summary>
+  /// The reason that caused TcpIpSession to be closed
+  /// </summary>
+  public SessionCloseReason CloseReason => vReason;
+
+  /// <summary>
+  /// The exception, if any that caused a TcpIpSession to be terminated
+  /// </summary>
+  public Exception Exception => vException;
+
+  #endregion
 }

@@ -24,28 +24,37 @@ namespace JamaaTech.Smpp.Net.Client;
 [Serializable]
 public class SmppClientException : Exception
 {
-    #region Variables
-    #endregion
+  #region Variables
 
-    #region Constructors
-    /// <summary>
-    /// Initializes a new instance of <see cref="SmppClientException"/>
-    /// </summary>
-    public SmppClientException() { }
+  #endregion
 
-    /// <summary>
-    /// Initializes a new instance of <see cref="SmppClientException"/>
-    /// </summary>
-    /// <param name="message">The message that describes the error</param>
-    public SmppClientException(string message)
-        : base(message) { }
+  #region Constructors
 
-    /// <summary>
-    /// Initializes a new instance of <see cref="SmppClientException"/>
-    /// </summary>
-    /// <param name="message">A message that describes the error</param>
-    /// <param name="innerException">The exception that is the cause of the current exception or null if not exception is specified</param>
-    public SmppClientException(string message, Exception innerException)
-        : base(message, innerException) { }
-    #endregion
+  /// <summary>
+  /// Initializes a new instance of <see cref="SmppClientException"/>
+  /// </summary>
+  public SmppClientException()
+  {
+  }
+
+  /// <summary>
+  /// Initializes a new instance of <see cref="SmppClientException"/>
+  /// </summary>
+  /// <param name="message">The message that describes the error</param>
+  public SmppClientException(string message)
+    : base(message)
+  {
+  }
+
+  /// <summary>
+  /// Initializes a new instance of <see cref="SmppClientException"/>
+  /// </summary>
+  /// <param name="message">A message that describes the error</param>
+  /// <param name="innerException">The exception that is the cause of the current exception or null if not exception is specified</param>
+  public SmppClientException(string message, Exception innerException)
+    : base(message, innerException)
+  {
+  }
+
+  #endregion
 }

@@ -14,21 +14,22 @@
  *
  ************************************************************************/
 
-namespace JamaaTech.Smpp.Net.Lib.Networking
+namespace JamaaTech.Smpp.Net.Lib.Networking;
+
+public enum SessionCloseReason : int
 {
-    public enum SessionCloseReason : int
-    {
-        /// <summary>
-        /// A TcpIpSession was closed due to a call on <see cref="TcpIpSession.EndSession()"/>
-        /// </summary>
-        EndSessionCalled = 1,
-        /// <summary>
-        /// An exception was thrown which forced the session to be terminated unexpectedly
-        /// </summary>
-        ExceptionThrown = 2,
-        /// <summary>
-        /// Existing connection was closed by remote host
-        /// </summary>
-        SocketShutdown = 3
-    }
+  /// <summary>
+  /// A TcpIpSession was closed due to a call on <see cref="TcpIpSession.EndSession()"/>
+  /// </summary>
+  EndSessionCalled = 1,
+
+  /// <summary>
+  /// An exception was thrown which forced the session to be terminated unexpectedly
+  /// </summary>
+  ExceptionThrown = 2,
+
+  /// <summary>
+  /// Existing connection was closed by remote host
+  /// </summary>
+  SocketShutdown = 3
 }

@@ -14,11 +14,10 @@
  *
  ************************************************************************/
 
-namespace JamaaTech.Smpp.Net.Lib
+namespace JamaaTech.Smpp.Net.Lib;
+
+public enum InterfaceVersion : uint
 {
-    public enum InterfaceVersion : uint
-    {
-        v33 = 0x33,
-        v34 = 0x34
-    }
+  v33 = 0x33,
+  v34 = 0x34
 }

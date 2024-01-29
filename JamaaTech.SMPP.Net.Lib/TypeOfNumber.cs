@@ -14,16 +14,15 @@
  *
  ************************************************************************/
 
-namespace JamaaTech.Smpp.Net.Lib
+namespace JamaaTech.Smpp.Net.Lib;
+
+public enum TypeOfNumber : byte
 {
-    public enum TypeOfNumber : byte
-    {
-        Unknown = 0,
-        International = 1,
-        National = 2,
-        NetworkSpecific = 3,
-        SubscriberNumber = 4,
-        Alphanumeric = 5,
-        Abbreviated = 6
-    }
+  Unknown = 0,
+  International = 1,
+  National = 2,
+  NetworkSpecific = 3,
+  SubscriberNumber = 4,
+  Alphanumeric = 5,
+  Abbreviated = 6
 }

@@ -18,29 +18,34 @@ using System;
 using JamaaTech.Smpp.Net.Lib.Protocol;
 using JamaaTech.Smpp.Net.Lib.Networking;
 
-namespace JamaaTech.Smpp.Net.Lib
+namespace JamaaTech.Smpp.Net.Lib;
+
+public class PDUTransmitter
 {
-    public class PDUTransmitter
-    {
-        #region Variables
-        private TcpIpSession vTcpIpSession;
-        #endregion
+  #region Variables
 
-        #region Constructors
-        public PDUTransmitter(TcpIpSession session)
-        {
-            if (session == null) { throw new ArgumentNullException("session"); }
-            vTcpIpSession = session;
-        }
-        #endregion
+  private TcpIpSession vTcpIpSession;
 
-        #region Methods
-        public void Send(PDU pdu)
-        {
-            if (pdu == null) { throw new ArgumentNullException("pdu"); }
-            byte[] bytesToSend = pdu.GetBytes();
-            vTcpIpSession.Send(bytesToSend);
-        }
-        #endregion
-    }
+  #endregion
+
+  #region Constructors
+
+  public PDUTransmitter(TcpIpSession session)
+  {
+    if (session == null) throw new ArgumentNullException("session");
+    vTcpIpSession = session;
+  }
+
+  #endregion
+
+  #region Methods
+
+  public void Send(PDU pdu)
+  {
+    if (pdu == null) throw new ArgumentNullException("pdu");
+    var bytesToSend = pdu.GetBytes();
+    vTcpIpSession.Send(bytesToSend);
+  }
+
+  #endregion
 }

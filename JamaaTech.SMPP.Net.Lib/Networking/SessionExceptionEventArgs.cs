@@ -16,26 +16,28 @@
 
 using System;
 
-namespace JamaaTech.Smpp.Net.Lib.Networking
+namespace JamaaTech.Smpp.Net.Lib.Networking;
+
+public class TcpIpSessionExceptionEventArgs : EventArgs
 {
-    public class TcpIpSessionExceptionEventArgs : EventArgs
-    {
-        #region Variables
-        private Exception vException;
-        #endregion
+  #region Variables
 
-        #region Constructors
-        public TcpIpSessionExceptionEventArgs(Exception ex)
-        {
-            vException = ex;
-        }
-        #endregion
+  private Exception vException;
 
-        #region Properties
-        public Exception Exception
-        {
-            get { return vException; }
-        }
-        #endregion
-    }
+  #endregion
+
+  #region Constructors
+
+  public TcpIpSessionExceptionEventArgs(Exception ex)
+  {
+    vException = ex;
+  }
+
+  #endregion
+
+  #region Properties
+
+  public Exception Exception => vException;
+
+  #endregion
 }

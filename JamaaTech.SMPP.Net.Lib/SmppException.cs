@@ -16,38 +16,51 @@
 
 using System;
 
-namespace JamaaTech.Smpp.Net.Lib
+namespace JamaaTech.Smpp.Net.Lib;
+
+public class SmppException : Exception
 {
-    public class SmppException : Exception
-    {
-        #region Variables
-        private SmppErrorCode vErrorCode;
-        #endregion
+  #region Variables
 
-        #region Constructors
-        public SmppException(SmppErrorCode errorCode)
-            : base() { vErrorCode = errorCode; }
+  private SmppErrorCode vErrorCode;
 
-        public SmppException(SmppErrorCode errorCode, string message)
-            : base(message) { vErrorCode = errorCode; }
+  #endregion
 
-        public SmppException(SmppErrorCode errorCode, string message, Exception innerException)
-            : base(message, innerException) { vErrorCode = errorCode; }
-        #endregion
+  #region Constructors
 
-        #region Properties
-        public SmppErrorCode ErrorCode
-        {
-            get { return vErrorCode; }
-        }
-        #endregion
+  public SmppException(SmppErrorCode errorCode)
+    : base()
+  {
+    vErrorCode = errorCode;
+  }
 
-        #region Methods
-        internal static void WrapAndThrow(Exception exception)
-        {
-            SmppException smppEx = new SmppException(SmppErrorCode.ESME_RUNKNOWNERR, exception.Message, exception);
-            throw smppEx;
-        }
-        #endregion
-    }
+  public SmppException(SmppErrorCode errorCode, string message)
+    : base(message)
+  {
+    vErrorCode = errorCode;
+  }
+
+  public SmppException(SmppErrorCode errorCode, string message, Exception innerException)
+    : base(message, innerException)
+  {
+    vErrorCode = errorCode;
+  }
+
+  #endregion
+
+  #region Properties
+
+  public SmppErrorCode ErrorCode => vErrorCode;
+
+  #endregion
+
+  #region Methods
+
+  internal static void WrapAndThrow(Exception exception)
+  {
+    var smppEx = new SmppException(SmppErrorCode.ESME_RUNKNOWNERR, exception.Message, exception);
+    throw smppEx;
+  }
+
+  #endregion
 }

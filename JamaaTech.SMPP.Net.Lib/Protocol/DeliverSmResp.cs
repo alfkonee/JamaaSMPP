@@ -16,47 +16,49 @@
 
 using JamaaTech.Smpp.Net.Lib.Util;
 
-namespace JamaaTech.Smpp.Net.Lib.Protocol
+namespace JamaaTech.Smpp.Net.Lib.Protocol;
+
+public sealed class DeliverSmResp : ResponsePDU
 {
-    public sealed class DeliverSmResp : ResponsePDU
-    {
-        #region Constructors
-        internal DeliverSmResp(PDUHeader header, SmppEncodingService smppEncodingService)
-            : base(header, smppEncodingService) { }
-        #endregion
+  #region Constructors
 
-        #region Properties
-        public override SmppEntityType AllowedSource
-        {
-            get { return SmppEntityType.ESME; }
-        }
+  internal DeliverSmResp(PDUHeader header, SmppEncodingService smppEncodingService)
+    : base(header, smppEncodingService)
+  {
+  }
 
-        public override SmppSessionState AllowedSession
-        {
-            get { return SmppSessionState.Receiver; }
-        }
-        #endregion
+  #endregion
 
-        #region Methods
-        protected override byte[] GetBodyData()
-        {
-            //deliver_sm_resp has unused param 'message_id'
-            //It must always be set to null
-            return EncodeCString(null, vSmppEncodingService);
-        }
+  #region Properties
 
-        protected override void Parse(ByteBuffer buffer)
-        {
-            //deliver_sm_resp must contain one unused parameter 'message_id'
-            //thus, at least 1 byte is required for this pdu
-            if (buffer.Length < 1) { throw new NotEnoughBytesException("deliver_sm_resp requires at least 1 byte for body data"); }
-            //unfortunately we don't have storage variable for this parameter
-            /*vMessageID = */ DecodeCString(buffer, vSmppEncodingService);
-            //Since this pdu has no optional parameters,
-            //If there is still something in the buffer,
-            //we then have more than enough
-            if (buffer.Length > 0) { throw new TooManyBytesException(); }
-        }
-        #endregion
-    }
+  public override SmppEntityType AllowedSource => SmppEntityType.ESME;
+
+  public override SmppSessionState AllowedSession => SmppSessionState.Receiver;
+
+  #endregion
+
+  #region Methods
+
+  protected override byte[] GetBodyData()
+  {
+    //deliver_sm_resp has unused param 'message_id'
+    //It must always be set to null
+    return EncodeCString(null, vSmppEncodingService);
+  }
+
+  protected override void Parse(ByteBuffer buffer)
+  {
+    //deliver_sm_resp must contain one unused parameter 'message_id'
+    //thus, at least 1 byte is required for this pdu
+    if (buffer.Length < 1) throw new NotEnoughBytesException("deliver_sm_resp requires at least 1 byte for body data");
+    //unfortunately we don't have storage variable for this parameter
+    /*vMessageID = */
+    DecodeCString(buffer, vSmppEncodingService);
+    //Since this pdu has no optional parameters,
+    //If there is still something in the buffer,
+    //we then have more than enough
+    if (buffer.Length > 0) throw new TooManyBytesException();
+  }
+
+  #endregion
 }

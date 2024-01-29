@@ -17,60 +17,61 @@
 using System;
 using JamaaTech.Smpp.Net.Lib.Util;
 
-namespace JamaaTech.Smpp.Net.Lib.Protocol
+namespace JamaaTech.Smpp.Net.Lib.Protocol;
+
+public sealed class SubmitSmResp : ResponsePDU
 {
-    public sealed class SubmitSmResp : ResponsePDU
-    {
-        #region Variables
-        private string vMessageID;
-        #endregion
+  #region Variables
 
-        #region Constructors
-        internal SubmitSmResp(PDUHeader header, SmppEncodingService smppEncodingService)
-            : base(header, smppEncodingService)
-        {
-            vMessageID = "";
-        }
-        #endregion
+  private string vMessageID;
 
-        #region properties
-        public override SmppEntityType AllowedSource
-        {
-            get { return SmppEntityType.SMSC; }
-        }
+  #endregion
 
-        public override SmppSessionState AllowedSession
-        {
-            get { return SmppSessionState.Transmitter; }
-        }
+  #region Constructors
 
-        public string MessageID
-        {
-            get { return vMessageID; }
-            set { vMessageID = value; }
-        }
-        #endregion
+  internal SubmitSmResp(PDUHeader header, SmppEncodingService smppEncodingService)
+    : base(header, smppEncodingService)
+  {
+    vMessageID = "";
+  }
 
-        #region Methods
-        protected override byte[] GetBodyData()
-        {
-            return EncodeCString(vMessageID, vSmppEncodingService);
-        }
+  #endregion
 
-        protected override void Parse(ByteBuffer buffer)
-        {
-            if (buffer == null) { throw new ArgumentNullException("buffer"); }
-            //Note that the body part may have not been returned by
-            //the SMSC if the command status is not 0
-            if (buffer.Length == 0) { return; }
-            if(string.IsNullOrEmpty(vMessageID))
-                vMessageID = DecodeCString(buffer, vSmppEncodingService);
-            else
-                vMessageID+=$":{DecodeCString(buffer, vSmppEncodingService)}";
-            //This pdu has no optional parameters,
-            //after preceding statements, the buffer must remain with no data
-            if (buffer.Length > 0) { throw new TooManyBytesException(); }
-        }
-        #endregion
-    }
+  #region properties
+
+  public override SmppEntityType AllowedSource => SmppEntityType.SMSC;
+
+  public override SmppSessionState AllowedSession => SmppSessionState.Transmitter;
+
+  public string MessageID
+  {
+    get => vMessageID;
+    set => vMessageID = value;
+  }
+
+  #endregion
+
+  #region Methods
+
+  protected override byte[] GetBodyData()
+  {
+    return EncodeCString(vMessageID, vSmppEncodingService);
+  }
+
+  protected override void Parse(ByteBuffer buffer)
+  {
+    if (buffer == null) throw new ArgumentNullException("buffer");
+    //Note that the body part may have not been returned by
+    //the SMSC if the command status is not 0
+    if (buffer.Length == 0) return;
+    if (string.IsNullOrEmpty(vMessageID))
+      vMessageID = DecodeCString(buffer, vSmppEncodingService);
+    else
+      vMessageID += $":{DecodeCString(buffer, vSmppEncodingService)}";
+    //This pdu has no optional parameters,
+    //after preceding statements, the buffer must remain with no data
+    if (buffer.Length > 0) throw new TooManyBytesException();
+  }
+
+  #endregion
 }
