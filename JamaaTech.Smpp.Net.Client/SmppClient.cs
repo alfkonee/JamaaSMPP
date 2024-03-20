@@ -177,12 +177,14 @@ public class SmppClient : IDisposable
 
   #region Interface Methods
 
+  public virtual void SendMessage(ShortMessage message, int timeOut) =>
+    SendMessage(message, timeOut, TypeOfNumber.Unknown, NumberingPlanIndicator.Unknown);
   /// <summary>
   /// Sends message to a remote SMPP server
   /// </summary>
   /// <param name="message">A message to send</param>
   /// <param name="timeOut">A value in miliseconds after which the send operation times out</param>
-  public virtual void SendMessage(ShortMessage message, int timeOut)
+  public virtual void SendMessage(ShortMessage message, int timeOut, TypeOfNumber destinationTON = TypeOfNumber.Unknown, NumberingPlanIndicator destinationNPI = NumberingPlanIndicator.Unknown )
   {
     if (message == null) throw new ArgumentNullException("message");
 
@@ -193,7 +195,7 @@ public class SmppClient : IDisposable
 
     var srcAddress = new SmppAddress(_vProperties.AddressTon, _vProperties.AddressNpi,
       string.IsNullOrWhiteSpace(message.SourceAddress) ? Properties.SourceAddress : message.SourceAddress);
-    var destAddress = new SmppAddress() { Address = message.DestinationAddress };
+    var destAddress = new SmppAddress() { Address = message.DestinationAddress, Ton = destinationTON, Npi = destinationNPI};
     var messagePdUs = message.GetMessagePDUs(_vProperties.DefaultEncoding, _vSmppEncodingService, destAddress,
       srcAddress);
     foreach (var pdu in messagePdUs)
