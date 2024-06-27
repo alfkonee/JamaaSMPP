@@ -19,137 +19,136 @@ using JamaaTech.Smpp.Net.Lib.Protocol;
 
 namespace JamaaTech.Smpp.Net.Lib;
 
-[Serializable()]
+[Serializable]
 public class SessionBindInfo
 {
-  #region Variables
+    #region Variables
 
-  private string vHost;
-  private int vPort;
-  private string vSystemID;
-  private string vPassword;
-  private string vSystemType;
-  private InterfaceVersion vInterfaceVersion;
-  private bool vAllowReceive;
-  private bool vAllowTransmit;
-  private TypeOfNumber vAddressTon;
-  private NumberingPlanIndicator vAddressNpi;
+    private string vHost;
+    private int vPort;
+    private string vSystemID;
+    private string vPassword;
+    private string vSystemType;
+    private InterfaceVersion vInterfaceVersion;
+    private bool vAllowReceive;
+    private bool vAllowTransmit;
+    private TypeOfNumber vAddressTon;
+    private NumberingPlanIndicator vAddressNpi;
 
-  #endregion
+    #endregion
 
-  #region Constructors
+    #region Constructors
 
-  public SessionBindInfo()
-  {
-    vHost = "";
-    vSystemID = "";
-    vPassword = "";
-    vSystemType = "";
-    vInterfaceVersion = InterfaceVersion.v34;
-    vAllowReceive = true;
-    vAllowTransmit = true;
-    vAddressTon = TypeOfNumber.International;
-    vAddressNpi = NumberingPlanIndicator.ISDN;
-  }
+    public SessionBindInfo()
+    {
+        vHost = "";
+        vSystemID = "";
+        vPassword = "";
+        vSystemType = "";
+        vInterfaceVersion = InterfaceVersion.v34;
+        vAllowReceive = true;
+        vAllowTransmit = true;
+        vAddressTon = TypeOfNumber.International;
+        vAddressNpi = NumberingPlanIndicator.ISDN;
+    }
 
-  public SessionBindInfo(string systemId, string password)
-    : this()
-  {
-    vSystemID = systemId;
-    vPassword = password;
-  }
+    public SessionBindInfo(string systemId, string password)
+        : this()
+    {
+        vSystemID = systemId;
+        vPassword = password;
+    }
 
-  #endregion
+    #endregion
 
-  #region Properties
+    #region Properties
 
-  public string ServerName
-  {
-    get => vHost;
-    set => vHost = value;
-  }
+    public string ServerName
+    {
+        get => vHost;
+        set => vHost = value;
+    }
 
-  public int Port
-  {
-    get => vPort;
-    set => vPort = value;
-  }
+    public int Port
+    {
+        get => vPort;
+        set => vPort = value;
+    }
 
-  public InterfaceVersion InterfaceVersion
-  {
-    get => vInterfaceVersion;
-    set => vInterfaceVersion = value;
-  }
+    public InterfaceVersion InterfaceVersion
+    {
+        get => vInterfaceVersion;
+        set => vInterfaceVersion = value;
+    }
 
-  public string SystemID
-  {
-    get => vSystemID;
-    set => vSystemID = value;
-  }
+    public string SystemID
+    {
+        get => vSystemID;
+        set => vSystemID = value;
+    }
 
-  public string Password
-  {
-    get => vPassword;
-    set => vPassword = value;
-  }
+    public string Password
+    {
+        get => vPassword;
+        set => vPassword = value;
+    }
 
-  public string SystemType
-  {
-    get => vSystemType;
-    set => vSystemType = value;
-  }
+    public string SystemType
+    {
+        get => vSystemType;
+        set => vSystemType = value;
+    }
 
-  public NumberingPlanIndicator AddressNpi
-  {
-    get => vAddressNpi;
-    set => vAddressNpi = value;
-  }
+    public NumberingPlanIndicator AddressNpi
+    {
+        get => vAddressNpi;
+        set => vAddressNpi = value;
+    }
 
-  public TypeOfNumber AddressTon
-  {
-    get => vAddressTon;
-    set => vAddressTon = value;
-  }
+    public TypeOfNumber AddressTon
+    {
+        get => vAddressTon;
+        set => vAddressTon = value;
+    }
 
-  public bool AllowReceive
-  {
-    get => vAllowReceive;
-    set => vAllowReceive = value;
-  }
+    public bool AllowReceive
+    {
+        get => vAllowReceive;
+        set => vAllowReceive = value;
+    }
 
-  public bool AllowTransmit
-  {
-    get => vAllowTransmit;
-    set => vAllowTransmit = value;
-  }
+    public bool AllowTransmit
+    {
+        get => vAllowTransmit;
+        set => vAllowTransmit = value;
+    }
 
-  #endregion
+    #endregion
 
-  #region Methods
+    #region Methods
 
-  internal BindRequest CreatePdu(SmppEncodingService smppEncodingService)
-  {
-    var req = CreateBindBdu(smppEncodingService);
-    req.AddressNpi = vAddressNpi;
-    req.AddressTon = vAddressTon;
-    req.SystemID = vSystemID;
-    req.Password = vPassword;
-    req.SystemType = vSystemType;
-    req.InterfaceVersion = vInterfaceVersion == InterfaceVersion.v33 ? (byte)0x33 : (byte)0x34;
-    return req;
-  }
+    internal BindRequest CreatePdu(SmppEncodingService smppEncodingService)
+    {
+        var req = CreateBindBdu(smppEncodingService);
+        req.AddressNpi = vAddressNpi;
+        req.AddressTon = vAddressTon;
+        req.SystemID = vSystemID;
+        req.Password = vPassword;
+        req.SystemType = vSystemType;
+        req.InterfaceVersion = vInterfaceVersion == InterfaceVersion.v33 ? (byte)0x33 : (byte)0x34;
+        return req;
+    }
 
-  private BindRequest CreateBindBdu(SmppEncodingService smppEncodingService)
-  {
-    if (vAllowReceive && vAllowTransmit)
-      return new BindTransceiver(smppEncodingService);
-    else if (vAllowTransmit)
-      return new BindTransmitter(smppEncodingService);
-    else if (vAllowReceive)
-      return new BindReceiver(smppEncodingService);
-    else
-      throw new InvalidOperationException("Both AllowTransmit and AllowReceive cannot be set to false");
-  }
+    private BindRequest CreateBindBdu(SmppEncodingService smppEncodingService)
+    {
+        if (vAllowReceive && vAllowTransmit)
+            return new BindTransceiver(smppEncodingService);
+        if (vAllowTransmit)
+            return new BindTransmitter(smppEncodingService);
+        if (vAllowReceive)
+            return new BindReceiver(smppEncodingService);
+        throw new InvalidOperationException("Both AllowTransmit and AllowReceive cannot be set to false");
+    }
 
-  #endregion
+    #endregion
 }

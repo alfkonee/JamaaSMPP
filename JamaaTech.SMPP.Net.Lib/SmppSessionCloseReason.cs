@@ -16,11 +16,11 @@
 
 namespace JamaaTech.Smpp.Net.Lib;
 
-public enum SmppSessionCloseReason : int
+public enum SmppSessionCloseReason
 {
-  EndSessionCalled = 1,
-  UnbindRequested = 2,
-  TcpIpSessionClosed = 3,
-  TcpIpSessionError = 4,
-  EnquireLinkTimeout = 5
+    EndSessionCalled = 1,
+    UnbindRequested = 2,
+    TcpIpSessionClosed = 3,
+    TcpIpSessionError = 4,
+    EnquireLinkTimeout = 5
 }

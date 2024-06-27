@@ -21,110 +21,98 @@ namespace JamaaTech.Smpp.Net.Lib;
 
 public class Udh
 {
-  #region Variables
+    #region Variables
 
-  private int vSegmentId;
-  private int vMessageCount;
-  private int vMessageSequence;
+    private static object vSyncRoot;
 
-  private static object vSyncRoot;
+    #endregion
 
-  #endregion
+    #region Constructors
 
-  #region Constructors
-
-  static Udh()
-  {
-    vSyncRoot = new object();
-  }
-
-  public Udh(int segmentId, int messageCount, int messageSequence)
-  {
-    vSegmentId = segmentId;
-    vMessageCount = messageCount;
-    vMessageSequence = messageSequence;
-  }
-
-  public Udh(int segmentid, int messageCount)
-  {
-    vSegmentId = segmentid;
-    vMessageCount = messageCount;
-  }
-
-  #endregion
-
-  #region Properties
-
-  public int SegmentID => vSegmentId;
-
-  public int MessageCount
-  {
-    get => vMessageCount;
-    set => vMessageCount = value;
-  }
-
-  public int MessageSequence
-  {
-    get => vMessageSequence;
-    set => vMessageSequence = value;
-  }
-
-  #endregion
-
-  #region Methods
-
-  public static Udh Parse(ByteBuffer buffer, SmppEncodingService smppEncodingService)
-  {
-    if (buffer == null) throw new ArgumentNullException("buffer");
-    //There must be at least 3 bytes for UDHL, IEI, IEDL
-    if (buffer.Length < 3) throw new SmppException(SmppErrorCode.ESME_RUNKNOWNERR, "Invalid UDH field");
-    int length = buffer.Remove(); //UDH Length
-    int iei = buffer.Remove(); //Information element identifier
-    int ieidl = buffer.Remove(); //Information element identifier data length
-    /*
-     * This udh implementation supports only concatenated messages with
-     * 8 bits (IEI = 0) and 16 bits (IEI = 8) reference number.
-     * Therefore, the expected number of bytes indicated by the UDHL field
-     * should be either 5 or 6 octects, otherwise the udh is unsupported.
-     */
-    var segId = 0;
-    var count = 0;
-    var seq = 0;
-    //--
-    //Confirm that we have enough bytes as indicated by the UDHL
-    if (buffer.Length < ieidl) throw new SmppException(SmppErrorCode.ESME_RUNKNOWNERR, "Invalid UDH field");
-    if (length == 5 && iei == 0 && ieidl == 3) //8 bits message reference
+    static Udh()
     {
-      segId = buffer.Remove();
-      count = buffer.Remove();
-      seq = buffer.Remove();
-    }
-    else if (length == 6 && iei == 8 && ieidl == 4) //16 bits message reference
-    {
-      segId = smppEncodingService.GetShortFromBytes(buffer.Remove(2));
-      count = buffer.Remove();
-      seq = buffer.Remove();
-    }
-    else
-    {
-      throw new SmppException(SmppErrorCode.ESME_RUNKNOWNERR, "Invalid or unsupported UDH field");
+        vSyncRoot = new object();
     }
 
-    var udh = new Udh(segId, count, seq);
-    return udh;
-  }
+    public Udh(int segmentId, int messageCount, int messageSequence)
+    {
+        SegmentID = segmentId;
+        MessageCount = messageCount;
+        MessageSequence = messageSequence;
+    }
 
-  public byte[] GetBytes()
-  {
-    var buffer = new ByteBuffer(5);
-    buffer.Append(0x05); //User 8 bits reference number
-    buffer.Append(0x00); //IEI = 0 concatenated message
-    buffer.Append(0x03); //Three bytes follow
-    buffer.Append((byte)vSegmentId);
-    buffer.Append((byte)vMessageCount);
-    buffer.Append((byte)vMessageSequence);
-    return buffer.ToBytes();
-  }
+    public Udh(int segmentid, int messageCount)
+    {
+        SegmentID = segmentid;
+        MessageCount = messageCount;
+    }
 
-  #endregion
+    #endregion
+
+    #region Properties
+
+    public int SegmentID { get; }
+
+    public int MessageCount { get; set; }
+
+    public int MessageSequence { get; set; }
+
+    #endregion
+
+    #region Methods
+
+    public static Udh Parse(ByteBuffer buffer, SmppEncodingService smppEncodingService)
+    {
+        if (buffer == null) throw new ArgumentNullException("buffer");
+        //There must be at least 3 bytes for UDHL, IEI, IEDL
+        if (buffer.Length < 3) throw new SmppException(SmppErrorCode.ESME_RUNKNOWNERR, "Invalid UDH field");
+        int length = buffer.Remove(); //UDH Length
+        int iei = buffer.Remove(); //Information element identifier
+        int ieidl = buffer.Remove(); //Information element identifier data length
+        /*
+         * This udh implementation supports only concatenated messages with
+         * 8 bits (IEI = 0) and 16 bits (IEI = 8) reference number.
+         * Therefore, the expected number of bytes indicated by the UDHL field
+         * should be either 5 or 6 octects, otherwise the udh is unsupported.
+         */
+        var segId = 0;
+        var count = 0;
+        var seq = 0;
+        //--
+        //Confirm that we have enough bytes as indicated by the UDHL
+        if (buffer.Length < ieidl) throw new SmppException(SmppErrorCode.ESME_RUNKNOWNERR, "Invalid UDH field");
+        if (length == 5 && iei == 0 && ieidl == 3) //8 bits message reference
+        {
+            segId = buffer.Remove();
+            count = buffer.Remove();
+            seq = buffer.Remove();
+        }
+        else if (length == 6 && iei == 8 && ieidl == 4) //16 bits message reference
+        {
+            segId = smppEncodingService.GetShortFromBytes(buffer.Remove(2));
+            count = buffer.Remove();
+            seq = buffer.Remove();
+        }
+        else
+        {
+            throw new SmppException(SmppErrorCode.ESME_RUNKNOWNERR, "Invalid or unsupported UDH field");
+        }
+
+        var udh = new Udh(segId, count, seq);
+        return udh;
+    }
+
+    public byte[] GetBytes()
+    {
+        var buffer = new ByteBuffer(5);
+        buffer.Append(0x05); //User 8 bits reference number
+        buffer.Append(0x00); //IEI = 0 concatenated message
+        buffer.Append(0x03); //Three bytes follow
+        buffer.Append((byte)SegmentID);
+        buffer.Append((byte)MessageCount);
+        buffer.Append((byte)MessageSequence);
+        return buffer.ToBytes();
+    }
+
+    #endregion
 }

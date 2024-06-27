@@ -21,41 +21,36 @@ namespace JamaaTech.Smpp.Net.Lib;
 
 public class PDUErrorEventArgs : EventArgs
 {
-  #region Variable
+    #region Variable
 
-  private PDUException vException;
-  private byte[] vByteDump;
-  private PDUHeader vHeader;
-  private PDU vPdu;
+    #endregion
 
-  #endregion
+    #region Constructors
 
-  #region Constructors
+    public PDUErrorEventArgs(PDUException exception, byte[] byteDump, PDUHeader header)
+    {
+        Exception = exception;
+        ByteDump = byteDump;
+        Header = header;
+    }
 
-  public PDUErrorEventArgs(PDUException exception, byte[] byteDump, PDUHeader header)
-  {
-    vException = exception;
-    vByteDump = byteDump;
-    vHeader = header;
-  }
+    public PDUErrorEventArgs(PDUException exception, byte[] byteDump, PDUHeader header, PDU pdu)
+        : this(exception, byteDump, header)
+    {
+        Pdu = pdu;
+    }
 
-  public PDUErrorEventArgs(PDUException exception, byte[] byteDump, PDUHeader header, PDU pdu)
-    : this(exception, byteDump, header)
-  {
-    vPdu = pdu;
-  }
+    #endregion
 
-  #endregion
+    #region Properties
 
-  #region Properties
+    public PDUException Exception { get; }
 
-  public PDUException Exception => vException;
+    public byte[] ByteDump { get; }
 
-  public byte[] ByteDump => vByteDump;
+    public PDUHeader Header { get; }
 
-  public PDUHeader Header => vHeader;
+    public PDU Pdu { get; }
 
-  public PDU Pdu => vPdu;
-
-  #endregion
+    #endregion
 }

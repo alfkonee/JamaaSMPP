@@ -20,47 +20,44 @@ namespace JamaaTech.Smpp.Net.Lib;
 
 public class SmppException : Exception
 {
-  #region Variables
+    #region Variables
 
-  private SmppErrorCode vErrorCode;
+    #endregion
 
-  #endregion
+    #region Properties
 
-  #region Constructors
+    public SmppErrorCode ErrorCode { get; }
 
-  public SmppException(SmppErrorCode errorCode)
-    : base()
-  {
-    vErrorCode = errorCode;
-  }
+    #endregion
 
-  public SmppException(SmppErrorCode errorCode, string message)
-    : base(message)
-  {
-    vErrorCode = errorCode;
-  }
+    #region Methods
 
-  public SmppException(SmppErrorCode errorCode, string message, Exception innerException)
-    : base(message, innerException)
-  {
-    vErrorCode = errorCode;
-  }
+    internal static void WrapAndThrow(Exception exception)
+    {
+        var smppEx = new SmppException(SmppErrorCode.ESME_RUNKNOWNERR, exception.Message, exception);
+        throw smppEx;
+    }
 
-  #endregion
+    #endregion
 
-  #region Properties
+    #region Constructors
 
-  public SmppErrorCode ErrorCode => vErrorCode;
+    public SmppException(SmppErrorCode errorCode)
+    {
+        ErrorCode = errorCode;
+    }
 
-  #endregion
+    public SmppException(SmppErrorCode errorCode, string message)
+        : base(message)
+    {
+        ErrorCode = errorCode;
+    }
 
-  #region Methods
+    public SmppException(SmppErrorCode errorCode, string message, Exception innerException)
+        : base(message, innerException)
+    {
+        ErrorCode = errorCode;
+    }
 
-  internal static void WrapAndThrow(Exception exception)
-  {
-    var smppEx = new SmppException(SmppErrorCode.ESME_RUNKNOWNERR, exception.Message, exception);
-    throw smppEx;
-  }
-
-  #endregion
+    #endregion
 }
