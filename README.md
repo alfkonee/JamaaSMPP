@@ -15,6 +15,12 @@ This is created based on  https://jamaasmpp.codeplex.com/
 - Read User Guide [http://www.seleniumsoftware.com/user-guide.htm](http://www.seleniumsoftware.com/user-guide.htm)
 
 # What's new?
+### v1.10.0
+
+- Improve SmppClient to respect AddressNPI and AddressTON for Source Addresses
+- (fix) Fallback Source to Config Value
+- Bump .Net Versions
+
 ### v1.9.1
 
 - Modified: allow some methods to be overridden in `SmppClient`
