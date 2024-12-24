@@ -15,6 +15,10 @@ This is created based on  https://jamaasmpp.codeplex.com/
 - Read User Guide [http://www.seleniumsoftware.com/user-guide.htm](http://www.seleniumsoftware.com/user-guide.htm)
 
 # What's new?
+### v1.11.0
+
+- Added MultiPartTextMessage
+
 ### v1.10.0
 
 - Improve SmppClient to respect AddressNPI and AddressTON for Source Addresses

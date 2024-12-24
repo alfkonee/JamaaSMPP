@@ -1,7 +1,7 @@
 <Project>
   <PropertyGroup>
     <LangVersion>latest</LangVersion>
-    <Version>1.10.0</Version>
+    <Version>1.11.0</Version>
     <NoWarn>$(NoWarn);CS1591</NoWarn>
     <PackageProjectUrl>https://github.com/AdhamAwadhi/JamaaSMPP/</PackageProjectUrl>
     <RepositoryType>git</RepositoryType>
@@ -24,11 +24,9 @@
     <AssemblyVersion>$(Version)</AssemblyVersion>
     <FileVersion>$(Version)</FileVersion>
     <PackageReleaseNotes>
-		v1.10.0
+		v1.11.0
 
-		- Improve SmppClient to respect AddressNPI and AddressTON for Source Addresses
-		- (fix) Fallback Source to Config Value
-		- Bump .Net Versions
+		- Added MultiPartTextMessage
 	</PackageReleaseNotes>
   </PropertyGroup>
 
