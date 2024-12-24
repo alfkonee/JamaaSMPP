@@ -28,6 +28,10 @@ namespace JamaaTech.Smpp.Net.Lib.Protocol
         {
             get { return true; }
         }
+        public virtual bool EmptyResponse
+        {
+            get { return false; }
+        }
         #endregion
 
         #region Methods

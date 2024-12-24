@@ -50,6 +50,11 @@ namespace JamaaTech.Smpp.Net.Lib
         #endregion
 
         #region Properties
+        public bool IsLast
+        {
+            get { return MessageSequence == MessageCount; }
+        }
+
         public int SegmentID
         {
             get { return vSegmentId; }

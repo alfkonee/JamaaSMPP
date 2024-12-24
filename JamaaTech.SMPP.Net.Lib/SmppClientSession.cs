@@ -175,6 +175,7 @@ namespace JamaaTech.Smpp.Net.Lib
                     throw;
                 }
             }
+            else if (pdu.EmptyResponse) { return pdu.GenericNack(SmppErrorCode.ESME_ROK); }
             else { return null; }
         }
 
@@ -189,7 +190,7 @@ namespace JamaaTech.Smpp.Net.Lib
                 ByteBuffer buffer = new ByteBuffer(pdu.GetBytes());
                 _Log.ErrorFormat("200022:PDU send operation failed - {0}", ex, buffer.DumpString());
                 if (vTraceSwitch.TraceInfo)
-                {                    
+                {
                     Trace.WriteLine(string.Format(
                         "200022:PDU send operation failed - {0} {1};",
                         buffer.DumpString(), ex.Message));
