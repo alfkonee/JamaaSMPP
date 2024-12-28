@@ -207,14 +207,17 @@ namespace JamaaTech.Smpp.Net.Lib.Networking
 
         private void RaiseSessionClosedEvent(SessionCloseReason reason, Exception ex)
         {
+            // SEE_ISSUE: Issue #34 https://github.com/AdhamAwadhi/JamaaSMPP/issues/34 
             if (SessionClosed == null) { return; }
-            foreach (EventHandler<TcpIpSessionClosedEventArgs> del in SessionClosed.GetInvocationList())
+            var delegates = SessionClosed.GetInvocationList();
+            foreach (EventHandler<TcpIpSessionClosedEventArgs> del in delegates)
             {
+                if (del == null) continue;
 #if NET40
-                SessionClosed.BeginInvoke(this, new TcpIpSessionClosedEventArgs(reason, ex),
+                del.BeginInvoke(this, new TcpIpSessionClosedEventArgs(reason, ex),
                     AsyncCallBackRaiseSessionClosedEvent, del);
 #else
-                System.Threading.Tasks.Task.Run(() => SessionClosed.Invoke(this, new TcpIpSessionClosedEventArgs(reason, ex)));
+                System.Threading.Tasks.Task.Run(() => del.Invoke(this, new TcpIpSessionClosedEventArgs(reason, ex)));
 #endif
             }
         }
@@ -276,7 +279,7 @@ namespace JamaaTech.Smpp.Net.Lib.Networking
         public int Receive(byte[] buffer, int start, int length)
         {
             CheckSession();
-            try 
+            try
             {
                 int received = vSocket.Receive(buffer, start, length, SocketFlags.None);
                 //If underlying socket returns zero bytes, close this session
@@ -348,7 +351,7 @@ namespace JamaaTech.Smpp.Net.Lib.Networking
         public static TcpIpSession OpenClientSession(IPAddress[] addresses, int port)
         {
             Socket socket = CreateClientSocket(); //Creates a socket to be used for client connection
-            try { socket.Connect(addresses,port); }
+            try { socket.Connect(addresses, port); }
             catch (SocketException ex) { HandleConnectionException(ex); }
             TcpIpSession session = new TcpIpSession(socket, SessionType.Client);
             session.vProperties = new TcpIpSessionProperties(socket);
