@@ -1,17 +1,19 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
-    <Import Project="..\common.props"/>
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>disable</Nullable>
+    <RootNamespace>JamaaTech.Smpp.Net.Lib</RootNamespace>
+    <AssemblyName>JamaaTech.Smpp.Net.Lib</AssemblyName>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\Jamaa Smpp Client.snk</AssemblyOriginatorKeyFile>
+    <GenerateAssemblyInfo>true</GenerateAssemblyInfo> 
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
 
-    <PropertyGroup>
-        <TargetFramework>netstandard2.0</TargetFramework>
-        <AssemblyName>JamaaTech.Smpp.Net.Lib</AssemblyName>
-    </PropertyGroup>
-
-    <ItemGroup>
-        <PackageReference Update="MinVer" Version="6.0.0">
-            <PrivateAssets>all</PrivateAssets>
-            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
-    </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Common.Logging" Version="3.4.1" />
+  </ItemGroup>
 
 </Project>

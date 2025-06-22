@@ -28,6 +28,12 @@ public sealed class QuerySm : SmOperationPDU
   {
   }
 
+  public QuerySm(SmppEncodingService  smppEncodingService, SmppAddress srcAddress)
+  : this(smppEncodingService)
+  {
+    _sourceAddress = srcAddress;
+  }
+
   internal QuerySm(PDUHeader header, SmppEncodingService smppEncodingService)
     : base(header, smppEncodingService)
   {
@@ -55,7 +61,7 @@ public sealed class QuerySm : SmOperationPDU
   {
     var buffer = new ByteBuffer(16);
     buffer.Append(EncodeCString(vMessageID, vSmppEncodingService));
-    buffer.Append(vSourceAddress.GetBytes(vSmppEncodingService));
+    buffer.Append(_sourceAddress.GetBytes(vSmppEncodingService));
     return buffer.ToBytes();
   }
 
@@ -63,7 +69,7 @@ public sealed class QuerySm : SmOperationPDU
   {
     if (buffer == null) throw new ArgumentNullException("buffer");
     vMessageID = DecodeCString(buffer, vSmppEncodingService);
-    vSourceAddress = SmppAddress.Parse(buffer, vSmppEncodingService);
+    _sourceAddress = SmppAddress.Parse(buffer, vSmppEncodingService);
     //This pdu has no option parameters
     //If there is still something in the buffer,
     //we then have more than required bytes

@@ -25,10 +25,10 @@ using JamaaTech.Smpp.Net.Lib.Util;
 
 namespace JamaaTech.Smpp.Net.Client;
 
-public class SmppClient : IDisposable
+public sealed class SmppClient : IDisposable
 {
   private static readonly Common.Logging.ILog Log =
-    Common.Logging.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+    Common.Logging.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod()?.DeclaringType);
 
   #region Variables
 
@@ -177,14 +177,40 @@ public class SmppClient : IDisposable
 
   #region Interface Methods
 
-  public virtual void SendMessage(ShortMessage message, int timeOut) =>
+  public ResponsePDU QueryMessageStatus(string messageId, string sourceAddress)
+  {
+    if (string.IsNullOrEmpty(messageId)) throw new ArgumentNullException(nameof(messageId));
+    if (string.IsNullOrEmpty(sourceAddress)) throw new ArgumentNullException(nameof(sourceAddress));
+    if( _vState != SmppConnectionState.Connected)
+      throw new SmppClientException(
+        "Sending message operation failed because the SmppClient is not connected");
+    var source = new SmppAddress()
+    {
+      Address = sourceAddress,
+      Npi = _vProperties.AddressNpi,
+      Ton = _vProperties.AddressTon
+    };
+    var queryPdu = new QuerySm(_vSmppEncodingService,source)
+    {
+      MessageID = messageId
+    };
+    
+    var response = SendPdu(queryPdu, _vTrans.DefaultResponseTimeout);
+    if (response is QuerySmResp queryResp)
+    {
+      return queryResp;
+    }
+    throw new NotImplementedException("WIP");
+  }
+
+  public void SendMessage(ShortMessage message, int timeOut) =>
     SendMessage(message, timeOut, TypeOfNumber.Unknown, NumberingPlanIndicator.Unknown);
   /// <summary>
   /// Sends message to a remote SMPP server
   /// </summary>
   /// <param name="message">A message to send</param>
   /// <param name="timeOut">A value in miliseconds after which the send operation times out</param>
-  public virtual void SendMessage(ShortMessage message, int timeOut, TypeOfNumber destinationTON = TypeOfNumber.Unknown, NumberingPlanIndicator destinationNPI = NumberingPlanIndicator.Unknown )
+  public void SendMessage(ShortMessage message, int timeOut, TypeOfNumber destinationTON = TypeOfNumber.Unknown, NumberingPlanIndicator destinationNPI = NumberingPlanIndicator.Unknown )
   {
     if (message == null) throw new ArgumentNullException("message");
 
@@ -227,19 +253,19 @@ public class SmppClient : IDisposable
   /// <param name="pdu"><see cref="RequestPDU"/></param>
   /// <param name="timeout">A value in miliseconds after which the send operation times out</param>
   /// <returns><see cref="ResponsePDU"/></returns>
-  protected virtual ResponsePDU SendPdu(RequestPDU pdu, int timeout)
+  private ResponsePDU SendPdu(RequestPDU pdu, int timeout)
   {
     var resp = _vTrans.SendPdu(pdu, timeout);
     if (resp.Header.ErrorCode != SmppErrorCode.ESME_ROK) throw new SmppException(resp.Header.ErrorCode);
 
     return resp;
   }
-
+  
   /// <summary>
   /// Sends message to a remote SMPP server
   /// </summary>
   /// <param name="message">A message to send</param>
-  public virtual void SendMessage(ShortMessage message)
+  public void SendMessage(ShortMessage message)
   {
     SendMessage(message, _vTrans.DefaultResponseTimeout);
   }
@@ -252,7 +278,7 @@ public class SmppClient : IDisposable
   /// <param name="callback">An <see cref="AsyncCallback"/> delegate</param>
   /// <param name="state">An object that contains state information for this request</param>
   /// <returns>An <see cref="IAsyncResult"/> that references the asynchronous send message operation</returns>
-  public virtual IAsyncResult BeginSendMessage(ShortMessage message, int timeout, AsyncCallback callback,
+  public IAsyncResult BeginSendMessage(ShortMessage message, int timeout, AsyncCallback callback,
     object state)
   {
 #if NET40
@@ -270,7 +296,7 @@ public class SmppClient : IDisposable
   /// <param name="callback">An <see cref="AsyncCallback"/> delegate</param>
   /// <param name="state">An object that contains state information for this request</param>
   /// <returns>An <see cref="IAsyncResult"/> that references the asynchronous send message operation</returns>
-  public virtual IAsyncResult BeginSendMessage(ShortMessage message, AsyncCallback callback, object state)
+  public IAsyncResult BeginSendMessage(ShortMessage message, AsyncCallback callback, object state)
   {
     var timeout = 0;
     timeout = _vTrans.DefaultResponseTimeout;
@@ -281,7 +307,7 @@ public class SmppClient : IDisposable
   /// Ends a pending asynchronous send message operation
   /// </summary>
   /// <param name="result">An <see cref="IAsyncResult"/> that stores state information for this asynchronous operation</param>
-  public virtual void EndSendMessage(IAsyncResult result)
+  public void EndSendMessage(IAsyncResult result)
   {
     _vSendMessageCallBack.EndInvoke(result);
   }
@@ -289,7 +315,7 @@ public class SmppClient : IDisposable
   /// <summary>
   /// Starts <see cref="SmppClient"/> and immediately connects to a remote SMPP server
   /// </summary>
-  public virtual void Start()
+  public void Start()
   {
     _vStarted = true;
     _vTimer.Change(0, _vAutoReconnectDelay);
@@ -300,7 +326,7 @@ public class SmppClient : IDisposable
   /// Starts <see cref="SmppClient"/> and waits for a specified amount of time before establishing connection
   /// </summary>
   /// <param name="connectDelay">A value in miliseconds to wait before establishing connection</param>
-  public virtual void Start(int connectDelay)
+  public void Start(int connectDelay)
   {
     if (connectDelay < 0) connectDelay = 0;
 
@@ -312,7 +338,7 @@ public class SmppClient : IDisposable
   /// <summary>
   /// Immediately attempts to reestablish a lost connection without waiting for <see cref="SmppClient"/> to automatically reconnect
   /// </summary>
-  public virtual void ForceConnect()
+  public void ForceConnect()
   {
     Open(_vTimeOut);
   }
@@ -321,7 +347,7 @@ public class SmppClient : IDisposable
   /// Immediately attempts to reestablish a lost connection without waiting for <see cref="SmppClient"/> to automatically reconnect
   /// </summary>
   /// <param name="timeout">A time in miliseconds after which a connection operation times out</param>
-  public virtual void ForceConnect(int timeout)
+  public void ForceConnect(int timeout)
   {
     Open(timeout);
   }
@@ -329,7 +355,7 @@ public class SmppClient : IDisposable
   /// <summary>
   /// Shuts down <see cref="SmppClient"/>
   /// </summary>
-  public virtual void Shutdown()
+  public void Shutdown()
   {
     if (!_vStarted) return;
 
@@ -342,7 +368,7 @@ public class SmppClient : IDisposable
   /// <summary>
   /// Restarts <see cref="SmppClient"/>
   /// </summary>
-  public virtual void Restart()
+  public void Restart()
   {
     Shutdown();
     Start();
@@ -684,7 +710,7 @@ public class SmppClient : IDisposable
         Trace.WriteLine(string.Format(
           "PduReceived: message: DestinationAddress:{0}, MessageCount:{1}, ReceiptedMessageId:{2}, RegisterDeliveryNotification:{3}, SegmentID:{4}, SequenceNumber:{5}, SourceAddress:{6}, UserMessageReference:{7}",
           message.DestinationAddress, message.MessageCount, message.ReceiptedMessageId,
-          message.RegisterDeliveryNotification, message.SegmentID, message.SequenceNumber,
+          message.RegisterDeliveryNotification, message.SegmentId, message.SequenceNumber,
           message.SourceAddress, message.UserMessageReference));
     }
 
@@ -755,13 +781,13 @@ public class SmppClient : IDisposable
 
   #endregion
 
-  public virtual void Dispose()
+  public void Dispose()
   {
     Dispose(true);
     GC.SuppressFinalize(this);
   }
 
-  protected virtual void Dispose(bool disposeManagedResorces)
+  private void Dispose(bool disposeManagedResorces)
   {
     try
     {

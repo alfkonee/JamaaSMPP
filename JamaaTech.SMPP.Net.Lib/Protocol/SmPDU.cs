@@ -20,7 +20,7 @@ public abstract class SmPDU : RequestPDU
 {
   #region Variables
 
-  protected SmppAddress vSourceAddress;
+  protected SmppAddress _sourceAddress;
 
   #endregion
 
@@ -29,14 +29,14 @@ public abstract class SmPDU : RequestPDU
   internal SmPDU(PDUHeader header, SmppEncodingService smppEncodingService, SmppAddress srcAddress = null)
     : base(header, smppEncodingService)
   {
-    vSourceAddress = srcAddress ?? new SmppAddress();
+    _sourceAddress = srcAddress ?? new SmppAddress();
   }
 
   #endregion
 
   #region Properties
 
-  public SmppAddress SourceAddress => vSourceAddress;
+  public SmppAddress SourceAddress => _sourceAddress;
 
   #endregion
 }

@@ -110,7 +110,7 @@ public sealed class ReplaceSm : SmOperationPDU
   {
     var buffer = new ByteBuffer(64);
     buffer.Append(EncodeCString(vMessageID, vSmppEncodingService));
-    buffer.Append(vSourceAddress.GetBytes(vSmppEncodingService));
+    buffer.Append(_sourceAddress.GetBytes(vSmppEncodingService));
     buffer.Append(EncodeCString(vScheduleDeliveryTime, vSmppEncodingService));
     buffer.Append(EncodeCString(vValidityPeriod, vSmppEncodingService));
     buffer.Append((byte)vRegisteredDelivery);
@@ -126,7 +126,7 @@ public sealed class ReplaceSm : SmOperationPDU
   {
     if (buffer == null) throw new ArgumentNullException("buffer");
     vMessageID = DecodeCString(buffer, vSmppEncodingService);
-    vSourceAddress = SmppAddress.Parse(buffer, vSmppEncodingService);
+    _sourceAddress = SmppAddress.Parse(buffer, vSmppEncodingService);
     vScheduleDeliveryTime = DecodeCString(buffer, vSmppEncodingService);
     vValidityPeriod = DecodeCString(buffer, vSmppEncodingService);
     vRegisteredDelivery = (RegisteredDelivery)GetByte(buffer);

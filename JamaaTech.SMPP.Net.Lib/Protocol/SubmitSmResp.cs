@@ -23,7 +23,7 @@ public sealed class SubmitSmResp : ResponsePDU
 {
   #region Variables
 
-  private string vMessageID;
+  private string _MessageId;
 
   #endregion
 
@@ -32,7 +32,7 @@ public sealed class SubmitSmResp : ResponsePDU
   internal SubmitSmResp(PDUHeader header, SmppEncodingService smppEncodingService)
     : base(header, smppEncodingService)
   {
-    vMessageID = "";
+    _MessageId = "";
   }
 
   #endregion
@@ -45,8 +45,8 @@ public sealed class SubmitSmResp : ResponsePDU
 
   public string MessageID
   {
-    get => vMessageID;
-    set => vMessageID = value;
+    get => _MessageId;
+    set => _MessageId = value;
   }
 
   #endregion
@@ -55,7 +55,7 @@ public sealed class SubmitSmResp : ResponsePDU
 
   protected override byte[] GetBodyData()
   {
-    return EncodeCString(vMessageID, vSmppEncodingService);
+    return EncodeCString(_MessageId, vSmppEncodingService);
   }
 
   protected override void Parse(ByteBuffer buffer)
@@ -64,10 +64,10 @@ public sealed class SubmitSmResp : ResponsePDU
     //Note that the body part may have not been returned by
     //the SMSC if the command status is not 0
     if (buffer.Length == 0) return;
-    if (string.IsNullOrEmpty(vMessageID))
-      vMessageID = DecodeCString(buffer, vSmppEncodingService);
+    if (string.IsNullOrEmpty(_MessageId))
+      _MessageId = DecodeCString(buffer, vSmppEncodingService);
     else
-      vMessageID += $":{DecodeCString(buffer, vSmppEncodingService)}";
+      _MessageId += $":{DecodeCString(buffer, vSmppEncodingService)}";
     //This pdu has no optional parameters,
     //after preceding statements, the buffer must remain with no data
     if (buffer.Length > 0) throw new TooManyBytesException();

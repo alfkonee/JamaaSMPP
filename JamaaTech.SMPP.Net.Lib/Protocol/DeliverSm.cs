@@ -113,7 +113,7 @@ public class DeliverSm : SingleDestinationPDU
   {
     var buffer = new ByteBuffer(256);
     buffer.Append(EncodeCString(vServiceType, vSmppEncodingService));
-    buffer.Append(vSourceAddress.GetBytes(vSmppEncodingService));
+    buffer.Append(_sourceAddress.GetBytes(vSmppEncodingService));
     buffer.Append(vDestinationAddress.GetBytes(vSmppEncodingService));
     buffer.Append((byte)vEsmClass);
     buffer.Append(vProtocolId);
@@ -147,7 +147,7 @@ public class DeliverSm : SingleDestinationPDU
   {
     if (buffer == null) throw new ArgumentNullException("buffer");
     vServiceType = DecodeCString(buffer, vSmppEncodingService);
-    vSourceAddress = SmppAddress.Parse(buffer, vSmppEncodingService);
+    _sourceAddress = SmppAddress.Parse(buffer, vSmppEncodingService);
     vDestinationAddress = SmppAddress.Parse(buffer, vSmppEncodingService);
     vEsmClass = (EsmClass)GetByte(buffer);
     vProtocolId = GetByte(buffer);

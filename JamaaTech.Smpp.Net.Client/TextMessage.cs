@@ -69,8 +69,8 @@ public class TextMessage : ShortMessage
   protected override IEnumerable<SendSmPDU> GetPDUs(DataCoding defaultEncoding,
     SmppEncodingService smppEncodingService, SmppAddress destAddress = null, SmppAddress srcAddress = null)
   {
-    destAddress ??= new SmppAddress() { Address = vDestinatinoAddress };
-    srcAddress ??= new SmppAddress() { Address = vSourceAddress };
+    destAddress ??= new SmppAddress() { Address = _destinationAddress };
+    srcAddress ??= new SmppAddress() { Address = _sourceAddress };
 
     _vMaxMessageLength = GetMaxMessageLength(defaultEncoding, false);
     var bytes = smppEncodingService.GetBytesFromString(_vText, defaultEncoding);
@@ -91,7 +91,7 @@ public class TextMessage : ShortMessage
         if (SubmitUserMessageReference)
           sm.SetOptionalParamString(Lib.Protocol.Tlv.Tag.user_message_reference, UserMessageReference);
 
-        if (vRegisterDeliveryNotification)
+        if (RegisterDeliveryNotification)
           sm.RegisteredDelivery = RegisteredDelivery.DeliveryReceipt;
         var udh = new Udh(segId, totalSegments, i + 1); // ID, Total, part
         sm.SetMessageText(messages[i], defaultEncoding, udh); // send parts of the message + all other UDH settings
@@ -105,7 +105,7 @@ public class TextMessage : ShortMessage
       if (SubmitUserMessageReference)
         sm.SetOptionalParamString(Lib.Protocol.Tlv.Tag.user_message_reference, UserMessageReference);
 
-      if (vRegisterDeliveryNotification)
+      if (RegisterDeliveryNotification)
         sm.RegisteredDelivery = RegisteredDelivery.DeliveryReceipt;
       sm.SetMessageBytes(bytes);
       yield return sm;

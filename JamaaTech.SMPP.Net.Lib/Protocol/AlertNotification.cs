@@ -65,7 +65,7 @@ public class AlertNotification : SmPDU
 
   protected override byte[] GetBodyData()
   {
-    var sourceAddrBytes = vSourceAddress.GetBytes(vSmppEncodingService);
+    var sourceAddrBytes = _sourceAddress.GetBytes(vSmppEncodingService);
     var esmeAddresBytes = vEsmeAddress.GetBytes(vSmppEncodingService);
     var buffer = new ByteBuffer(sourceAddrBytes.Length + esmeAddresBytes.Length);
     buffer.Append(sourceAddrBytes);
@@ -76,7 +76,7 @@ public class AlertNotification : SmPDU
   protected override void Parse(ByteBuffer buffer)
   {
     if (buffer == null) throw new ArgumentNullException("buffer");
-    vSourceAddress = SmppAddress.Parse(buffer, vSmppEncodingService);
+    _sourceAddress = SmppAddress.Parse(buffer, vSmppEncodingService);
     vEsmeAddress = SmppAddress.Parse(buffer, vSmppEncodingService);
     //If there are some bytes left,
     //construct a tlv collection

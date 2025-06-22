@@ -141,13 +141,13 @@ public class SessionBindInfo
 
     private BindRequest CreateBindBdu(SmppEncodingService smppEncodingService)
     {
-        if (vAllowReceive && vAllowTransmit)
-            return new BindTransceiver(smppEncodingService);
-        if (vAllowTransmit)
-            return new BindTransmitter(smppEncodingService);
-        if (vAllowReceive)
-            return new BindReceiver(smppEncodingService);
-        throw new InvalidOperationException("Both AllowTransmit and AllowReceive cannot be set to false");
+        return (vAllowReceive, vAllowTransmit) switch
+        {
+            (true, true) => new BindTransceiver(smppEncodingService),
+            (false, true) => new BindTransmitter(smppEncodingService),
+            (true, false) => new BindReceiver(smppEncodingService),
+            _ => throw new InvalidOperationException("Both AllowTransmit and AllowReceive cannot be set to false")
+        };
     }
 
     #endregion

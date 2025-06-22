@@ -65,7 +65,7 @@ public sealed class CancelSm : SmOperationPDU
   {
     var buffer = new ByteBuffer(64);
     buffer.Append(EncodeCString(vMessageID, vSmppEncodingService));
-    buffer.Append(vSourceAddress.GetBytes(vSmppEncodingService));
+    buffer.Append(_sourceAddress.GetBytes(vSmppEncodingService));
     buffer.Append(vDestinationAddress.GetBytes(vSmppEncodingService));
     return buffer.ToBytes();
   }
@@ -74,7 +74,7 @@ public sealed class CancelSm : SmOperationPDU
   {
     if (buffer == null) throw new ArgumentNullException("buffer");
     vMessageID = DecodeCString(buffer, vSmppEncodingService);
-    vSourceAddress = SmppAddress.Parse(buffer, vSmppEncodingService);
+    _sourceAddress = SmppAddress.Parse(buffer, vSmppEncodingService);
     vDestinationAddress = SmppAddress.Parse(buffer, vSmppEncodingService);
     //If this pdu has no option parameters
     //If there is still something in the buffer, we then have more than required bytes

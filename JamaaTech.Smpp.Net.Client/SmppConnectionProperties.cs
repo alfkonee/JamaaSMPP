@@ -27,23 +27,7 @@ namespace JamaaTech.Smpp.Net.Client;
 public class SmppConnectionProperties
 {
   #region Variables
-
-  private string _vSystemId;
-  private string _vPassword;
-  private string _vHost;
-  private int _vPort;
-  private InterfaceVersion _vInterfaceVersion;
-  private TypeOfNumber _vAddressTon;
-  private NumberingPlanIndicator _vAddressNpi;
-  private DataCoding _vDefaultEncoding;
-  private string _vDefaultServiceType;
-  private string _vSystemType;
-  private object _vSyncRoot;
-  private string _vSourceAddress;
-  private bool? _vUseSeparateConnections;
-  private bool _vAllowReceive = true;
-  private bool _vAllowTransmit = true;
-
+  private readonly object _vSyncRoot;
   #endregion
 
   #region Constructors
@@ -53,16 +37,18 @@ public class SmppConnectionProperties
   /// </summary>
   public SmppConnectionProperties()
   {
-    _vSystemId = "";
-    _vPassword = "";
-    _vHost = "";
-    _vAddressTon = TypeOfNumber.International;
-    _vAddressNpi = NumberingPlanIndicator.ISDN;
-    _vInterfaceVersion = InterfaceVersion.v34;
-    _vSystemType = "";
-    _vDefaultServiceType = "";
+    SystemId = "";
+    Password = "";
+    Host = "";
+    AddressTon = TypeOfNumber.International;
+    AddressNpi = NumberingPlanIndicator.ISDN;
+    InterfaceVersion = InterfaceVersion.v34;
+    SystemType = "";
+    DefaultServiceType = "";
     SmscId = "";
     _vSyncRoot = new object();
+    AllowReceive = true;
+    AllowTransmit = true;
   }
 
   #endregion
@@ -72,92 +58,52 @@ public class SmppConnectionProperties
   /// <summary>
   /// Gets or sets the system id that identifies this client to the SMPP server
   /// </summary>
-  public string SystemId
-  {
-    get => _vSystemId;
-    set => _vSystemId = value;
-  }
+  public string SystemId { get; set; }
 
   /// <summary>
   /// Gets or sets the password for authenticating the client to the SMPP server
   /// </summary>
-  public string Password
-  {
-    get => _vPassword;
-    set => _vPassword = value;
-  }
+  public string Password { get; set; }
 
   /// <summary>
   /// Gets or sets host name or IP address of the remote host
   /// </summary>
-  public string Host
-  {
-    get => _vHost;
-    set => _vHost = value;
-  }
+  public string Host { get; set; }
 
   /// <summary>
   /// Gets or sets the TCP/IP Protocol port number
   /// </summary>
-  public int Port
-  {
-    get => _vPort;
-    set => _vPort = value;
-  }
+  public int Port { get; set; }
 
   /// <summary>
   /// Gets or sets the default SMPP interface version to be used
   /// </summary>
-  public InterfaceVersion InterfaceVersion
-  {
-    get => _vInterfaceVersion;
-    set => _vInterfaceVersion = value;
-  }
+  public InterfaceVersion InterfaceVersion { get; set; }
 
   /// <summary>
   /// Gets or sets the Numbering Plan Indicator (NPI)
   /// </summary>
-  public NumberingPlanIndicator AddressNpi
-  {
-    get => _vAddressNpi;
-    set => _vAddressNpi = value;
-  }
+  public NumberingPlanIndicator AddressNpi { get; set; }
 
   /// <summary>
   /// Gets or sets the type of number
   /// </summary>
-  public TypeOfNumber AddressTon
-  {
-    get => _vAddressTon;
-    set => _vAddressTon = value;
-  }
+  public TypeOfNumber AddressTon { get; set; }
 
   /// <summary>
   /// Gets or sets the default encoding to be used when sending messages
   /// </summary>
-  public DataCoding DefaultEncoding
-  {
-    get => _vDefaultEncoding;
-    set => _vDefaultEncoding = value;
-  }
+  public DataCoding DefaultEncoding { get; set; }
 
   /// <summary>
   /// Gets or sets the defalt SMPP service type
   /// </summary>
-  public string DefaultServiceType
-  {
-    get => _vDefaultServiceType;
-    set => _vDefaultServiceType = value;
-  }
+  public string DefaultServiceType { get; set; }
 
   /// <summary>
   /// Gets or sets SMPP service type
   /// </summary>
-  public string SystemType
-  {
-    get => _vSystemType;
-    set => _vSystemType = value;
-  }
+  public string SystemType { get; set; }
 
   /// <summary>
   /// Gets the ID or the Short Message Service Center (SMSC)
@@ -172,11 +118,7 @@ public class SmppConnectionProperties
   /// <summary>
   /// Gets or sets the default source address when sending messages
   /// </summary>
-  public string SourceAddress
-  {
-    get => _vSourceAddress;
-    set => _vSourceAddress = value;
-  }
+  public string SourceAddress { get; set; }
 
   /// <summary>
   /// Gets or sets UseSeparateConnections
@@ -184,28 +126,16 @@ public class SmppConnectionProperties
   /// When true: Use two sessions for Receiver (<see cref="CommandType.BindReceiver"/>) and Transmitter (<see cref="CommandType.BindTransmitter"/>)
   /// When false: Use one session for Receiver and Transmitter in mode <see cref="CommandType.BindTransceiver"/>
   /// </summary>
-  public bool? UseSeparateConnections
-  {
-    get => _vUseSeparateConnections;
-    set => _vUseSeparateConnections = value;
-  }
+  public bool? UseSeparateConnections { get; set; }
 
   /// <summary>
   /// <see cref="UseSeparateConnections"/>
   /// </summary>
   public bool CanSeparateConnections => UseSeparateConnections == true || InterfaceVersion == InterfaceVersion.v33;
 
-  public bool AllowReceive
-  {
-    get => _vAllowReceive;
-    set => _vAllowReceive = value;
-  }
+  public bool AllowReceive { get; set; }
 
-  public bool AllowTransmit
-  {
-    get => _vAllowTransmit;
-    set => _vAllowTransmit = value;
-  }
+  public bool AllowTransmit { get; set; }
 
   #endregion
 
@@ -213,17 +143,19 @@ public class SmppConnectionProperties
 
   internal SessionBindInfo GetBindInfo()
   {
-    var bindInfo = new SessionBindInfo();
-    bindInfo.SystemID = _vSystemId;
-    bindInfo.Password = _vPassword;
-    bindInfo.ServerName = _vHost;
-    bindInfo.Port = _vPort;
-    bindInfo.InterfaceVersion = _vInterfaceVersion;
-    bindInfo.AddressTon = _vAddressTon;
-    bindInfo.AddressNpi = _vAddressNpi;
-    bindInfo.SystemType = _vSystemType;
-    bindInfo.AllowReceive = _vAllowReceive;
-    bindInfo.AllowTransmit = _vAllowTransmit;
+    var bindInfo = new SessionBindInfo
+    {
+      SystemID = SystemId,
+      Password = Password,
+      ServerName = Host,
+      Port = Port,
+      InterfaceVersion = InterfaceVersion,
+      AddressTon = AddressTon,
+      AddressNpi = AddressNpi,
+      SystemType = SystemType,
+      AllowReceive = AllowReceive,
+      AllowTransmit = AllowTransmit
+    };
     return bindInfo;
   }
 
