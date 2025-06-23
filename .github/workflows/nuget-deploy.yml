@@ -19,9 +19,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Setup .NET
-        uses: actions/setup-dotnet@v3
+        uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 7.0.x
+          dotnet-version: 9.0.x
       - name: Restore dependencies
         run: dotnet restore ./JamaaTech.Smpp.Net.Client/Smpp.Net.Client.csproj
       - name: Build
@@ -29,7 +29,7 @@ jobs:
       - name: Pack
         run: dotnet pack --configuration Release ./JamaaTech.Smpp.Net.Client/Smpp.Net.Client.csproj --output nupkgs
       - name: Upload artifact for Publish job
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: .nuget-package
           path: nupkgs/*.nupkg
@@ -41,7 +41,7 @@ jobs:
     steps:
       - name: Download artifact from build job
         id: download
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: .nuget-package
       - name: Publish
