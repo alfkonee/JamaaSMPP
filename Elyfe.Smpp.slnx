@@ -1,0 +1,7 @@
+<Solution>
+  <Folder Name="/JamaaTech.SMPP.Net.Lib/">
+    <Project Path="JamaaTech.SMPP.Net.Lib/Smpp.Net.Lib.csproj" />
+  </Folder>
+  <Project Path="Client.Tests/Client.Tests.csproj" />
+  <Project Path="Client/Client.csproj" />
+</Solution>
