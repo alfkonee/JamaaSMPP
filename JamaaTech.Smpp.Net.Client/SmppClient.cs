@@ -203,6 +203,13 @@ public sealed class SmppClient : IDisposable
     throw new NotImplementedException("WIP");
   }
 
+  /// <summary>
+  /// Sends a message to a remote SMPP server.
+  /// </summary>
+  /// <param name="message">The message to be sent.</param>
+  /// <param name="timeOut">The timeout duration for the send operation, specified in milliseconds.</param>
+  /// <param name="destinationTON">The type of number for the destination address (optional).</param>
+  /// <param name="destinationNPI">The numbering plan for the destination address (optional).</param>
   public void SendMessage(ShortMessage message, int timeOut) =>
     SendMessage(message, timeOut, TypeOfNumber.Unknown, NumberingPlanIndicator.Unknown);
   /// <summary>
