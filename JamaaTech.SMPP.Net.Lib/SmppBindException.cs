@@ -16,27 +16,36 @@
 
 using System;
 
-namespace JamaaTech.Smpp.Net.Lib
+namespace JamaaTech.Smpp.Net.Lib;
+
+public class SmppBindException : SmppException
 {
-    public class SmppBindException : SmppException
-    {
-        #region Constructors
-        internal SmppBindException()
-            : base(SmppErrorCode.ESME_RBINDFAIL, "Bind operation failed") { }
+  #region Constructors
 
-        internal SmppBindException(SmppErrorCode errorCode)
-            : base(errorCode, "Bind operation failed") { }
+  internal SmppBindException()
+    : base(SmppErrorCode.ESME_RBINDFAIL, "Bind operation failed")
+  {
+  }
 
-        internal SmppBindException(Exception innerException)
-            : base(SmppErrorCode.ESME_RBINDFAIL, "Bind operation failed", innerException) { }
-        #endregion
+  internal SmppBindException(SmppErrorCode errorCode)
+    : base(errorCode, "Bind operation failed")
+  {
+  }
 
-        #region Methods
-        public static new void WrapAndThrow(Exception innerException)
-        {
-            if (innerException == null) { throw new ArgumentNullException("innerException"); }
-            throw new SmppBindException(innerException);
-        }
-        #endregion
-    }
+  internal SmppBindException(Exception innerException)
+    : base(SmppErrorCode.ESME_RBINDFAIL, "Bind operation failed", innerException)
+  {
+  }
+
+  #endregion
+
+  #region Methods
+
+  public new static void WrapAndThrow(Exception innerException)
+  {
+    if (innerException == null) throw new ArgumentNullException("innerException");
+    throw new SmppBindException(innerException);
+  }
+
+  #endregion
 }

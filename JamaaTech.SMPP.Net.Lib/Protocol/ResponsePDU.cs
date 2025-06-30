@@ -14,13 +14,16 @@
  *
  ************************************************************************/
 
-namespace JamaaTech.Smpp.Net.Lib.Protocol
+namespace JamaaTech.Smpp.Net.Lib.Protocol;
+
+public abstract class ResponsePDU : PDU
 {
-    public abstract class ResponsePDU : PDU
-    {
-        #region Constructors
-        internal ResponsePDU(PDUHeader header, SmppEncodingService smppEncodingService)
-            : base(header, smppEncodingService) { }
-        #endregion
-    }
+  #region Constructors
+
+  internal ResponsePDU(PDUHeader header, SmppEncodingService smppEncodingService)
+    : base(header, smppEncodingService)
+  {
+  }
+
+  #endregion
 }

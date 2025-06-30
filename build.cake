@@ -13,7 +13,7 @@ var toolpath = Argument("toolpath", @"tools");
 var branch = Argument("branch", EnvironmentVariable("APPVEYOR_REPO_BRANCH"));
 
 var vsLatest  = VSWhereLatest();
-var msBuildPathX64 = (vsLatest==null)
+var msBuildPathX64 =  (vsLatest==null)
                             ? null
                             : vsLatest.CombineWithFilePath("./MSBuild/15.0/Bin/amd64/MSBuild.exe");
                    
@@ -45,7 +45,10 @@ Task("Build")
     .IsDependentOn("Restore-NuGet-Packages")
     .Does(() =>
     {
-        MSBuild(solution, new MSBuildSettings(){Configuration = configuration, ToolPath = msBuildPathX64}
+        MSBuild(solution, new MSBuildSettings(){
+            Configuration = configuration,    
+            ToolVersion = MSBuildToolVersion.VS2022
+}
                                                .WithProperty("SourceLinkCreate","true"));
     });
     

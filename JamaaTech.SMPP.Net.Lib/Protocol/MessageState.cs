@@ -14,41 +14,47 @@
  *
  ************************************************************************/
 
-namespace JamaaTech.Smpp.Net.Lib.Protocol
+namespace JamaaTech.Smpp.Net.Lib.Protocol;
+
+public enum MessageState : byte
 {
-    public enum MessageState : byte
-    {
-        /// <summary>
-        /// The message is in enroute state
-        /// </summary>
-        EnRoute = 1,
-        /// <summary>
-        /// The message is delivered to destination
-        /// </summary>
-        Delivered = 2,
-        /// <summary>
-        /// Message validity period has expired
-        /// </summary>
-        Expired = 3,
-        /// <summary>
-        /// Message has been deleted
-        /// </summary>
-        Deleted = 4,
-        /// <summary>
-        /// Message is undeliverable
-        /// </summary>
-        Undeliverable = 5,
-        /// <summary>
-        /// Message is in accepted state (i.e. has been manually read on behalf of the subscriber by the customer service
-        /// </summary>
-        Accepted = 6,
-        /// <summary>
-        /// Message is invalid state
-        /// </summary>
-        Unknown = 7,
-        /// <summary>
-        /// Message is in rejected state
-        /// </summary>
-        Rejected = 8
-    }
+  /// <summary>
+  /// The message is in enroute state
+  /// </summary>
+  EnRoute = 1,
+
+  /// <summary>
+  /// The message is delivered to destination
+  /// </summary>
+  Delivered = 2,
+
+  /// <summary>
+  /// Message validity period has expired
+  /// </summary>
+  Expired = 3,
+
+  /// <summary>
+  /// Message has been deleted
+  /// </summary>
+  Deleted = 4,
+
+  /// <summary>
+  /// Message is undeliverable
+  /// </summary>
+  Undeliverable = 5,
+
+  /// <summary>
+  /// Message is in accepted state (i.e. has been manually read on behalf of the subscriber by the customer service
+  /// </summary>
+  Accepted = 6,
+
+  /// <summary>
+  /// Message is invalid state
+  /// </summary>
+  Unknown = 7,
+
+  /// <summary>
+  /// Message is in rejected state
+  /// </summary>
+  Rejected = 8
 }

@@ -14,25 +14,27 @@
  *
  ************************************************************************/
 
-namespace JamaaTech.Smpp.Net.Lib.Protocol
+namespace JamaaTech.Smpp.Net.Lib.Protocol;
+
+public enum PriorityFlag : byte
 {
-    public enum PriorityFlag : byte
-    {
-        /// <summary>
-        /// Lowerst priority
-        /// </summary>
-        Level0 = 0,
-        /// <summary>
-        /// Level 1 priority
-        /// </summary>
-        Level1 = 1,
-        /// <summary>
-        /// Level 2 priority
-        /// </summary>
-        Level2 = 2,
-        /// <summary>
-        /// Level 3 priority
-        /// </summary>
-        Level3 = 3
-    }
+  /// <summary>
+  /// Lowerst priority
+  /// </summary>
+  Level0 = 0,
+
+  /// <summary>
+  /// Level 1 priority
+  /// </summary>
+  Level1 = 1,
+
+  /// <summary>
+  /// Level 2 priority
+  /// </summary>
+  Level2 = 2,
+
+  /// <summary>
+  /// Level 3 priority
+  /// </summary>
+  Level3 = 3
 }

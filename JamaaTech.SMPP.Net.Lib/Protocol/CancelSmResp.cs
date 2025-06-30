@@ -14,25 +14,24 @@
  *
  ************************************************************************/
 
-namespace JamaaTech.Smpp.Net.Lib.Protocol
+namespace JamaaTech.Smpp.Net.Lib.Protocol;
+
+public sealed class CancelSmResp : GenericResponsePDU
 {
-    public sealed class CancelSmResp : GenericResponsePDU
-    {
-        #region Constructors
-        internal CancelSmResp(PDUHeader header, SmppEncodingService smppEncodingService)
-            : base(header, smppEncodingService) { }
-        #endregion
+  #region Constructors
 
-        #region Properties
-        public override SmppEntityType AllowedSource
-        {
-            get { return SmppEntityType.SMSC; }
-        }
+  internal CancelSmResp(PDUHeader header, SmppEncodingService smppEncodingService)
+    : base(header, smppEncodingService)
+  {
+  }
 
-        public override SmppSessionState AllowedSession
-        {
-            get { return SmppSessionState.Transmitter; }
-        }
-        #endregion
-    }
+  #endregion
+
+  #region Properties
+
+  public override SmppEntityType AllowedSource => SmppEntityType.SMSC;
+
+  public override SmppSessionState AllowedSession => SmppSessionState.Transmitter;
+
+  #endregion
 }

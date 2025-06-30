@@ -16,15 +16,14 @@
 
 using System;
 
-namespace JamaaTech.Smpp.Net.Lib
+namespace JamaaTech.Smpp.Net.Lib;
+
+[Flags()]
+public enum SmppSessionState : int
 {
-    [Flags()]
-    public enum SmppSessionState : int
-    {
-        Open = 1,
-        Transmitter = 2,
-        Receiver = 4,
-        Closed = 8,
-        Transceiver = Transmitter | Receiver
-    }
+  Open = 1,
+  Transmitter = 2,
+  Receiver = 4,
+  Closed = 8,
+  Transceiver = Transmitter | Receiver
 }

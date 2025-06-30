@@ -16,7 +16,6 @@
 
 using JamaaTech.Smpp.Net.Lib.Protocol;
 
-namespace JamaaTech.Smpp.Net.Lib
-{
-    public delegate void PduProcessorCallback(RequestPDU pdu);
-}
+namespace JamaaTech.Smpp.Net.Lib;
+
+public delegate void PduProcessorCallback(RequestPDU pdu);

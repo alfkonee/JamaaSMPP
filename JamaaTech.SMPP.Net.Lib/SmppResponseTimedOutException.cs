@@ -14,13 +14,16 @@
  *
  ************************************************************************/
 
-namespace JamaaTech.Smpp.Net.Lib
+namespace JamaaTech.Smpp.Net.Lib;
+
+public class SmppResponseTimedOutException : SmppException
 {
-    public class SmppResponseTimedOutException : SmppException
-    {
-        #region Constructors
-        internal SmppResponseTimedOutException()
-            : base(SmppErrorCode.ESME_RUNKNOWNERR, "PDU receive operation timed out") { }
-        #endregion
-    }
+  #region Constructors
+
+  internal SmppResponseTimedOutException()
+    : base(SmppErrorCode.ESME_RUNKNOWNERR, "PDU receive operation timed out")
+  {
+  }
+
+  #endregion
 }

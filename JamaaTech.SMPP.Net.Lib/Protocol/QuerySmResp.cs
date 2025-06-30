@@ -17,87 +17,48 @@
 using System;
 using JamaaTech.Smpp.Net.Lib.Util;
 
-namespace JamaaTech.Smpp.Net.Lib.Protocol
+namespace JamaaTech.Smpp.Net.Lib.Protocol;
+
+public sealed class QuerySmResp : ResponsePDU
 {
-    public sealed class QuerySmResp : ResponsePDU
+    internal QuerySmResp(PDUHeader header, SmppEncodingService smppEncodingService)
+        : base(header, smppEncodingService)
     {
-        #region Variables
-        private string vMessageID;
-        private string vFinalDate;
-        private MessageState vMessageState;
-        private byte vErrorCode;
-        #endregion
+        MessageId = string.Empty;
+        FinalDate = string.Empty;
+        MessageState = MessageState.Unknown;
+        ErrorCode = 0;
+    }
 
-        #region Constructors
-        internal QuerySmResp(PDUHeader header, SmppEncodingService smppEncodingService)
-            : base(header, smppEncodingService)
-        {
-            vMessageID = "";
-            vFinalDate = "";
-            vMessageState = MessageState.Unknown;
-            vErrorCode = 0;
-        }
-        #endregion
+    public override SmppEntityType AllowedSource => SmppEntityType.SMSC;
+    public override SmppSessionState AllowedSession => SmppSessionState.Transmitter;
+    
+    public string MessageId { get; set; }
+    public string FinalDate { get; set; }
+    public MessageState MessageState { get; set; }
+    public byte ErrorCode { get; set; }
 
-        #region Properties
-        public override SmppEntityType AllowedSource
-        {
-            get { return SmppEntityType.SMSC; }
-        }
+    protected override byte[] GetBodyData()
+    {
+        var buffer = new ByteBuffer(16);
+        buffer.Append(EncodeCString(MessageId, vSmppEncodingService));
+        buffer.Append(EncodeCString(FinalDate, vSmppEncodingService));
+        buffer.Append((byte)MessageState);
+        buffer.Append(ErrorCode);
+        return buffer.ToBytes();
+    }
 
-        public override SmppSessionState AllowedSession
-        {
-            get { return SmppSessionState.Transmitter; }
-        }
-
-        public string MessageID
-        {
-            get { return vMessageID; }
-            set { vMessageID = value; }
-        }
-
-        public string FinalDate
-        {
-            get { return vFinalDate; }
-            set { vFinalDate = value; }
-        }
-
-        public MessageState MessageState
-        {
-            get { return vMessageState; }
-            set { vMessageState = value; }
-        }
-
-        public byte ErrorCode
-        {
-            get { return vErrorCode; }
-            set { vErrorCode = value; }
-        }
-        #endregion
-
-        #region Methods
-        protected override byte[] GetBodyData()
-        {
-            ByteBuffer buffer = new ByteBuffer(16);
-            buffer.Append(EncodeCString(vMessageID, vSmppEncodingService));
-            buffer.Append(EncodeCString(vFinalDate, vSmppEncodingService));
-            buffer.Append((byte)vMessageState);
-            buffer.Append(vErrorCode);
-            return buffer.ToBytes();
-        }
-
-        protected override void Parse(ByteBuffer buffer)
-        {
-            if (buffer == null) { throw new ArgumentNullException("buffer"); }
-            vMessageID = DecodeCString(buffer, vSmppEncodingService);
-            vFinalDate = DecodeCString(buffer, vSmppEncodingService);
-            vMessageState = (MessageState)GetByte(buffer);
-            vErrorCode = GetByte(buffer);
-            //This pdu has no option parameters,
-            //If the buffer still contains something,
-            //the we received more that required bytes
-            if (buffer.Length > 0) { throw new TooManyBytesException(); }
-        }
-        #endregion
+    protected override void Parse(ByteBuffer buffer)
+    {
+        if (buffer == null) throw new ArgumentNullException(nameof(buffer));
+        
+        MessageId = DecodeCString(buffer, vSmppEncodingService);
+        FinalDate = DecodeCString(buffer, vSmppEncodingService);
+        MessageState = (MessageState)GetByte(buffer);
+        ErrorCode = GetByte(buffer);
+        
+        // This PDU has no option parameters.
+        // If the buffer still contains something, we received more than required bytes
+        if (buffer.Length > 0) throw new TooManyBytesException();
     }
 }

@@ -14,27 +14,30 @@
  *
  ************************************************************************/
 
-namespace JamaaTech.Smpp.Net.Lib.Protocol
+namespace JamaaTech.Smpp.Net.Lib.Protocol;
+
+public abstract class SingleDestinationPDU : SendSmPDU
 {
-    public abstract class SingleDestinationPDU : SendSmPDU
-    {
-        #region Variables
-        protected SmppAddress vDestinationAddress;
-        #endregion
+  #region Variables
 
-        #region Constructors
-        internal SingleDestinationPDU(PDUHeader header, SmppEncodingService smppEncodingService,SmppAddress destinationDestAddress = null, SmppAddress srcAddresss = null)
-            : base(header, smppEncodingService,srcAddresss)
-        {
-            vDestinationAddress = destinationDestAddress ?? new SmppAddress();
-        }
-        #endregion
+  protected SmppAddress vDestinationAddress;
 
-        #region Properties
-        public SmppAddress DestinationAddress
-        {
-            get { return vDestinationAddress; }
-        }
-        #endregion
-    }
+  #endregion
+
+  #region Constructors
+
+  internal SingleDestinationPDU(PDUHeader header, SmppEncodingService smppEncodingService,
+    SmppAddress destinationDestAddress = null, SmppAddress srcAddresss = null)
+    : base(header, smppEncodingService, srcAddresss)
+  {
+    vDestinationAddress = destinationDestAddress ?? new SmppAddress();
+  }
+
+  #endregion
+
+  #region Properties
+
+  public SmppAddress DestinationAddress => vDestinationAddress;
+
+  #endregion
 }

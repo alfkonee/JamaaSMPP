@@ -16,36 +16,38 @@
 
 using System;
 
-namespace JamaaTech.Smpp.Net.Client
+namespace JamaaTech.Smpp.Net.Client;
+
+/// <summary>
+/// Provides data for <see cref="SmppClient.MessageReceived"/>, <see cref="SmppClient.MessageDelivered"/> and <see cref="SmppClient.MessageSent"/> events
+/// </summary>
+public class MessageEventArgs : EventArgs
 {
-    /// <summary>
-    /// Provides data for <see cref="SmppClient.MessageReceived"/>, <see cref="SmppClient.MessageDelivered"/> and <see cref="SmppClient.MessageSent"/> events
-    /// </summary>
-    public class MessageEventArgs : EventArgs
-    {
-        #region Variables
-        private ShortMessage vShortMessage;
-        #endregion
+  #region Variables
 
-        #region Constructors
-        /// <summary>
-        /// Creates a new instance of <see cref="MessageEventArgs"/>
-        /// </summary>
-        /// <param name="message">The message associated with the message event</param>
-        public MessageEventArgs(ShortMessage message)
-        {
-            vShortMessage = message;
-        }
-        #endregion
+  private ShortMessage _vShortMessage;
 
-        #region Properties
-        /// <summary>
-        /// Gets the message associated with this event
-        /// </summary>
-        public ShortMessage ShortMessage
-        {
-            get { return vShortMessage; }
-        }
-        #endregion
-    }
+  #endregion
+
+  #region Constructors
+
+  /// <summary>
+  /// Creates a new instance of <see cref="MessageEventArgs"/>
+  /// </summary>
+  /// <param name="message">The message associated with the message event</param>
+  public MessageEventArgs(ShortMessage message)
+  {
+    _vShortMessage = message;
+  }
+
+  #endregion
+
+  #region Properties
+
+  /// <summary>
+  /// Gets the message associated with this event
+  /// </summary>
+  public ShortMessage ShortMessage => _vShortMessage;
+
+  #endregion
 }

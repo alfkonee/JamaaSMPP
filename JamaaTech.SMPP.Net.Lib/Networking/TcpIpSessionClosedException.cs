@@ -16,20 +16,25 @@
 
 using System;
 
-namespace JamaaTech.Smpp.Net.Lib.Networking
-{
-    /// <summary>
-    /// Represents an exception that is thrown when attempting to send or received data with a closed <see cref="TcpIpSession"/> instance
-    /// </summary>
-    [Serializable]
-    public class TcpIpSessionClosedException : TcpIpException
-    {
-        #region Constructors
-        public TcpIpSessionClosedException(string message)
-            : base(message) { }
+namespace JamaaTech.Smpp.Net.Lib.Networking;
 
-        public TcpIpSessionClosedException(Exception innerException)
-            : base(innerException.Message, innerException) { }
-        #endregion
-    }
+/// <summary>
+/// Represents an exception that is thrown when attempting to send or received data with a closed <see cref="TcpIpSession"/> instance
+/// </summary>
+[Serializable]
+public class TcpIpSessionClosedException : TcpIpException
+{
+  #region Constructors
+
+  public TcpIpSessionClosedException(string message)
+    : base(message)
+  {
+  }
+
+  public TcpIpSessionClosedException(Exception innerException)
+    : base(innerException.Message, innerException)
+  {
+  }
+
+  #endregion
 }

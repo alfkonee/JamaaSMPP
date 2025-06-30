@@ -16,26 +16,28 @@
 
 using System;
 
-namespace JamaaTech.Smpp.Net.Lib
+namespace JamaaTech.Smpp.Net.Lib;
+
+public class ParserExceptionEventArgs : EventArgs
 {
-    public class ParserExceptionEventArgs : EventArgs
-    {
-        #region Variables
-        private Exception vException;
-        #endregion
+  #region Variables
 
-        #region Constructors
-        public ParserExceptionEventArgs(Exception exception)
-        {
-            vException = exception;
-        }
-        #endregion
+  private Exception vException;
 
-        #region Properties
-        public Exception Exception
-        {
-            get { return vException; }
-        }
-        #endregion
-    }
+  #endregion
+
+  #region Constructors
+
+  public ParserExceptionEventArgs(Exception exception)
+  {
+    vException = exception;
+  }
+
+  #endregion
+
+  #region Properties
+
+  public Exception Exception => vException;
+
+  #endregion
 }

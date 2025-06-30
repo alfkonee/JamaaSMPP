@@ -17,67 +17,66 @@
 using System.Net;
 using System.Net.Sockets;
 
-namespace JamaaTech.Smpp.Net.Lib.Networking
+namespace JamaaTech.Smpp.Net.Lib.Networking;
+
+public class TcpIpSessionProperties
 {
-    public class TcpIpSessionProperties
-    {
-        #region Variables
-        private Socket vSocket;
-        #endregion
+  #region Variables
 
-        #region Constructors
-        internal TcpIpSessionProperties(Socket socket)
-        {
-            vSocket = socket;
-        }
-        #endregion
+  private Socket vSocket;
 
-        #region Properties
-        public LingerOption LingerState
-        {
-            get { return vSocket.LingerState; }
-            set { vSocket.LingerState = value; }
-        }
+  #endregion
 
-        public bool NoDelay
-        {
-            get { return vSocket.NoDelay; }
-            set { vSocket.NoDelay = value; }
-        }
+  #region Constructors
 
-        public int ReceiveTimeout
-        {
-            get { return vSocket.ReceiveTimeout; }
-            set { vSocket.ReceiveTimeout = value; }
-        }
+  internal TcpIpSessionProperties(Socket socket)
+  {
+    vSocket = socket;
+  }
 
-        public int ReceiveBufferSize
-        {
-            get { return vSocket.ReceiveBufferSize; }
-            set { vSocket.ReceiveBufferSize = value; }
-        }
+  #endregion
 
-        public int SendTimeout
-        {
-            get { return vSocket.SendTimeout; }
-            set { vSocket.SendTimeout = value; }
-        }
+  #region Properties
 
-        public int SendBufferSize
-        {
-            get { return vSocket.SendBufferSize; }
-            set { vSocket.SendBufferSize = value; }
-        }
+  public LingerOption LingerState
+  {
+    get => vSocket.LingerState;
+    set => vSocket.LingerState = value;
+  }
 
-        public IPEndPoint LocalEndPoint
-        {
-            get { return (IPEndPoint)vSocket.LocalEndPoint; }
-        }
+  public bool NoDelay
+  {
+    get => vSocket.NoDelay;
+    set => vSocket.NoDelay = value;
+  }
 
-        public IPEndPoint RemoteEndPoint
-        {
-            get { return (IPEndPoint)vSocket.RemoteEndPoint; }
-        }
-        #endregion
-    }
+  public int ReceiveTimeout
+  {
+    get => vSocket.ReceiveTimeout;
+    set => vSocket.ReceiveTimeout = value;
+  }
+
+  public int ReceiveBufferSize
+  {
+    get => vSocket.ReceiveBufferSize;
+    set => vSocket.ReceiveBufferSize = value;
+  }
+
+  public int SendTimeout
+  {
+    get => vSocket.SendTimeout;
+    set => vSocket.SendTimeout = value;
+  }
+
+  public int SendBufferSize
+  {
+    get => vSocket.SendBufferSize;
+    set => vSocket.SendBufferSize = value;
+  }
+
+  public IPEndPoint LocalEndPoint => (IPEndPoint)vSocket.LocalEndPoint;
+
+  public IPEndPoint RemoteEndPoint => (IPEndPoint)vSocket.RemoteEndPoint;
+
+  #endregion
 }

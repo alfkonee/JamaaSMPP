@@ -14,11 +14,10 @@
  *
  ************************************************************************/
 
-namespace JamaaTech.Smpp.Net.Lib.Networking
+namespace JamaaTech.Smpp.Net.Lib.Networking;
+
+public enum SessionType : int
 {
-    public enum SessionType : int
-    {
-        Server = 0,
-        Client = 1
-    }
+  Server = 0,
+  Client = 1
 }

@@ -16,33 +16,32 @@
 
 using System;
 
-namespace JamaaTech.Smpp.Net.Lib
+namespace JamaaTech.Smpp.Net.Lib;
+
+public class SmppSessionClosedEventArgs : EventArgs
 {
-    public class SmppSessionClosedEventArgs : EventArgs
-    {
-        #region Variables
-        private SmppSessionCloseReason vReason;
-        private Exception vException;
-        #endregion
+  #region Variables
 
-        #region Constructors
-        public SmppSessionClosedEventArgs(SmppSessionCloseReason reason, Exception exception)
-        {
-            vReason = reason;
-            vException = exception;
-        }
-        #endregion
+  private SmppSessionCloseReason vReason;
+  private Exception vException;
 
-        #region Properties
-        public SmppSessionCloseReason Reason
-        {
-            get { return vReason; }
-        }
+  #endregion
 
-        public Exception Exception
-        {
-            get { return vException; }
-        }
-        #endregion
-    }
+  #region Constructors
+
+  public SmppSessionClosedEventArgs(SmppSessionCloseReason reason, Exception exception)
+  {
+    vReason = reason;
+    vException = exception;
+  }
+
+  #endregion
+
+  #region Properties
+
+  public SmppSessionCloseReason Reason => vReason;
+
+  public Exception Exception => vException;
+
+  #endregion
 }

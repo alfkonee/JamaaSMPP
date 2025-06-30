@@ -18,70 +18,84 @@ using System.Collections.Generic;
 using System.Threading;
 using JamaaTech.Smpp.Net.Lib.Protocol;
 
-namespace JamaaTech.Smpp.Net.Lib.Util
+namespace JamaaTech.Smpp.Net.Lib.Util;
+
+public abstract class PduProcessor<T> : RunningComponent where T : PDU
 {
-    public abstract class PduProcessor<T> : RunningComponent where T : PDU
+  #region Variables
+
+  private Queue<T> vPduQueue;
+  private ManualResetEvent vWaitEvent;
+
+  #endregion
+
+  #region Constants
+
+  private const int DEFAULT_CAPACITY = 256;
+
+  #endregion
+
+  #region Constructors
+
+  public PduProcessor()
+  {
+    InitializeInstance(DEFAULT_CAPACITY);
+  }
+
+  public PduProcessor(int defaultQueueCapacity)
+  {
+    InitializeInstance(defaultQueueCapacity);
+  }
+
+  #endregion
+
+  #region Methods
+
+  #region Helper Methods
+
+  private void InitializeInstance(int queueCapacity)
+  {
+    vPduQueue = new Queue<T>(queueCapacity);
+    vWaitEvent = new ManualResetEvent(false); //The state is unsignaled initially
+  }
+
+  private T WaitPdu()
+  {
+    vWaitEvent.WaitOne();
+    lock (vPduQueue)
     {
-        #region Variables
-        private Queue<T> vPduQueue;
-        private ManualResetEvent vWaitEvent;
-        #endregion
-
-        #region Constants
-        private const int DEFAULT_CAPACITY = 256;
-        #endregion
-
-        #region Constructors
-        public PduProcessor()
-        {
-            InitializeInstance(DEFAULT_CAPACITY);
-        }
-
-        public PduProcessor(int defaultQueueCapacity)
-        {
-            InitializeInstance(defaultQueueCapacity);
-        }
-        #endregion
-
-        #region Methods
-        #region Helper Methods
-        private void InitializeInstance(int queueCapacity)
-        {
-            vPduQueue = new Queue<T>(queueCapacity);
-            vWaitEvent = new ManualResetEvent(false); //The state is unsignaled initially
-        }
-
-        private T WaitPdu()
-        {
-            vWaitEvent.WaitOne();
-            lock (vPduQueue)
-            {
-                T pdu = vPduQueue.Dequeue();
-                if (vPduQueue.Count == 0) { vWaitEvent.Reset(); }
-                return pdu;
-            }
-        }
-        #endregion
-
-        #region Interface Methods
-        protected abstract void PostProcessPdu(T pdu);
-
-        internal void ProcessPdu(T pdu)
-        {
-            lock (vPduQueue)
-            {
-                if (!Running) { return; }
-                vPduQueue.Enqueue(pdu);
-                vWaitEvent.Set();
-            }
-        }
-
-        protected override void RunNow()
-        {
-            while (true) { T pdu = WaitPdu(); PostProcessPdu(pdu); }
-        }
-        #endregion
-        #endregion
-
+      var pdu = vPduQueue.Dequeue();
+      if (vPduQueue.Count == 0) vWaitEvent.Reset();
+      return pdu;
     }
+  }
+
+  #endregion
+
+  #region Interface Methods
+
+  protected abstract void PostProcessPdu(T pdu);
+
+  internal void ProcessPdu(T pdu)
+  {
+    lock (vPduQueue)
+    {
+      if (!Running) return;
+      vPduQueue.Enqueue(pdu);
+      vWaitEvent.Set();
+    }
+  }
+
+  protected override void RunNow()
+  {
+    while (true)
+    {
+      var pdu = WaitPdu();
+      PostProcessPdu(pdu);
+    }
+  }
+
+  #endregion
+
+  #endregion
 }

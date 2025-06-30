@@ -14,43 +14,43 @@
  *
  ************************************************************************/
 
-namespace JamaaTech.Smpp.Net.Lib.Protocol
+namespace JamaaTech.Smpp.Net.Lib.Protocol;
+
+public class EnquireLink : GenericRequestPDU
 {
-    public class EnquireLink : GenericRequestPDU
-    {
-        #region Constuctors
-        internal EnquireLink(PDUHeader header, SmppEncodingService smppEncodingService)
-            : base(header, smppEncodingService) { }
+  #region Constuctors
 
-        public EnquireLink(SmppEncodingService smppEncodingService)
-            :base(new PDUHeader(CommandType.EnquireLink), smppEncodingService)
-        {
-        }
-        #endregion
+  internal EnquireLink(PDUHeader header, SmppEncodingService smppEncodingService)
+    : base(header, smppEncodingService)
+  {
+  }
 
-        #region Properties
-        public override SmppEntityType AllowedSource
-        {
-            get { return SmppEntityType.Any; }
-        }
+  public EnquireLink(SmppEncodingService smppEncodingService)
+    : base(new PDUHeader(CommandType.EnquireLink), smppEncodingService)
+  {
+  }
 
-        public override SmppSessionState AllowedSession
-        {
-            get { return SmppSessionState.Transceiver; }
-        }
-        #endregion
+  #endregion
 
-        #region Methods
-        public override ResponsePDU CreateDefaultResponse()
-        {
-            PDUHeader header = new PDUHeader(CommandType.EnquireLinkResp, vHeader.SequenceNumber);
-            //use default Status and Length
-            //header.CommandStatus = 0;
-            //header.CommandLength = 16;
-            EnquireLinkResp resp = (EnquireLinkResp)CreatePDU(header, vSmppEncodingService);
-            return resp;
-        }
-        #endregion
+  #region Properties
 
-    }
+  public override SmppEntityType AllowedSource => SmppEntityType.Any;
+
+  public override SmppSessionState AllowedSession => SmppSessionState.Transceiver;
+
+  #endregion
+
+  #region Methods
+
+  public override ResponsePDU CreateDefaultResponse()
+  {
+    var header = new PDUHeader(CommandType.EnquireLinkResp, vHeader.SequenceNumber);
+    //use default Status and Length
+    //header.CommandStatus = 0;
+    //header.CommandLength = 16;
+    var resp = (EnquireLinkResp)CreatePDU(header, vSmppEncodingService);
+    return resp;
+  }
+
+  #endregion
 }

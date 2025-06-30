@@ -16,28 +16,37 @@
 
 using System;
 
-namespace JamaaTech.Smpp.Net.Lib.Protocol
+namespace JamaaTech.Smpp.Net.Lib.Protocol;
+
+public class PDUParseException : PDUException
 {
-    public class PDUParseException : PDUException
-    {
-        #region Constructors
-        public PDUParseException(SmppErrorCode errorCode)
-            : base(errorCode) { }
+  #region Constructors
 
-        public PDUParseException(SmppErrorCode errorCode, string message)
-            : base(errorCode, message) { }
+  public PDUParseException(SmppErrorCode errorCode)
+    : base(errorCode)
+  {
+  }
 
-        public PDUParseException(SmppErrorCode errorCode, string message, Exception innerException)
-            : base(errorCode, message, innerException) { }
-        #endregion
+  public PDUParseException(SmppErrorCode errorCode, string message)
+    : base(errorCode, message)
+  {
+  }
 
-        #region Methods
-        public static void WrapAndThrow(Exception innerException)
-        {
-            if (innerException == null) { throw new ArgumentNullException("innerException"); }
-            throw new PDUParseException(SmppErrorCode.ESME_RUNKNOWNERR,
-                innerException.Message, innerException);
-        }
-        #endregion
-    }
+  public PDUParseException(SmppErrorCode errorCode, string message, Exception innerException)
+    : base(errorCode, message, innerException)
+  {
+  }
+
+  #endregion
+
+  #region Methods
+
+  public static void WrapAndThrow(Exception innerException)
+  {
+    if (innerException == null) throw new ArgumentNullException("innerException");
+    throw new PDUParseException(SmppErrorCode.ESME_RUNKNOWNERR,
+      innerException.Message, innerException);
+  }
+
+  #endregion
 }

@@ -1,45 +1,48 @@
 <Project>
-  <PropertyGroup>
-    <LangVersion>latest</LangVersion>
-    <Version>1.10.0</Version>
-    <NoWarn>$(NoWarn);CS1591</NoWarn>
-    <PackageProjectUrl>https://github.com/AdhamAwadhi/JamaaSMPP/</PackageProjectUrl>
-    <RepositoryType>git</RepositoryType>
-    <RepositoryUrl>$(PackageProjectUrl)</RepositoryUrl>
-    <Company>Jamaa Technologies</Company>
-    <Authors>AdhamAwadhi,JamaaTech</Authors>
-    <NeutralLanguage>en</NeutralLanguage>
-    <Owners>AdhamAwadhi,JamaaTech</Owners>
-    <Summary>HardwareAnalyzer</Summary>
-    <PackageTags>.net smpp</PackageTags>
-    <Title>Jamaa SMPP Client</Title>
-    <Description>Jamaa SMPP Client is a .NET implementation of the SMPP protocol that focuses on providing an easy-to-use and robust SMPP client library for .NET developers. This project is intended to be used by developers who want to integrate SMS functionalities in their applications as well as students who are learning the SMPP protocol.</Description>
-    <Copyright>Jamaa Technologies</Copyright>
-    <RepositoryType>git</RepositoryType>
-    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <PackageLicense>https://github.com/AdhamAwadhi/JamaaSMPP/blob/master/LICENSE</PackageLicense>
-    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-    <ReleaseVersion>$(Version)</ReleaseVersion>
-    <Version>$(Version)</Version>
-    <AssemblyVersion>$(Version)</AssemblyVersion>
-    <FileVersion>$(Version)</FileVersion>
-    <PackageReleaseNotes>
-		v1.10.0
+    <PropertyGroup>
+        <LangVersion>latest</LangVersion>
+        <NoWarn>$(NoWarn);CS1591</NoWarn>
+        <PackageProjectUrl>https://github.com/alfkonee/JamaaSMPP</PackageProjectUrl>
+        <RepositoryType>git</RepositoryType>
+        <RepositoryUrl>$(PackageProjectUrl)</RepositoryUrl>
+        <Company>Elyfe Innovations</Company>
+        <Authors>Alfred Neequaye,AdhamAwadhi,JamaaTech</Authors>
+        <NeutralLanguage>en</NeutralLanguage>
+        <Owners>Alfred Neequaye,AdhamAwadhi,JamaaTech</Owners>
+        <Summary>SMPP interface Library</Summary>
+        <PackageTags>.net smpp</PackageTags>
+        <Title>Elyfe SMPP Client</Title>
+        <Description>Elyfe SMPP Client is a .NET implementation of the SMPP protocol that focuses on providing an easy-to-use and robust SMPP client library for .NET developers. This project is intended to be used by developers who want to integrate SMS functionalities in their applications as well as students who are learning the SMPP protocol.Based on JamaaSMPP</Description>
+        <Copyright>Elyfe Innovations</Copyright>
+        <RepositoryType>git</RepositoryType>
+        <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+        <PackageLicense>MIT</PackageLicense>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+        <MinVerTagPrefix>v</MinVerTagPrefix>
+        <PackageReleaseNotes>
+            v2023.10.0
 
-		- Improve SmppClient to respect AddressNPI and AddressTON for Source Addresses
-		- (fix) Fallback Source to Config Value
-		- Bump .Net Versions
-	</PackageReleaseNotes>
-  </PropertyGroup>
+            - Improve handling of multiple messageIds in SmppClient
+        </PackageReleaseNotes>
 
-  <PropertyGroup>
-    <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>..\Jamaa Smpp Client.snk</AssemblyOriginatorKeyFile>
-  </PropertyGroup>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="SourceLink.Create.CommandLine" Version="2.8.3" PrivateAssets="All" />
-    <PackageReference Include="Common.Logging" Version="3.4.1" />
-  </ItemGroup>
+    <PropertyGroup>
+        <SignAssembly>true</SignAssembly>
+        <AssemblyOriginatorKeyFile>..\Jamaa Smpp Client.snk</AssemblyOriginatorKeyFile>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <None Include="..\README.md" Pack="true" PackagePath="\"/>
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="SourceLink.Create.CommandLine" Version="2.8.3" PrivateAssets="All"/>
+        <PackageReference Include="Common.Logging" Version="3.4.1"/>
+        <PackageReference Include="MinVer" Version="4.3.0">
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+            <PrivateAssets>all</PrivateAssets>
+        </PackageReference>
+    </ItemGroup>
 
 </Project>

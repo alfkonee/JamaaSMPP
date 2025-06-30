@@ -16,49 +16,50 @@
 
 using System.Threading;
 
-namespace JamaaTech.Smpp.Net.Lib
+namespace JamaaTech.Smpp.Net.Lib;
+
+internal class PDUWaitContext
 {
-    internal class PDUWaitContext
-    {
-        #region Variables
-        private uint vSequenceNumber;
-        private AutoResetEvent vNotifyEvent;
-        private int vTimeOut;
-        private bool vTimedOut;
-        #endregion
+  #region Variables
 
-        #region Constructors
-        public PDUWaitContext(uint sequenceNumber,int timeOut)
-        {
-            vSequenceNumber = sequenceNumber;
-            vNotifyEvent = new AutoResetEvent(false);
-            vTimeOut = timeOut;
-        }
-        #endregion
+  private uint vSequenceNumber;
+  private AutoResetEvent vNotifyEvent;
+  private int vTimeOut;
+  private bool vTimedOut;
 
-        #region Properties
-        public uint SequenceNumber
-        {
-            get { return vSequenceNumber; }
-        }
+  #endregion
 
-        public bool TimedOut
-        {
-            get { return vTimedOut; }
-        }
-        #endregion
+  #region Constructors
 
-        #region Methods
-        public bool WaitForAlert()
-        {
-            vTimedOut = !vNotifyEvent.WaitOne(vTimeOut,false);
-            return !vTimedOut;
-        }
+  public PDUWaitContext(uint sequenceNumber, int timeOut)
+  {
+    vSequenceNumber = sequenceNumber;
+    vNotifyEvent = new AutoResetEvent(false);
+    vTimeOut = timeOut;
+  }
 
-        public void AlertResponseReceived()
-        {
-            vNotifyEvent.Set();
-        }
-        #endregion
-    }
+  #endregion
+
+  #region Properties
+
+  public uint SequenceNumber => vSequenceNumber;
+
+  public bool TimedOut => vTimedOut;
+
+  #endregion
+
+  #region Methods
+
+  public bool WaitForAlert()
+  {
+    vTimedOut = !vNotifyEvent.WaitOne(vTimeOut, false);
+    return !vTimedOut;
+  }
+
+  public void AlertResponseReceived()
+  {
+    vNotifyEvent.Set();
+  }
+
+  #endregion
 }

@@ -14,16 +14,21 @@
  *
  ************************************************************************/
 
-namespace JamaaTech.Smpp.Net.Lib.Protocol
-{
-    public sealed class BindReceiver : BindRequest
-    {
-        #region Constructors
-        public BindReceiver(SmppEncodingService smppEncodingService)
-            : base(new PDUHeader(CommandType.BindReceiver), smppEncodingService) { }
+namespace JamaaTech.Smpp.Net.Lib.Protocol;
 
-        internal BindReceiver(PDUHeader header, SmppEncodingService smppEncodingService)
-            : base(header, smppEncodingService) { }
-        #endregion
-    }
+public sealed class BindReceiver : BindRequest
+{
+  #region Constructors
+
+  public BindReceiver(SmppEncodingService smppEncodingService)
+    : base(new PDUHeader(CommandType.BindReceiver), smppEncodingService)
+  {
+  }
+
+  internal BindReceiver(PDUHeader header, SmppEncodingService smppEncodingService)
+    : base(header, smppEncodingService)
+  {
+  }
+
+  #endregion
 }

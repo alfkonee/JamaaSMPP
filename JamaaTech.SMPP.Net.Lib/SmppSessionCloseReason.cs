@@ -14,14 +14,13 @@
  *
  ************************************************************************/
 
-namespace JamaaTech.Smpp.Net.Lib
+namespace JamaaTech.Smpp.Net.Lib;
+
+public enum SmppSessionCloseReason
 {
-    public enum SmppSessionCloseReason : int
-    {
-        EndSessionCalled = 1,
-        UnbindRequested = 2,
-        TcpIpSessionClosed = 3,
-        TcpIpSessionError = 4,
-        EnquireLinkTimeout = 5
-    }
+    EndSessionCalled = 1,
+    UnbindRequested = 2,
+    TcpIpSessionClosed = 3,
+    TcpIpSessionError = 4,
+    EnquireLinkTimeout = 5
 }

@@ -1,29 +1,37 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <Import Project="..\common.props" />
+    <Import Project="..\common.props"/>
 
-  <PropertyGroup>
-    <TargetFrameworks>net40;net48;netstandard2.0</TargetFrameworks>
-    <AssemblyName>JamaaTech.Smpp.Net.Client</AssemblyName>
-    <PackageId>JamaaSMPP</PackageId>
-    <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);CopyProjectReferencesToPackage</TargetsForTfmSpecificBuildOutput>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <AssemblyName>JamaaTech.Smpp.Net.Client</AssemblyName>
+        <PackageId>Elyfe.Smpp</PackageId>
+        <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);CopyProjectReferencesToPackage</TargetsForTfmSpecificBuildOutput>
+        <RootNamespace>JamaaTech.Smpp.Net.Client</RootNamespace>
+    </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)' == 'Release' ">
-    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-  </PropertyGroup>
+    <!--<PropertyGroup Condition="'$(Configuration)' == 'Release' ">
+      <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    </PropertyGroup>-->
 
-  <ItemGroup>
-    <ProjectReference Include="..\JamaaTech.Smpp.Net.Lib\Smpp.Net.Lib.csproj">
-      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
-      <IncludeAssets>Smpp.Net.Lib.dll</IncludeAssets>
-    </ProjectReference>
-  </ItemGroup>
-  
-  <Target DependsOnTargets="ResolveReferences" Name="CopyProjectReferencesToPackage">
-    <Message Text="@(ReferenceCopyLocalPaths)" />
     <ItemGroup>
-      <BuildOutputInPackage Include="@(ReferenceCopyLocalPaths-&gt;WithMetadataValue('ReferenceSourceTarget', 'ProjectReference'))" />
+        <ProjectReference Include="..\JamaaTech.SMPP.Net.Lib\Smpp.Net.Lib.csproj">
+            <ReferenceOutputAssembly Condition="'$(Configuration)' == 'Release' ">true</ReferenceOutputAssembly>
+            <IncludeAssets Condition="'$(Configuration)' == 'Release' ">Smpp.Net.Lib.dll</IncludeAssets>
+        </ProjectReference>
     </ItemGroup>
-  </Target>
+
+    <ItemGroup>
+        <PackageReference Update="MinVer" Version="6.0.0">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+    </ItemGroup>
+
+    <Target DependsOnTargets="ResolveReferences" Name="CopyProjectReferencesToPackage">
+        <Message Text="@(ReferenceCopyLocalPaths)"/>
+        <ItemGroup>
+            <BuildOutputInPackage Include="@(ReferenceCopyLocalPaths-&gt;WithMetadataValue('ReferenceSourceTarget', 'ProjectReference'))"/>
+        </ItemGroup>
+    </Target>
 </Project>

@@ -16,16 +16,21 @@
 
 using System;
 
-namespace JamaaTech.Smpp.Net.Lib.Protocol
-{
-    public class NotEnoughBytesException : PDUException
-    {
-        #region Constructors
-        public NotEnoughBytesException(string message)
-            : base(SmppErrorCode.ESME_RINVCMDLEN, message) { }
+namespace JamaaTech.Smpp.Net.Lib.Protocol;
 
-        public NotEnoughBytesException(string messager, Exception innerException)
-            : base(SmppErrorCode.ESME_RINVCMDLEN,messager, innerException) { }
-        #endregion
-    }
+public class NotEnoughBytesException : PDUException
+{
+  #region Constructors
+
+  public NotEnoughBytesException(string message)
+    : base(SmppErrorCode.ESME_RINVCMDLEN, message)
+  {
+  }
+
+  public NotEnoughBytesException(string messager, Exception innerException)
+    : base(SmppErrorCode.ESME_RINVCMDLEN, messager, innerException)
+  {
+  }
+
+  #endregion
 }
