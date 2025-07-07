@@ -14,7 +14,6 @@
  *
  ************************************************************************/
 
-using System;
 using JamaaTech.Smpp.Net.Lib.Util;
 
 namespace JamaaTech.Smpp.Net.Lib;

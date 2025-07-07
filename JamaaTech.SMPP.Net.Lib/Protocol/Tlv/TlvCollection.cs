@@ -14,8 +14,6 @@
  *
  ************************************************************************/
 
-using System;
-using System.Collections.Generic;
 using JamaaTech.Smpp.Net.Lib.Util;
 
 namespace JamaaTech.Smpp.Net.Lib.Protocol.Tlv;

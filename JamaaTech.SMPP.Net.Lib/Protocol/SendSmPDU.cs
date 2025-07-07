@@ -14,7 +14,6 @@
  *
  ************************************************************************/
 
-using System;
 using JamaaTech.Smpp.Net.Lib.Util;
 using System.Diagnostics;
 

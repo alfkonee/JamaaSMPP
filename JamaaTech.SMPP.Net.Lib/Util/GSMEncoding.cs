@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace JamaaTech.Smpp.Net.Lib.Util;
+﻿namespace JamaaTech.Smpp.Net.Lib.Util;
 
 /// <summary>
 /// Text encoding class for the GSM 03.38 alphabet.

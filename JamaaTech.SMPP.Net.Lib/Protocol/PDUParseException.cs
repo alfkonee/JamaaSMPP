@@ -14,8 +14,6 @@
  *
  ************************************************************************/
 
-using System;
-
 namespace JamaaTech.Smpp.Net.Lib.Protocol;
 
 public class PDUParseException : PDUException

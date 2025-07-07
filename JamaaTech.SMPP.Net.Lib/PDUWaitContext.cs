@@ -14,8 +14,6 @@
  *
  ************************************************************************/
 
-using System.Threading;
-
 namespace JamaaTech.Smpp.Net.Lib;
 
 internal class PDUWaitContext
