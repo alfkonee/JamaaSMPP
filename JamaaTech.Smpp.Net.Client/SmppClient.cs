@@ -71,6 +71,11 @@ namespace JamaaTech.Smpp.Net.Client
         public event EventHandler<MessageEventArgs> MessageSent;
 
         /// <summary>
+        /// Occurs when a message pdu (part) is successfully sent
+        /// </summary>
+        public event EventHandler<MessagePduEventArgs> MessagePduSent;
+
+        /// <summary>
         /// Occurs when <see cref="SmppClient"/> is started or shut down
         /// </summary>
         public event EventHandler<StateChangedEventArgs> StateChanged;
@@ -192,8 +197,9 @@ namespace JamaaTech.Smpp.Net.Client
 
             string messageId = message.ReceiptedMessageId;
             var srcAddress = new SmppAddress(vProperties.AddressTon, vProperties.AddressNpi, string.IsNullOrWhiteSpace(message.SourceAddress) ? Properties.SourceAddress : message.SourceAddress);
-            var destAddress = new SmppAddress(){ Address = message.DestinationAddress};
-            foreach (SendSmPDU pdu in message.GetMessagePDUs(vProperties.DefaultEncoding, vSmppEncodingService,destAddress, srcAddress))
+            var destAddress = new SmppAddress() { Address = message.DestinationAddress };
+
+            foreach (SendSmPDU pdu in message.GetMessagePDUs(vProperties.DefaultEncoding, vSmppEncodingService, destAddress, srcAddress))
             {
                 if (_Log.IsDebugEnabled) _Log.DebugFormat("SendMessage SendSmPDU: {0}", LoggingExtensions.DumpString(pdu, vSmppEncodingService));
                 ResponsePDU resp = SendPdu(pdu, timeOut);
@@ -203,9 +209,12 @@ namespace JamaaTech.Smpp.Net.Client
                     if (_Log.IsDebugEnabled) _Log.DebugFormat("SendMessage Response: {0}", LoggingExtensions.DumpString(resp, vSmppEncodingService));
                     messageId = ((SubmitSmResp)resp).MessageID;
                 }
-                message.ReceiptedMessageId = messageId;
-                RaiseMessageSentEvent(message);
+                // Set the message id only if we have a valid message id
+                // when Response is default, id is null or empty
+                if (!string.IsNullOrWhiteSpace(messageId)) message.ReceiptedMessageId = messageId;
+                RaiseMessagePduSentEvent(message, pdu);
             }
+            RaiseMessageSentEvent(message);
         }
 
         /// <summary>
@@ -504,6 +513,11 @@ namespace JamaaTech.Smpp.Net.Client
         private void RaiseMessageSentEvent(ShortMessage message)
         {
             if (MessageSent != null) { MessageSent(this, new MessageEventArgs(message)); }
+        }
+
+        private void RaiseMessagePduSentEvent(ShortMessage message, SendSmPDU pdu)
+        {
+            if (MessagePduSent != null) { MessagePduSent(this, new MessagePduEventArgs(message, pdu)); }
         }
 
         private void RaiseConnectionStateChangeEvent(SmppConnectionState newState, SmppConnectionState oldState)
