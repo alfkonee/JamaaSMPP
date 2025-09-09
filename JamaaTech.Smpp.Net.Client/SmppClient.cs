@@ -49,10 +49,6 @@ namespace JamaaTech.Smpp.Net.Client
         #endregion
 
         #region Events
-        /// <summary>
-        /// Occurs when a pdu is received
-        /// </summary>
-        public event EventHandler<PduReceivedEventArgs> PduReceived;
 
         /// <summary>
         /// Occurs when a message is received
@@ -495,11 +491,6 @@ namespace JamaaTech.Smpp.Net.Client
             RaiseConnectionStateChangeEvent(newState, oldState);
         }
 
-        private void RaisePduReceivedEvent(PduReceivedEventArgs eventArgs)
-        {
-            if (PduReceived != null) { PduReceived(this, eventArgs); }
-        }
-
         private void RaiseMessageReceivedEvent(ShortMessage message)
         {
             if (MessageReceived != null) { MessageReceived(this, new MessageEventArgs(message)); }
@@ -533,8 +524,6 @@ namespace JamaaTech.Smpp.Net.Client
 
         private void PduReceivedEventHander(object sender, PduReceivedEventArgs e)
         {
-            RaisePduReceivedEvent(e);
-
             //This handler is interested in SingleDestinationPDU only
             SingleDestinationPDU pdu = e.Request as SingleDestinationPDU;
             if (pdu == null) { return; }
