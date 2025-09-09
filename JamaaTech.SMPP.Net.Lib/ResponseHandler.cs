@@ -28,12 +28,29 @@ namespace JamaaTech.Smpp.Net.Lib
         private IDictionary<uint, PDUWaitContext> vWaitingQueue;
         private AutoResetEvent vResponseEvent;
         private AutoResetEvent vWaitingEvent;
+        // Minimum enforced timeout (was hard-coded 5000). Made adjustable for testing.
+        private static int sMinTimeout = 5000;
+        #endregion
+
+        #region Testing Helpers
+        /// <summary>
+        /// Adjust minimum timeout (intended for unit testing). Use cautiously in production.
+        /// </summary>
+        public static void SetMinimumTimeoutForTesting(int milliseconds)
+        {
+            if (milliseconds < 1) { milliseconds = 1; }
+            Interlocked.Exchange(ref sMinTimeout, milliseconds);
+        }
+        /// <summary>
+        /// Returns current minimum enforced timeout.
+        /// </summary>
+        public static int GetMinimumTimeoutForTesting() { return sMinTimeout; }
         #endregion
 
         #region Constructors
         public ResponseHandler()
         {
-            vDefaultResponseTimeout = 5000; //Five seconds
+            vDefaultResponseTimeout = sMinTimeout; //Default min
             vWaitingQueue = new Dictionary<uint, PDUWaitContext>(32);
             vResponseQueue = new Dictionary<uint, ResponsePDU>(32);
             vResponseEvent = new AutoResetEvent(true);
@@ -47,7 +64,7 @@ namespace JamaaTech.Smpp.Net.Lib
             get { return vDefaultResponseTimeout; }
             set
             {
-                int timeOut = 5000;
+                int timeOut = sMinTimeout;
                 if (value > timeOut) { timeOut = value; }
                 Interlocked.Exchange(ref vDefaultResponseTimeout, timeOut);
             }
@@ -87,7 +104,7 @@ namespace JamaaTech.Smpp.Net.Lib
             uint sequenceNumber = pdu.Header.SequenceNumber;
             ResponsePDU resp = FetchResponse(sequenceNumber);
             if (resp != null) { return resp; }
-            if (timeOut < 5000) { timeOut = vDefaultResponseTimeout; }
+            if (timeOut < sMinTimeout) { timeOut = vDefaultResponseTimeout; }
             PDUWaitContext waitContext = new PDUWaitContext(sequenceNumber, timeOut);
             vWaitingEvent.WaitOne();
             try { vWaitingQueue[sequenceNumber] = waitContext; }
