@@ -16,6 +16,7 @@
 
 using System;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Diagnostics;
 using JamaaTech.Smpp.Net.Lib;
 using JamaaTech.Smpp.Net.Lib.Protocol;
@@ -241,17 +242,40 @@ namespace JamaaTech.Smpp.Net.Client
         /// </summary>
         /// <param name="message">A message to send</param>
         /// <param name="timeout">A value in miliseconds after which the send operation times out</param>
+        /// <returns>A task representing the asynchronous send message operation</returns>
+        public virtual async Task SendMessageAsync(ShortMessage message, int timeout)
+        {
+            await Task.Run(() => vSendMessageCallBack(message, timeout));
+        }
+
+        /// <summary>
+        /// Sends message asynchronously to a remote SMPP server
+        /// </summary>
+        /// <param name="message">A message to send</param>
+        /// <returns>A task representing the asynchronous send message operation</returns>
+        public virtual async Task SendMessageAsync(ShortMessage message)
+        {
+            int timeout = vTrans.DefaultResponseTimeout;
+            await SendMessageAsync(message, timeout);
+        }
+
+        /// <summary>
+        /// Sends message asynchronously to a remote SMPP server
+        /// </summary>
+        /// <param name="message">A message to send</param>
+        /// <param name="timeout">A value in miliseconds after which the send operation times out</param>
         /// <param name="callback">An <see cref="AsyncCallback"/> delegate</param>
         /// <param name="state">An object that contains state information for this request</param>
         /// <returns>An <see cref="IAsyncResult"/> that references the asynchronous send message operation</returns>
+        [Obsolete("Use SendMessageAsync instead. This method is provided for backward compatibility only.")]
         public virtual IAsyncResult BeginSendMessage(ShortMessage message, int timeout, AsyncCallback callback, object state)
         {
-#if NET40
-            return vSendMessageCallBack.BeginInvoke(message, timeout, callback, state);
-
-#else
-                return System.Threading.Tasks.Task.Run(() => vSendMessageCallBack(message, timeout));
-#endif
+            var task = SendMessageAsync(message, timeout);
+            if (callback != null)
+            {
+                task.ContinueWith(t => callback(t), TaskScheduler.Default);
+            }
+            return task;
         }
 
         /// <summary>
@@ -261,10 +285,10 @@ namespace JamaaTech.Smpp.Net.Client
         /// <param name="callback">An <see cref="AsyncCallback"/> delegate</param>
         /// <param name="state">An object that contains state information for this request</param>
         /// <returns>An <see cref="IAsyncResult"/> that references the asynchronous send message operation</returns>
+        [Obsolete("Use SendMessageAsync instead. This method is provided for backward compatibility only.")]
         public virtual IAsyncResult BeginSendMessage(ShortMessage message, AsyncCallback callback, object state)
         {
-            int timeout = 0;
-            timeout = vTrans.DefaultResponseTimeout;
+            int timeout = vTrans.DefaultResponseTimeout;
             return BeginSendMessage(message, timeout, callback, state);
         }
 
@@ -272,9 +296,17 @@ namespace JamaaTech.Smpp.Net.Client
         /// Ends a pending asynchronous send message operation
         /// </summary>
         /// <param name="result">An <see cref="IAsyncResult"/> that stores state information for this asynchronous operation</param>
+        [Obsolete("Use SendMessageAsync instead. This method is provided for backward compatibility only.")]
         public virtual void EndSendMessage(IAsyncResult result)
         {
-            vSendMessageCallBack.EndInvoke(result);
+            if (result is Task task)
+            {
+                task.GetAwaiter().GetResult();
+            }
+            else
+            {
+                throw new ArgumentException("Invalid async result", nameof(result));
+            }
         }
 
         /// <summary>

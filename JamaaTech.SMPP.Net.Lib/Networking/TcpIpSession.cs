@@ -213,12 +213,7 @@ namespace JamaaTech.Smpp.Net.Lib.Networking
             foreach (EventHandler<TcpIpSessionClosedEventArgs> del in delegates)
             {
                 if (del == null) continue;
-#if NET40
-                del.BeginInvoke(this, new TcpIpSessionClosedEventArgs(reason, ex),
-                    AsyncCallBackRaiseSessionClosedEvent, del);
-#else
                 System.Threading.Tasks.Task.Run(() => del.Invoke(this, new TcpIpSessionClosedEventArgs(reason, ex)));
-#endif
             }
         }
 
@@ -227,28 +222,10 @@ namespace JamaaTech.Smpp.Net.Lib.Networking
             if (SessionException == null) { return; }
             foreach (EventHandler<TcpIpSessionExceptionEventArgs> del in SessionException.GetInvocationList())
             {
-#if NET40
-                del.BeginInvoke(this, new TcpIpSessionExceptionEventArgs(ex),
-                    AsyncCallBackRaiseSessionExceptionEvent, del);
-#else
                 System.Threading.Tasks.Task.Run(() => del.Invoke(this, new TcpIpSessionExceptionEventArgs(ex)));
-#endif
             }
         }
 
-        private void AsyncCallBackRaiseSessionClosedEvent(IAsyncResult result)
-        {
-            EventHandler<TcpIpSessionClosedEventArgs> del =
-                (EventHandler<TcpIpSessionClosedEventArgs>)result.AsyncState;
-            del.EndInvoke(result);
-        }
-
-        private void AsyncCallBackRaiseSessionExceptionEvent(IAsyncResult result)
-        {
-            EventHandler<TcpIpSessionExceptionEventArgs> del =
-                (EventHandler<TcpIpSessionExceptionEventArgs>)result.AsyncState;
-            del.EndInvoke(result);
-        }
         #endregion
 
         #region Public Methods

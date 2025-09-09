@@ -4,9 +4,6 @@ using System;
 using System.Threading;
 using JamaaTech.Smpp.Net.Lib;
 using JamaaTech.Smpp.Net.Lib.Protocol;
-#if NET40
-using SettingsReader.Readers;
-#endif
 using System.Linq;
 
 namespace DemoClient
@@ -47,6 +44,7 @@ namespace DemoClient
             //Trace.Listeners.Add(new ConsoleTraceListener());
 
             smppConfig = GetSmppConfiguration();
+            smppConfig = GetLocalhostConfig();
 
             //SMPPEncodingUtil.UCS2Encoding = Encoding.UTF8;
 
@@ -175,12 +173,29 @@ namespace DemoClient
             }
         }
 
+        private static ISmppConfiguration GetLocalhostConfig()
+        {
+            return new SmppConfiguration()
+            {
+                SystemID = "sysId",
+                Password = "sysPass",
+                Host = "127.0.0.1",
+                Port = 3775,
+                SystemType = "",
+                DefaultServiceType = "5750",
+                SourceAddress = "5750",
+                Encoding = DataCoding.UCS2,
+                AddressNpi = NumberingPlanIndicator.Unknown,
+                AddressTon = TypeOfNumber.Unknown,
+                UserMessageReferenceType = UserMessageReferenceType.Int,
+                RegisterDeliveryNotification = true,
+                UseSeparateConnections = false,
+                //SplitMethod = SplitMethodType.UDH
+            };
+        }
+
         private static ISmppConfiguration GetSmppConfiguration()
         {
-#if NET40
-            var reader = new AppSettingsReader();
-            return reader.Read<SmppConfiguration>();
-#else
             return new SmppConfiguration()
             {
                 SystemID = "smppclient1",
@@ -197,7 +212,6 @@ namespace DemoClient
                 RegisterDeliveryNotification = true,
                 UseSeparateConnections = true
             };
-#endif
         }
 
         static SmppClient CreateSmppClient(ISmppConfiguration config)

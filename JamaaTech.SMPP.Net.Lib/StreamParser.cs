@@ -90,11 +90,7 @@ namespace JamaaTech.Smpp.Net.Lib
                     PDU pdu = WaitPDU();
                     if (pdu is RequestPDU)
                     {
-#if NET40
-                        vProcessorCallback.BeginInvoke((RequestPDU)pdu, AsyncCallBackProcessPduRequest, null);  //old
-#else
-                        System.Threading.Tasks.Task.Run(() => vProcessorCallback.Invoke((RequestPDU)pdu));      //new
-#endif
+                        System.Threading.Tasks.Task.Run(() => vProcessorCallback.Invoke((RequestPDU)pdu));
                     }
                     else if (pdu is ResponsePDU) { vResponseHandler.Handle(pdu as ResponsePDU); }
                 }
@@ -231,11 +227,7 @@ namespace JamaaTech.Smpp.Net.Lib
             PDUErrorEventArgs e = new PDUErrorEventArgs(exception, byteDump, header, pdu);
             foreach (EventHandler<PDUErrorEventArgs> del in PDUError.GetInvocationList())
             {
-#if NET40
-                del.BeginInvoke(this, e, AsyncCallBackRaisePduErrorEvent, del);
-#else
                 System.Threading.Tasks.Task.Run(() => del.Invoke(this, e));
-#endif
             }
         }
 
@@ -245,32 +237,10 @@ namespace JamaaTech.Smpp.Net.Lib
             ParserExceptionEventArgs e = new ParserExceptionEventArgs(exception);
             foreach (EventHandler<ParserExceptionEventArgs> del in ParserException.GetInvocationList())
             {
-#if NET40
-                del.BeginInvoke(this, e, AsyncCallBackRaiseParserExceptionEvent, del);
-#else
                 System.Threading.Tasks.Task.Run(() => del.Invoke(this, e));
-#endif
             }
         }
 
-        private void AsyncCallBackRaisePduErrorEvent(IAsyncResult result)
-        {
-            EventHandler<PDUErrorEventArgs> del =
-                (EventHandler<PDUErrorEventArgs>)result.AsyncState;
-            del.EndInvoke(result);
-        }
-
-        private void AsyncCallBackRaiseParserExceptionEvent(IAsyncResult result)
-        {
-            EventHandler<ParserExceptionEventArgs> del =
-                (EventHandler<ParserExceptionEventArgs>)result.AsyncState;
-            del.EndInvoke(result);
-        }
-
-        private void AsyncCallBackProcessPduRequest(IAsyncResult result)
-        {
-            vProcessorCallback.EndInvoke(result);
-        }
         #endregion
         #endregion
     }

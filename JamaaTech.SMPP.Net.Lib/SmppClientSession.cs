@@ -15,6 +15,7 @@
  ************************************************************************/
 
 using System;
+using System.Threading.Tasks;
 using JamaaTech.Smpp.Net.Lib.Networking;
 using JamaaTech.Smpp.Net.Lib.Protocol;
 using System.Timers;
@@ -198,17 +199,30 @@ namespace JamaaTech.Smpp.Net.Lib
             }
         }
 
-        public IAsyncResult BeginSendPdu(RequestPDU pdu, int timeout, AsyncCallback callback, object @object)
+        public async Task<ResponsePDU> SendPduAsync(RequestPDU pdu, int timeout)
         {
-#if NET40
-            return vCallback.BeginInvoke(pdu, timeout, callback, @object);
-
-#else
-                return System.Threading.Tasks.Task.Run(() => vCallback(pdu, timeout));
-#endif
-
+            return await Task.Run(() => vCallback(pdu, timeout));
         }
 
+        public async Task<ResponsePDU> SendPduAsync(RequestPDU pdu)
+        {
+            int timeout = 0;
+            lock (vSyncRoot) { timeout = vDefaultResponseTimeout; }
+            return await SendPduAsync(pdu, timeout);
+        }
+
+        [Obsolete("Use SendPduAsync instead. This method is provided for backward compatibility only.")]
+        public IAsyncResult BeginSendPdu(RequestPDU pdu, int timeout, AsyncCallback callback, object @object)
+        {
+            var task = SendPduAsync(pdu, timeout);
+            if (callback != null)
+            {
+                task.ContinueWith(t => callback(t), TaskScheduler.Default);
+            }
+            return task;
+        }
+
+        [Obsolete("Use SendPduAsync instead. This method is provided for backward compatibility only.")]
         public IAsyncResult BeginSendPdu(RequestPDU pdu, AsyncCallback callback, object @object)
         {
             int timeout = 0;
@@ -216,9 +230,14 @@ namespace JamaaTech.Smpp.Net.Lib
             return BeginSendPdu(pdu, timeout, callback, @object);
         }
 
+        [Obsolete("Use SendPduAsync instead. This method is provided for backward compatibility only.")]
         public ResponsePDU EndSendPdu(IAsyncResult result)
         {
-            return vCallback.EndInvoke(result);
+            if (result is Task<ResponsePDU> task)
+            {
+                return task.GetAwaiter().GetResult();
+            }
+            throw new ArgumentException("Invalid async result", nameof(result));
         }
 
         public void EndSession()
@@ -496,20 +515,10 @@ namespace JamaaTech.Smpp.Net.Lib
             SmppSessionClosedEventArgs e = new SmppSessionClosedEventArgs(reason, exception);
             foreach (EventHandler<SmppSessionClosedEventArgs> del in SessionClosed.GetInvocationList())
             {
-#if NET40
-                del.BeginInvoke(this, e, AsyncCallBackRaiseSessionClosedEvent, del);
-#else
                 System.Threading.Tasks.Task.Run(() => del.Invoke(this, e));
-#endif
             }
         }
 
-        private void AsyncCallBackRaiseSessionClosedEvent(IAsyncResult result)
-        {
-            EventHandler<SmppSessionClosedEventArgs> del =
-                (EventHandler<SmppSessionClosedEventArgs>)result.AsyncState;
-            del.EndInvoke(result);
-        }
         #endregion
         #endregion
     }
