@@ -28,7 +28,6 @@ namespace JamaaTech.Smpp.Net.Lib
     /// </summary>
     public class StreamParser : RunningComponent
     {
-        private static readonly global::Common.Logging.ILog _Log = global::Common.Logging.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         #region Variables
         private TcpIpSession vTcpIpSession;

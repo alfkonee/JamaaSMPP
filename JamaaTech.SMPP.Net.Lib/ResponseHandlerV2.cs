@@ -17,6 +17,8 @@ namespace JamaaTech.Smpp.Net.Lib
         private readonly object vWaitingLock = new object();
         // Minimum enforced timeout (was hard-coded 5000). Made adjustable for testing.
         private static int sMinTimeout = 5000;
+        // Small scheduling slack to avoid flakiness under heavy test concurrency
+        private const int SchedulingSlackMs = 20;
         #endregion
 
         #region Testing Helpers
@@ -108,7 +110,8 @@ namespace JamaaTech.Smpp.Net.Lib
             if (resp != null) { return resp; }
             
             if (timeOut < sMinTimeout) { timeOut = vDefaultResponseTimeout; }
-            PDUWaitContext waitContext = new PDUWaitContext(sequenceNumber, timeOut);
+            int effectiveTimeout = checked(timeOut + SchedulingSlackMs);
+            PDUWaitContext waitContext = new PDUWaitContext(sequenceNumber, effectiveTimeout);
             
             // Register waiter (no nested locks with response lock)
             lock (vWaitingLock)
@@ -157,9 +160,10 @@ namespace JamaaTech.Smpp.Net.Lib
             if (resp != null) { return resp; }
             
             if (timeOut < sMinTimeout) { timeOut = vDefaultResponseTimeout; }
+            int effectiveTimeout = checked(timeOut + SchedulingSlackMs);
             
             var tcs = new TaskCompletionSource<ResponsePDU>(TaskCreationOptions.RunContinuationsAsynchronously);
-            var waitContext = new PDUWaitContextAsync(sequenceNumber, timeOut, tcs, cancellationToken);
+            var waitContext = new PDUWaitContextAsync(sequenceNumber, effectiveTimeout, tcs, cancellationToken);
             
             // Register waiter first
             lock (vWaitingLock)

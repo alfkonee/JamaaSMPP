@@ -20,6 +20,8 @@ namespace JamaaTech.Smpp.Net.Lib.Util
 {
     public abstract class RunningComponent
     {
+        internal static readonly global::Common.Logging.ILog _Log = global::Common.Logging.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         #region Variables
         protected bool vRunning;
         protected object vSyncRoot;
@@ -88,12 +90,30 @@ namespace JamaaTech.Smpp.Net.Lib.Util
 
         protected virtual void ThreadCallback()
         {
-            lock (vSyncRoot) { vRunning = true; }
-            RunNow();
-            lock (vSyncRoot)
+            lock (vSyncRoot) { vRunning = true; vStopOnNextCycle = false; }
+            try
             {
-                vRunning = false;
-                vRunningThread = null;
+                RunNow();
+            }
+            catch (System.Threading.ThreadAbortException)
+            {
+                // Ensure state is reset even if an abort was requested (legacy behavior)
+                Thread.ResetAbort();
+            }
+            catch (System.Exception ex)
+            {
+                // Swallow to prevent crashing the process, but log for diagnostics
+                System.Diagnostics.Debug.WriteLine($"RunningComponent terminated due to exception: {ex}");
+                _Log.Error("RunningComponent terminated due to exception", ex);
+            }
+            finally
+            {
+                lock (vSyncRoot)
+                {
+                    vRunning = false;
+                    vRunningThread = null;
+                    vStopOnNextCycle = true;
+                }
             }
         }
 

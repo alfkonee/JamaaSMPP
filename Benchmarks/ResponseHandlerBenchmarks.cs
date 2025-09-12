@@ -15,7 +15,6 @@ public class ResponseHandlerBenchmarks
     private ResponseHandler _handlerV1 = null!;
     private ResponseHandlerV2 _handlerV2 = null!;
     private ConcurrentResponseHandler _handlerV3 = null!;
-    private ResponseHandler3 _handlerV4 = null!;
 
     [Params(1, 10, 100)]
     public int Pending;
@@ -32,11 +31,9 @@ public class ResponseHandlerBenchmarks
         ResponseHandler.SetMinimumTimeoutForTesting(1);
         ResponseHandlerV2.SetMinimumTimeoutForTesting(1);
         ConcurrentResponseHandler.SetMinimumTimeoutForTesting(1);
-        ResponseHandler3.SetMinimumTimeoutForTesting(1);
         _handlerV1 = new ResponseHandler();
         _handlerV2 = new ResponseHandlerV2();
         _handlerV3 = new ConcurrentResponseHandler();
-        _handlerV4 = new ResponseHandler3();
         _requests = new TestRequestPDU[Pending];
         _responses = new TestResponsePDU[Pending];
         for (uint i = 0; i < Pending; i++)
@@ -89,20 +86,6 @@ public class ResponseHandlerBenchmarks
     }
 
     [Benchmark]
-    public void V4_WaitAndHandleSequential()
-    {
-        for (int i = 0; i < Pending; i++)
-        {
-            var req = _requests[i];
-            var resp = _responses[i];
-            var waitThread = new Thread(() => _handlerV4.WaitResponse(req, 5));
-            waitThread.Start();
-            _handlerV4.Handle(resp);
-            waitThread.Join();
-        }
-    }
-
-    [Benchmark]
     public void V1_HandleOnly()
     {
         for (int i = 0; i < Pending; i++)
@@ -126,15 +109,6 @@ public class ResponseHandlerBenchmarks
         for (int i = 0; i < Pending; i++)
         {
             _handlerV3.Handle(_responses[i]);
-        }
-    }
-
-    [Benchmark]
-    public void V4_HandleOnly()
-    {
-        for (int i = 0; i < Pending; i++)
-        {
-            _handlerV4.Handle(_responses[i]);
         }
     }
 
@@ -177,20 +151,6 @@ public class ResponseHandlerBenchmarks
             var resp = _responses[i];
             var t = Task.Run(() => _handlerV3.WaitResponse(req, 5));
             _handlerV3.Handle(resp);
-            t.GetAwaiter().GetResult();
-        });
-    }
-
-    [Benchmark]
-    public void V4_WaitAndHandleParallel()
-    {
-        var options = new ParallelOptions { MaxDegreeOfParallelism = Parallelism };
-        Parallel.For(0, Pending, options, i =>
-        {
-            var req = _requests[i];
-            var resp = _responses[i];
-            var t = Task.Run(() => _handlerV4.WaitResponse(req, 5));
-            _handlerV4.Handle(resp);
             t.GetAwaiter().GetResult();
         });
     }
@@ -255,16 +215,6 @@ public class ResponseHandlerBenchmarks
         }
     }
 
-    [Benchmark]
-    public void V4_ResponseBeforeWait()
-    {
-        for (int i = 0; i < Pending; i++)
-        {
-            _handlerV4.Handle(_responses[i]);
-            _ = _handlerV4.WaitResponse(_requests[i], 5);
-        }
-    }
-
     // Timeout scenarios (catch and ignore expected timeouts)
     [Benchmark]
     public void V1_Timeouts()
@@ -292,16 +242,6 @@ public class ResponseHandlerBenchmarks
         for (int i = 0; i < Pending; i++)
         {
             try { _ = _handlerV3.WaitResponse(_requests[i], 1); }
-            catch (SmppResponseTimedOutException) { }
-        }
-    }
-
-    [Benchmark]
-    public void V4_Timeouts()
-    {
-        for (int i = 0; i < Pending; i++)
-        {
-            try { _ = _handlerV4.WaitResponse(_requests[i], 1); }
             catch (SmppResponseTimedOutException) { }
         }
     }
