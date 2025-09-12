@@ -15,6 +15,7 @@
  ************************************************************************/
 
 using System;
+using System.Threading.Tasks;
 using JamaaTech.Smpp.Net.Lib.Protocol;
 using JamaaTech.Smpp.Net.Lib.Networking;
 using JamaaTech.Smpp.Net.Lib.Util;
@@ -90,7 +91,17 @@ namespace JamaaTech.Smpp.Net.Lib
                     PDU pdu = WaitPDU();
                     if (pdu is RequestPDU)
                     {
-                        System.Threading.Tasks.Task.Run(() => vProcessorCallback.Invoke((RequestPDU)pdu));
+                        Task.Factory.StartNew(() => 
+                        {
+                            try
+                            {
+                                vProcessorCallback.Invoke((RequestPDU)pdu);
+                            }
+                            catch (Exception ex)
+                            {
+                                _Log.ErrorFormat("Exception in PDU processor callback: {0}", ex, ex.Message);
+                            }
+                        }, TaskCreationOptions.DenyChildAttach);
                     }
                     else if (pdu is ResponsePDU) { vResponseHandler.Handle(pdu as ResponsePDU); }
                 }
@@ -227,7 +238,17 @@ namespace JamaaTech.Smpp.Net.Lib
             PDUErrorEventArgs e = new PDUErrorEventArgs(exception, byteDump, header, pdu);
             foreach (EventHandler<PDUErrorEventArgs> del in PDUError.GetInvocationList())
             {
-                System.Threading.Tasks.Task.Run(() => del.Invoke(this, e));
+                Task.Factory.StartNew(() => 
+                {
+                    try
+                    {
+                        del.Invoke(this, e);
+                    }
+                    catch (Exception ex)
+                    {
+                        _Log.ErrorFormat("Exception in PDUError event handler: {0}", ex, ex.Message);
+                    }
+                }, TaskCreationOptions.DenyChildAttach);
             }
         }
 
@@ -237,7 +258,17 @@ namespace JamaaTech.Smpp.Net.Lib
             ParserExceptionEventArgs e = new ParserExceptionEventArgs(exception);
             foreach (EventHandler<ParserExceptionEventArgs> del in ParserException.GetInvocationList())
             {
-                System.Threading.Tasks.Task.Run(() => del.Invoke(this, e));
+                Task.Factory.StartNew(() => 
+                {
+                    try
+                    {
+                        del.Invoke(this, e);
+                    }
+                    catch (Exception ex)
+                    {
+                        _Log.ErrorFormat("Exception in ParserException event handler: {0}", ex, ex.Message);
+                    }
+                }, TaskCreationOptions.DenyChildAttach);
             }
         }
 

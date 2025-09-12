@@ -15,6 +15,7 @@
  ************************************************************************/
 
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using JamaaTech.Smpp.Net.Lib.Networking;
 using JamaaTech.Smpp.Net.Lib.Protocol;
@@ -30,7 +31,7 @@ namespace JamaaTech.Smpp.Net.Lib
         private static readonly global::Common.Logging.ILog _Log = global::Common.Logging.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         #region Variables
-        private Timer vTimer;
+        private System.Timers.Timer vTimer;
         private PDUTransmitter vTrans;
         private IResponseHandler vRespHandler;
         private StreamParser vStreamParser;
@@ -199,9 +200,48 @@ namespace JamaaTech.Smpp.Net.Lib
             }
         }
 
-        public async Task<ResponsePDU> SendPduAsync(RequestPDU pdu, int timeout)
+        private async Task SendPduBaseAsync(PDU pdu, CancellationToken cancellationToken = default)
         {
-            return await Task.Run(() => vCallback(pdu, timeout));
+            if (pdu == null) { throw new ArgumentNullException("pdu"); }
+            if (!(CheckState(pdu) && (pdu.AllowedSource & SmppEntityType.ESME) == SmppEntityType.ESME))
+            { throw new SmppException(SmppErrorCode.ESME_RINVBNDSTS, "Incorrect bind status for given command"); }
+            try
+            {
+                await vTrans.SendAsync(pdu, cancellationToken).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                ByteBuffer buffer = new ByteBuffer(pdu.GetBytes());
+                _Log.ErrorFormat("200022:PDU send operation failed - {0}", ex, buffer.DumpString());
+                if (vTraceSwitch.TraceInfo)
+                {
+                    Trace.WriteLine(string.Format(
+                        "200022:PDU send operation failed - {0} {1};",
+                        buffer.DumpString(), ex.Message));
+                }
+            }
+        }
+
+        public async Task<ResponsePDU> SendPduAsync(RequestPDU pdu, int timeout, CancellationToken cancellationToken = default)
+        {
+            await SendPduBaseAsync(pdu, cancellationToken).ConfigureAwait(false);
+            if (pdu.HasResponse)
+            {
+                try
+                {
+                    return vRespHandler.WaitResponse(pdu, timeout);
+                    //return await vRespHandler.WaitResponseAsync(pdu, timeout, cancellationToken).ConfigureAwait(false);
+                }
+                catch (SmppResponseTimedOutException)
+                {
+                    _Log.Error("200016:PDU send operation timed out;");
+                    if (vTraceSwitch.TraceWarning)
+                    { Trace.WriteLine("200016:PDU send operation timed out;"); }
+                    throw;
+                }
+            }
+            else if (pdu.EmptyResponse) { return pdu.GenericNack(SmppErrorCode.ESME_ROK); }
+            else { return null; }
         }
 
         public async Task<ResponsePDU> SendPduAsync(RequestPDU pdu)
@@ -397,7 +437,7 @@ namespace JamaaTech.Smpp.Net.Lib
 
         private void InitializeTimer()
         {
-            vTimer = new Timer(DEFAULT_DELAY);
+            vTimer = new System.Timers.Timer(DEFAULT_DELAY);
             vTimer.Elapsed += new ElapsedEventHandler(TimerCallback);
         }
 
@@ -515,7 +555,18 @@ namespace JamaaTech.Smpp.Net.Lib
             SmppSessionClosedEventArgs e = new SmppSessionClosedEventArgs(reason, exception);
             foreach (EventHandler<SmppSessionClosedEventArgs> del in SessionClosed.GetInvocationList())
             {
-                System.Threading.Tasks.Task.Run(() => del.Invoke(this, e));
+                Task.Factory.StartNew(() =>
+                {
+                    try
+                    {
+                        del.Invoke(this, e);
+                    }
+                    catch (Exception ex)
+                    {
+                        // Log the exception but don't let it propagate to avoid crashing the application
+                        _Log.ErrorFormat("Exception in SessionClosed event handler: {0}", ex, ex.Message);
+                    }
+                }, TaskCreationOptions.DenyChildAttach);
             }
         }
 

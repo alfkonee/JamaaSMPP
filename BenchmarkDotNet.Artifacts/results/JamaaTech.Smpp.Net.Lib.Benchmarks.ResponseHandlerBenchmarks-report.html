@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<meta charset='utf-8' />
+<title>JamaaTech.Smpp.Net.Lib.Benchmarks.ResponseHandlerBenchmarks-20250911-232821</title>
+
+<style type="text/css">
+	table { border-collapse: collapse; display: block; width: 100%; overflow: auto; }
+	td, th { padding: 6px 13px; border: 1px solid #ddd; text-align: right; }
+	tr { background-color: #fff; border-top: 1px solid #ccc; }
+	tr:nth-child(even) { background: #f8f8f8; }
+</style>
+</head>
+<body>
+<pre><code>
+BenchmarkDotNet v0.13.12, Windows 11 (10.0.26100.6584)
+Intel Core i9-9880H CPU 2.30GHz, 1 CPU, 16 logical and 8 physical cores
+.NET SDK 9.0.305
+  [Host]     : .NET 8.0.20 (8.0.2025.41914), X64 RyuJIT AVX2
+  DefaultJob : .NET 8.0.20 (8.0.2025.41914), X64 RyuJIT AVX2
+</code></pre>
+<pre><code></code></pre>
+
+<table>
+<thead><tr><th>Method                    </th><th>Pending</th><th>Parallelism</th><th>Mean         </th><th>Error     </th><th>StdDev     </th><th>Median       </th><th>Gen0</th><th>Completed Work Items</th><th>Lock Contentions</th><th>Gen1</th><th>Gen2</th><th>Allocated</th>
+</tr>
+</thead><tbody><tr><td>V1_WaitAndHandleSequential</td><td>1</td><td>1</td><td>388,392.58 ns</td><td>86,411.661 ns</td><td>246,537.332 ns</td><td>267,112.50 ns</td><td>-</td><td>-</td><td>0.0059</td><td>-</td><td>-</td><td>409 B</td>
+</tr><tr><td>V2_WaitAndHandleSequential</td><td>1</td><td>1</td><td>414,445.78 ns</td><td>54,221.502 ns</td><td>158,166.667 ns</td><td>398,681.77 ns</td><td>0.2441</td><td>-</td><td>0.0320</td><td>0.2441</td><td>0.2441</td><td>232 B</td>
+</tr><tr><td>V3_WaitAndHandleSequential</td><td>1</td><td>1</td><td>236,066.38 ns</td><td>10,741.163 ns</td><td>30,470.893 ns</td><td>229,198.71 ns</td><td>-</td><td>-</td><td>0.0005</td><td>-</td><td>-</td><td>253 B</td>
+</tr><tr><td>V4_WaitAndHandleSequential</td><td>1</td><td>1</td><td>NA</td><td>NA</td><td>NA</td><td>NA</td><td>NA</td><td>NA</td><td>NA</td><td>NA</td><td>NA</td><td>NA</td>
+</tr><tr><td>V1_HandleOnly</td><td>1</td><td>1</td><td>2,702.42 ns</td><td>92.812 ns</td><td>266.294 ns</td><td>2,721.79 ns</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>V2_HandleOnly</td><td>1</td><td>1</td><td>49.87 ns</td><td>1.979 ns</td><td>5.834 ns</td><td>48.25 ns</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>V3_HandleOnly</td><td>1</td><td>1</td><td>55.68 ns</td><td>2.775 ns</td><td>8.183 ns</td><td>53.56 ns</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>V4_HandleOnly</td><td>1</td><td>1</td><td>48.23 ns</td><td>1.574 ns</td><td>4.640 ns</td><td>47.96 ns</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>V1_WaitAndHandleParallel</td><td>1</td><td>1</td><td>9,804.80 ns</td><td>235.255 ns</td><td>682.517 ns</td><td>9,785.18 ns</td><td>0.1831</td><td>1.0000</td><td>0.0004</td><td>-</td><td>-</td><td>1619 B</td>
+</tr><tr><td>V2_WaitAndHandleParallel</td><td>1</td><td>1</td><td>1,830.08 ns</td><td>102.013 ns</td><td>289.395 ns</td><td>1,753.77 ns</td><td>0.1926</td><td>1.0000</td><td>0.0000</td><td>-</td><td>-</td><td>1616 B</td>
+</tr><tr><td>V3_WaitAndHandleParallel</td><td>1</td><td>1</td><td>2,777.27 ns</td><td>89.407 ns</td><td>259.385 ns</td><td>2,731.65 ns</td><td>0.1907</td><td>1.0000</td><td>0.0001</td><td>-</td><td>-</td><td>1616 B</td>
+</tr><tr><td>V4_WaitAndHandleParallel</td><td>1</td><td>1</td><td>2,754.39 ns</td><td>70.662 ns</td><td>203.876 ns</td><td>2,719.53 ns</td><td>0.1907</td><td>1.0000</td><td>0.0002</td><td>-</td><td>-</td><td>1616 B</td>
+</tr><tr><td>V2_WaitAndHandleAsync_Sequential</td><td>1</td><td>1</td><td>144.98 ns</td><td>5.495 ns</td><td>15.677 ns</td><td>141.79 ns</td><td>0.0086</td><td>-</td><td>-</td><td>-</td><td>-</td><td>72 B</td>
+</tr><tr><td>V2_WaitAndHandleAsync_Parallel</td><td>1</td><td>1</td><td>340.36 ns</td><td>20.850 ns</td><td>61.476 ns</td><td>349.33 ns</td><td>0.0305</td><td>-</td><td>-</td><td>-</td><td>-</td><td>256 B</td>
+</tr><tr><td>V1_ResponseBeforeWait</td><td>1</td><td>1</td><td>4,556.77 ns</td><td>262.391 ns</td><td>773.667 ns</td><td>4,649.32 ns</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>V2_ResponseBeforeWait</td><td>1</td><td>1</td><td>95.60 ns</td><td>4.702 ns</td><td>13.864 ns</td><td>96.11 ns</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>V3_ResponseBeforeWait</td><td>1</td><td>1</td><td>89.40 ns</td><td>6.193 ns</td><td>18.260 ns</td><td>82.04 ns</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>V4_ResponseBeforeWait</td><td>1</td><td>1</td><td>94.27 ns</td><td>3.760 ns</td><td>10.788 ns</td><td>91.76 ns</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>V1_Timeouts</td><td>1</td><td>1</td><td>15,451,978.80 ns</td><td>40,411.009 ns</td><td>37,800.483 ns</td><td>15,448,163.28 ns</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>458 B</td>
+</tr><tr><td>V2_Timeouts</td><td>1</td><td>1</td><td>15,436,466.98 ns</td><td>62,119.245 ns</td><td>58,106.380 ns</td><td>15,417,343.75 ns</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>458 B</td>
+</tr><tr><td>V3_Timeouts</td><td>1</td><td>1</td><td>15,378,629.17 ns</td><td>78,921.110 ns</td><td>73,822.856 ns</td><td>15,389,057.81 ns</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>453 B</td>
+</tr><tr><td>V4_Timeouts</td><td>1</td><td>1</td><td>15,415,961.77 ns</td><td>89,024.123 ns</td><td>83,273.220 ns</td><td>15,392,404.69 ns</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>458 B</td>
+</tr><tr><td>V1_WaitAndHandleSequential</td><td>1</td><td>4</td><td>373,472.85 ns</td><td>28,677.740 ns</td><td>83,199.325 ns</td><td>375,966.99 ns</td><td>0.9766</td><td>-</td><td>0.0313</td><td>-</td><td>-</td><td>408 B</td>
+</tr><tr><td>V2_WaitAndHandleSequential</td><td>1</td><td>4</td><td>204,568.60 ns</td><td>7,275.574 ns</td><td>20,639.592 ns</td><td>200,459.81 ns</td><td>0.2441</td><td>-</td><td>0.0066</td><td>0.2441</td><td>0.2441</td><td>232 B</td>
+</tr><tr><td>V3_WaitAndHandleSequential</td><td>1</td><td>4</td><td>229,784.35 ns</td><td>12,567.267 ns</td><td>34,823.838 ns</td><td>222,702.61 ns</td><td>0.2441</td><td>-</td><td>-</td><td>0.2441</td><td>0.2441</td><td>234 B</td>
+</tr><tr><td>V4_WaitAndHandleSequential</td><td>1</td><td>4</td><td>178,701.96 ns</td><td>5,047.456 ns</td><td>14,563.065 ns</td><td>174,084.52 ns</td><td>0.2441</td><td>-</td><td>0.0007</td><td>0.2441</td><td>0.2441</td><td>236 B</td>
+</tr><tr><td>V1_HandleOnly</td><td>1</td><td>4</td><td>2,008.41 ns</td><td>39.670 ns</td><td>40.738 ns</td><td>2,001.81 ns</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>V2_HandleOnly</td><td>1</td><td>4</td><td>40.04 ns</td><td>0.766 ns</td><td>1.744 ns</td><td>39.64 ns</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>V3_HandleOnly</td><td>1</td><td>4</td><td>40.41 ns</td><td>0.816 ns</td><td>1.629 ns</td><td>40.23 ns</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>V4_HandleOnly</td><td>1</td><td>4</td><td>42.32 ns</td><td>1.024 ns</td><td>3.004 ns</td><td>41.59 ns</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>V1_WaitAndHandleParallel</td><td>1</td><td>4</td><td>6,875.37 ns</td><td>201.852 ns</td><td>575.896 ns</td><td>6,741.96 ns</td><td>0.2289</td><td>3.0095</td><td>0.0003</td><td>-</td><td>-</td><td>1939 B</td>
+</tr><tr><td>V2_WaitAndHandleParallel</td><td>1</td><td>4</td><td>2,521.82 ns</td><td>90.588 ns</td><td>258.453 ns</td><td>2,453.75 ns</td><td>0.2327</td><td>3.0160</td><td>0.0000</td><td>-</td><td>-</td><td>1939 B</td>
+</tr><tr><td>V3_WaitAndHandleParallel</td><td>1</td><td>4</td><td>2,544.18 ns</td><td>79.303 ns</td><td>227.535 ns</td><td>2,481.11 ns</td><td>0.2327</td><td>3.0143</td><td>0.0001</td><td>-</td><td>-</td><td>1939 B</td>
+</tr><tr><td>V4_WaitAndHandleParallel</td><td>1</td><td>4</td><td>2,542.30 ns</td><td>69.458 ns</td><td>197.040 ns</td><td>2,501.25 ns</td><td>0.2289</td><td>3.0085</td><td>0.0002</td><td>-</td><td>-</td><td>1938 B</td>
+</tr><tr><td>V2_WaitAndHandleAsync_Sequential</td><td>1</td><td>4</td><td>91.99 ns</td><td>2.081 ns</td><td>6.070 ns</td><td>90.93 ns</td><td>0.0086</td><td>-</td><td>-</td><td>-</td><td>-</td><td>72 B</td>
+</tr><tr><td>V2_WaitAndHandleAsync_Parallel</td><td>1</td><td>4</td><td>209.58 ns</td><td>4.750 ns</td><td>13.855 ns</td><td>206.61 ns</td><td>0.0305</td><td>-</td><td>-</td><td>-</td><td>-</td><td>256 B</td>
+</tr><tr><td>V1_ResponseBeforeWait</td><td>1</td><td>4</td><td>3,094.41 ns</td><td>94.881 ns</td><td>256.517 ns</td><td>3,016.89 ns</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>V2_ResponseBeforeWait</td><td>1</td><td>4</td><td>57.76 ns</td><td>0.815 ns</td><td>0.906 ns</td><td>57.80 ns</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>V3_ResponseBeforeWait</td><td>1</td><td>4</td><td>66.00 ns</td><td>1.326 ns</td><td>1.629 ns</td><td>65.81 ns</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>V4_ResponseBeforeWait</td><td>1</td><td>4</td><td>79.68 ns</td><td>1.616 ns</td><td>1.660 ns</td><td>79.50 ns</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>V1_Timeouts</td><td>1</td><td>4</td><td>15,476,799.69 ns</td><td>54,673.001 ns</td><td>51,141.159 ns</td><td>15,479,537.50 ns</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>458 B</td>
+</tr><tr><td>V2_Timeouts</td><td>1</td><td>4</td><td>15,414,701.68 ns</td><td>49,637.227 ns</td><td>41,449.333 ns</td><td>15,430,918.75 ns</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>458 B</td>
+</tr><tr><td>V3_Timeouts</td><td>1</td><td>4</td><td>15,435,667.55 ns</td><td>81,051.376 ns</td><td>75,815.507 ns</td><td>15,430,400.78 ns</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>458 B</td>
+</tr><tr><td>V4_Timeouts</td><td>1</td><td>4</td><td>15,478,520.00 ns</td><td>71,320.743 ns</td><td>66,713.468 ns</td><td>15,475,723.44 ns</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>458 B</td>
+</tr><tr><td>V1_WaitAndHandleSequential</td><td>1</td><td>16</td><td>201,516.54 ns</td><td>6,202.314 ns</td><td>17,895.095 ns</td><td>198,270.43 ns</td><td>0.9766</td><td>-</td><td>0.0042</td><td>0.2441</td><td>0.2441</td><td>408 B</td>
+</tr><tr><td>V2_WaitAndHandleSequential</td><td>1</td><td>16</td><td>186,161.92 ns</td><td>6,707.648 ns</td><td>19,672.370 ns</td><td>181,924.19 ns</td><td>0.2441</td><td>-</td><td>0.0112</td><td>0.2441</td><td>0.2441</td><td>232 B</td>
+</tr><tr><td>V3_WaitAndHandleSequential</td><td>1</td><td>16</td><td>172,206.60 ns</td><td>3,364.618 ns</td><td>5,803.801 ns</td><td>172,592.64 ns</td><td>0.2441</td><td>-</td><td>-</td><td>0.2441</td><td>0.2441</td><td>234 B</td>
+</tr><tr><td>V4_WaitAndHandleSequential</td><td>1</td><td>16</td><td>173,384.17 ns</td><td>3,349.575 ns</td><td>7,628.678 ns</td><td>172,036.05 ns</td><td>0.2441</td><td>-</td><td>0.0017</td><td>0.2441</td><td>0.2441</td><td>237 B</td>
+</tr><tr><td>V1_HandleOnly</td><td>1</td><td>16</td><td>2,068.65 ns</td><td>50.066 ns</td><td>142.028 ns</td><td>2,023.35 ns</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>V2_HandleOnly</td><td>1</td><td>16</td><td>47.29 ns</td><td>2.623 ns</td><td>7.356 ns</td><td>45.59 ns</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>V3_HandleOnly</td><td>1</td><td>16</td><td>41.19 ns</td><td>0.865 ns</td><td>2.107 ns</td><td>40.74 ns</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>V4_HandleOnly</td><td>1</td><td>16</td><td>55.26 ns</td><td>4.621 ns</td><td>13.625 ns</td><td>51.56 ns</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>V1_WaitAndHandleParallel</td><td>1</td><td>16</td><td>7,670.45 ns</td><td>334.676 ns</td><td>932.943 ns</td><td>7,474.78 ns</td><td>0.2289</td><td>3.0120</td><td>0.0004</td><td>-</td><td>-</td><td>1939 B</td>
+</tr><tr><td>V2_WaitAndHandleParallel</td><td>1</td><td>16</td><td>2,764.68 ns</td><td>68.914 ns</td><td>199.931 ns</td><td>2,736.62 ns</td><td>0.2289</td><td>3.0174</td><td>0.0000</td><td>-</td><td>-</td><td>1939 B</td>
+</tr><tr><td>V3_WaitAndHandleParallel</td><td>1</td><td>16</td><td>2,526.40 ns</td><td>50.353 ns</td><td>131.764 ns</td><td>2,505.36 ns</td><td>0.2289</td><td>3.0124</td><td>-</td><td>-</td><td>-</td><td>1938 B</td>
+</tr><tr><td>V4_WaitAndHandleParallel</td><td>1</td><td>16</td><td>2,758.94 ns</td><td>99.323 ns</td><td>275.222 ns</td><td>2,729.50 ns</td><td>0.2289</td><td>3.0169</td><td>0.0005</td><td>-</td><td>-</td><td>1939 B</td>
+</tr><tr><td>V2_WaitAndHandleAsync_Sequential</td><td>1</td><td>16</td><td>95.96 ns</td><td>2.222 ns</td><td>6.231 ns</td><td>94.63 ns</td><td>0.0086</td><td>-</td><td>-</td><td>-</td><td>-</td><td>72 B</td>
+</tr><tr><td>V2_WaitAndHandleAsync_Parallel</td><td>1</td><td>16</td><td>338.61 ns</td><td>22.526 ns</td><td>66.419 ns</td><td>360.58 ns</td><td>0.0305</td><td>-</td><td>-</td><td>-</td><td>-</td><td>256 B</td>
+</tr><tr><td>V1_ResponseBeforeWait</td><td>1</td><td>16</td><td>4,797.52 ns</td><td>121.203 ns</td><td>355.467 ns</td><td>4,740.79 ns</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>V2_ResponseBeforeWait</td><td>1</td><td>16</td><td>92.50 ns</td><td>3.422 ns</td><td>9.927 ns</td><td>93.54 ns</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>V3_ResponseBeforeWait</td><td>1</td><td>16</td><td>103.09 ns</td><td>5.841 ns</td><td>17.223 ns</td><td>101.47 ns</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>V4_ResponseBeforeWait</td><td>1</td><td>16</td><td>99.06 ns</td><td>5.998 ns</td><td>17.401 ns</td><td>94.03 ns</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>V1_Timeouts</td><td>1</td><td>16</td><td>15,393,185.94 ns</td><td>70,419.609 ns</td><td>65,870.546 ns</td><td>15,394,592.19 ns</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>458 B</td>
+</tr><tr><td>V2_Timeouts</td><td>1</td><td>16</td><td>15,372,422.08 ns</td><td>50,646.499 ns</td><td>47,374.766 ns</td><td>15,381,239.06 ns</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>458 B</td>
+</tr><tr><td>V3_Timeouts</td><td>1</td><td>16</td><td>15,345,544.58 ns</td><td>67,926.388 ns</td><td>63,538.386 ns</td><td>15,351,237.50 ns</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>453 B</td>
+</tr><tr><td>V4_Timeouts</td><td>1</td><td>16</td><td>15,417,136.67 ns</td><td>71,607.857 ns</td><td>66,982.034 ns</td><td>15,442,423.44 ns</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>458 B</td>
+</tr><tr><td>V1_WaitAndHandleSequential</td><td>10</td><td>1</td><td>2,030,150.47 ns</td><td>52,516.899 ns</td><td>149,833.669 ns</td><td>2,012,274.22 ns</td><td>7.8125</td><td>-</td><td>1.9336</td><td>-</td><td>-</td><td>4082 B</td>
+</tr><tr><td>V2_WaitAndHandleSequential</td><td>10</td><td>1</td><td>1,997,540.51 ns</td><td>63,479.307 ns</td><td>183,152.315 ns</td><td>1,926,996.48 ns</td><td>-</td><td>-</td><td>0.1133</td><td>-</td><td>-</td><td>2322 B</td>
+</tr><tr><td>V3_WaitAndHandleSequential</td><td>10</td><td>1</td><td>2,970,197.69 ns</td><td>348,028.995 ns</td><td>975,910.615 ns</td><td>2,802,105.27 ns</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>2346 B</td>
+</tr><tr><td>V4_WaitAndHandleSequential</td><td>10</td><td>1</td><td>2,118,853.90 ns</td><td>63,139.841 ns</td><td>179,117.220 ns</td><td>2,093,569.53 ns</td><td>-</td><td>-</td><td>0.6953</td><td>-</td><td>-</td><td>2574 B</td>
+</tr><tr><td>V1_HandleOnly</td><td>10</td><td>1</td><td>23,815.99 ns</td><td>858.100 ns</td><td>2,349.034 ns</td><td>23,535.11 ns</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>V2_HandleOnly</td><td>10</td><td>1</td><td>683.71 ns</td><td>33.178 ns</td><td>97.825 ns</td><td>736.16 ns</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>V3_HandleOnly</td><td>10</td><td>1</td><td>573.45 ns</td><td>34.160 ns</td><td>100.721 ns</td><td>573.18 ns</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>V4_HandleOnly</td><td>10</td><td>1</td><td>475.70 ns</td><td>14.411 ns</td><td>42.492 ns</td><td>466.70 ns</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>V1_WaitAndHandleParallel</td><td>10</td><td>1</td><td>94,401.55 ns</td><td>2,208.752 ns</td><td>6,407.991 ns</td><td>93,986.22 ns</td><td>0.3662</td><td>10.0000</td><td>0.0078</td><td>-</td><td>-</td><td>3203 B</td>
+</tr><tr><td>V2_WaitAndHandleParallel</td><td>10</td><td>1</td><td>14,439.00 ns</td><td>690.638 ns</td><td>2,025.521 ns</td><td>14,398.94 ns</td><td>0.3662</td><td>10.0000</td><td>0.0008</td><td>-</td><td>-</td><td>3184 B</td>
+</tr><tr><td>V3_WaitAndHandleParallel</td><td>10</td><td>1</td><td>15,712.20 ns</td><td>519.747 ns</td><td>1,499.589 ns</td><td>15,948.90 ns</td><td>0.3662</td><td>10.0000</td><td>0.0007</td><td>-</td><td>-</td><td>3186 B</td>
+</tr><tr><td>V4_WaitAndHandleParallel</td><td>10</td><td>1</td><td>13,468.05 ns</td><td>337.832 ns</td><td>980.111 ns</td><td>13,233.27 ns</td><td>0.3815</td><td>10.0000</td><td>0.0035</td><td>-</td><td>-</td><td>3185 B</td>
+</tr><tr><td>V2_WaitAndHandleAsync_Sequential</td><td>10</td><td>1</td><td>939.32 ns</td><td>36.160 ns</td><td>103.168 ns</td><td>908.91 ns</td><td>0.0858</td><td>-</td><td>-</td><td>-</td><td>-</td><td>720 B</td>
+</tr><tr><td>V2_WaitAndHandleAsync_Parallel</td><td>10</td><td>1</td><td>1,216.58 ns</td><td>26.552 ns</td><td>73.576 ns</td><td>1,200.05 ns</td><td>0.1335</td><td>-</td><td>-</td><td>-</td><td>-</td><td>1120 B</td>
+</tr><tr><td>V1_ResponseBeforeWait</td><td>10</td><td>1</td><td>34,924.88 ns</td><td>1,492.283 ns</td><td>4,376.608 ns</td><td>34,239.04 ns</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>V2_ResponseBeforeWait</td><td>10</td><td>1</td><td>665.88 ns</td><td>16.063 ns</td><td>45.568 ns</td><td>648.50 ns</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>V3_ResponseBeforeWait</td><td>10</td><td>1</td><td>720.40 ns</td><td>18.028 ns</td><td>52.588 ns</td><td>700.07 ns</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>V4_ResponseBeforeWait</td><td>10</td><td>1</td><td>900.87 ns</td><td>21.113 ns</td><td>59.549 ns</td><td>888.88 ns</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>V1_Timeouts</td><td>10</td><td>1</td><td>153,833,485.00 ns</td><td>834,584.936 ns</td><td>780,671.266 ns</td><td>153,766,950.00 ns</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>4632 B</td>
+</tr><tr><td>V2_Timeouts</td><td>10</td><td>1</td><td>152,989,705.00 ns</td><td>781,835.376 ns</td><td>731,329.295 ns</td><td>152,857,275.00 ns</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>4632 B</td>
+</tr><tr><td>V3_Timeouts</td><td>10</td><td>1</td><td>153,529,036.67 ns</td><td>845,850.923 ns</td><td>791,209.478 ns</td><td>153,510,525.00 ns</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>4632 B</td>
+</tr><tr><td>V4_Timeouts</td><td>10</td><td>1</td><td>154,094,681.67 ns</td><td>662,278.645 ns</td><td>619,495.856 ns</td><td>154,134,550.00 ns</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>4632 B</td>
+</tr><tr><td>V1_WaitAndHandleSequential</td><td>10</td><td>4</td><td>2,075,965.65 ns</td><td>54,786.460 ns</td><td>158,945.455 ns</td><td>2,062,142.97 ns</td><td>7.8125</td><td>-</td><td>0.0547</td><td>-</td><td>-</td><td>4082 B</td>
+</tr><tr><td>V2_WaitAndHandleSequential</td><td>10</td><td>4</td><td>1,965,914.34 ns</td><td>51,282.152 ns</td><td>148,778.822 ns</td><td>1,922,427.73 ns</td><td>1.9531</td><td>-</td><td>0.4805</td><td>1.9531</td><td>1.9531</td><td>2321 B</td>
+</tr><tr><td>V3_WaitAndHandleSequential</td><td>10</td><td>4</td><td>2,147,787.29 ns</td><td>81,593.932 ns</td><td>236,718.791 ns</td><td>2,111,191.41 ns</td><td>-</td><td>-</td><td>0.0039</td><td>-</td><td>-</td><td>2408 B</td>
+</tr><tr><td>V4_WaitAndHandleSequential</td><td>10</td><td>4</td><td>2,152,366.54 ns</td><td>75,953.897 ns</td><td>217,925.967 ns</td><td>2,116,850.20 ns</td><td>-</td><td>-</td><td>0.8672</td><td>-</td><td>-</td><td>2726 B</td>
+</tr><tr><td>V1_HandleOnly</td><td>10</td><td>4</td><td>23,838.89 ns</td><td>784.988 ns</td><td>2,277.391 ns</td><td>23,513.87 ns</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>V2_HandleOnly</td><td>10</td><td>4</td><td>566.80 ns</td><td>33.129 ns</td><td>97.681 ns</td><td>529.66 ns</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>V3_HandleOnly</td><td>10</td><td>4</td><td>473.38 ns</td><td>21.914 ns</td><td>62.522 ns</td><td>460.22 ns</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>V4_HandleOnly</td><td>10</td><td>4</td><td>441.67 ns</td><td>11.893 ns</td><td>33.544 ns</td><td>432.81 ns</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>V1_WaitAndHandleParallel</td><td>10</td><td>4</td><td>234,569.70 ns</td><td>6,211.881 ns</td><td>18,315.872 ns</td><td>232,282.13 ns</td><td>0.4883</td><td>12.9961</td><td>0.0454</td><td>-</td><td>-</td><td>4095 B</td>
+</tr><tr><td>V2_WaitAndHandleParallel</td><td>10</td><td>4</td><td>9,269.99 ns</td><td>306.250 ns</td><td>893.347 ns</td><td>9,162.60 ns</td><td>0.4578</td><td>12.9949</td><td>0.0038</td><td>-</td><td>-</td><td>3836 B</td>
+</tr><tr><td>V3_WaitAndHandleParallel</td><td>10</td><td>4</td><td>15,621.50 ns</td><td>350.036 ns</td><td>1,015.519 ns</td><td>15,297.13 ns</td><td>0.4578</td><td>12.9800</td><td>0.0073</td><td>0.0610</td><td>-</td><td>3891 B</td>
+</tr><tr><td>V4_WaitAndHandleParallel</td><td>10</td><td>4</td><td>17,590.15 ns</td><td>350.998 ns</td><td>942.933 ns</td><td>17,667.65 ns</td><td>0.4578</td><td>12.9783</td><td>0.0534</td><td>-</td><td>-</td><td>3844 B</td>
+</tr><tr><td>V2_WaitAndHandleAsync_Sequential</td><td>10</td><td>4</td><td>1,065.41 ns</td><td>58.221 ns</td><td>171.666 ns</td><td>1,017.86 ns</td><td>0.0858</td><td>-</td><td>-</td><td>-</td><td>-</td><td>720 B</td>
+</tr><tr><td>V2_WaitAndHandleAsync_Parallel</td><td>10</td><td>4</td><td>1,371.97 ns</td><td>52.172 ns</td><td>151.359 ns</td><td>1,336.44 ns</td><td>0.1335</td><td>-</td><td>-</td><td>-</td><td>-</td><td>1120 B</td>
+</tr><tr><td>V1_ResponseBeforeWait</td><td>10</td><td>4</td><td>36,410.54 ns</td><td>1,379.579 ns</td><td>4,067.720 ns</td><td>35,418.89 ns</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>V2_ResponseBeforeWait</td><td>10</td><td>4</td><td>738.56 ns</td><td>29.363 ns</td><td>84.247 ns</td><td>714.67 ns</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>V3_ResponseBeforeWait</td><td>10</td><td>4</td><td>828.45 ns</td><td>34.517 ns</td><td>101.233 ns</td><td>809.03 ns</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>V4_ResponseBeforeWait</td><td>10</td><td>4</td><td>891.50 ns</td><td>24.270 ns</td><td>69.636 ns</td><td>867.90 ns</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>V1_Timeouts</td><td>10</td><td>4</td><td>153,716,615.00 ns</td><td>1,018,951.333 ns</td><td>953,127.710 ns</td><td>153,639,375.00 ns</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>4632 B</td>
+</tr><tr><td>V2_Timeouts</td><td>10</td><td>4</td><td>153,590,160.00 ns</td><td>575,466.134 ns</td><td>538,291.379 ns</td><td>153,427,675.00 ns</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>4632 B</td>
+</tr><tr><td>V3_Timeouts</td><td>10</td><td>4</td><td>154,048,373.33 ns</td><td>866,236.438 ns</td><td>810,278.102 ns</td><td>153,881,175.00 ns</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>4632 B</td>
+</tr><tr><td>V4_Timeouts</td><td>10</td><td>4</td><td>153,866,466.67 ns</td><td>907,407.997 ns</td><td>848,790.004 ns</td><td>154,033,225.00 ns</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>4632 B</td>
+</tr><tr><td>V1_WaitAndHandleSequential</td><td>10</td><td>16</td><td>2,184,713.04 ns</td><td>86,682.315 ns</td><td>250,098.297 ns</td><td>2,152,162.50 ns</td><td>7.8125</td><td>-</td><td>0.4297</td><td>-</td><td>-</td><td>4082 B</td>
+</tr><tr><td>V2_WaitAndHandleSequential</td><td>10</td><td>16</td><td>1,970,896.95 ns</td><td>52,219.132 ns</td><td>151,497.172 ns</td><td>1,954,580.08 ns</td><td>-</td><td>-</td><td>0.1172</td><td>-</td><td>-</td><td>2322 B</td>
+</tr><tr><td>V3_WaitAndHandleSequential</td><td>10</td><td>16</td><td>2,075,021.32 ns</td><td>57,619.388 ns</td><td>168,078.460 ns</td><td>2,055,137.79 ns</td><td>1.9531</td><td>-</td><td>-</td><td>1.9531</td><td>1.9531</td><td>2365 B</td>
+</tr><tr><td>V4_WaitAndHandleSequential</td><td>10</td><td>16</td><td>1,967,134.91 ns</td><td>49,483.908 ns</td><td>142,772.390 ns</td><td>1,936,353.52 ns</td><td>-</td><td>-</td><td>0.0781</td><td>-</td><td>-</td><td>2370 B</td>
+</tr><tr><td>V1_HandleOnly</td><td>10</td><td>16</td><td>21,565.15 ns</td><td>612.962 ns</td><td>1,698.515 ns</td><td>21,048.61 ns</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>V2_HandleOnly</td><td>10</td><td>16</td><td>759.79 ns</td><td>14.160 ns</td><td>13.907 ns</td><td>755.96 ns</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>V3_HandleOnly</td><td>10</td><td>16</td><td>451.23 ns</td><td>13.526 ns</td><td>37.480 ns</td><td>440.44 ns</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>V4_HandleOnly</td><td>10</td><td>16</td><td>435.07 ns</td><td>12.394 ns</td><td>35.956 ns</td><td>422.02 ns</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>V1_WaitAndHandleParallel</td><td>10</td><td>16</td><td>252,280.23 ns</td><td>6,448.909 ns</td><td>18,913.534 ns</td><td>251,367.43 ns</td><td>0.4883</td><td>17.6445</td><td>0.0239</td><td>-</td><td>-</td><td>5359 B</td>
+</tr><tr><td>V2_WaitAndHandleParallel</td><td>10</td><td>16</td><td>8,000.94 ns</td><td>159.498 ns</td><td>275.125 ns</td><td>7,997.16 ns</td><td>0.5188</td><td>15.2641</td><td>0.0043</td><td>-</td><td>-</td><td>4498 B</td>
+</tr><tr><td>V3_WaitAndHandleParallel</td><td>10</td><td>16</td><td>14,685.92 ns</td><td>292.705 ns</td><td>666.638 ns</td><td>14,637.70 ns</td><td>0.5341</td><td>14.7038</td><td>0.0202</td><td>0.0610</td><td>-</td><td>4459 B</td>
+</tr><tr><td>V4_WaitAndHandleParallel</td><td>10</td><td>16</td><td>17,132.63 ns</td><td>335.027 ns</td><td>620.994 ns</td><td>16,979.31 ns</td><td>0.4883</td><td>14.7036</td><td>0.0576</td><td>-</td><td>-</td><td>4423 B</td>
+</tr><tr><td>V2_WaitAndHandleAsync_Sequential</td><td>10</td><td>16</td><td>863.43 ns</td><td>22.850 ns</td><td>64.449 ns</td><td>843.91 ns</td><td>0.0858</td><td>-</td><td>-</td><td>-</td><td>-</td><td>720 B</td>
+</tr><tr><td>V2_WaitAndHandleAsync_Parallel</td><td>10</td><td>16</td><td>1,195.96 ns</td><td>23.864 ns</td><td>42.419 ns</td><td>1,179.94 ns</td><td>0.1335</td><td>-</td><td>-</td><td>-</td><td>-</td><td>1120 B</td>
+</tr><tr><td>V1_ResponseBeforeWait</td><td>10</td><td>16</td><td>33,325.95 ns</td><td>921.962 ns</td><td>2,630.408 ns</td><td>32,708.39 ns</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>V2_ResponseBeforeWait</td><td>10</td><td>16</td><td>690.78 ns</td><td>20.832 ns</td><td>59.772 ns</td><td>671.88 ns</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>V3_ResponseBeforeWait</td><td>10</td><td>16</td><td>764.35 ns</td><td>26.559 ns</td><td>78.308 ns</td><td>742.84 ns</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>V4_ResponseBeforeWait</td><td>10</td><td>16</td><td>898.58 ns</td><td>19.793 ns</td><td>56.471 ns</td><td>879.41 ns</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>V1_Timeouts</td><td>10</td><td>16</td><td>153,943,893.33 ns</td><td>906,785.948 ns</td><td>848,208.138 ns</td><td>153,969,275.00 ns</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>4632 B</td>
+</tr><tr><td>V2_Timeouts</td><td>10</td><td>16</td><td>153,991,743.33 ns</td><td>1,067,821.756 ns</td><td>998,841.133 ns</td><td>153,805,525.00 ns</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>4632 B</td>
+</tr><tr><td>V3_Timeouts</td><td>10</td><td>16</td><td>154,241,480.00 ns</td><td>969,550.328 ns</td><td>906,917.979 ns</td><td>154,327,025.00 ns</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>4632 B</td>
+</tr><tr><td>V4_Timeouts</td><td>10</td><td>16</td><td>154,279,638.33 ns</td><td>822,844.452 ns</td><td>769,689.211 ns</td><td>154,030,050.00 ns</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>4632 B</td>
+</tr><tr><td>V1_WaitAndHandleSequential</td><td>100</td><td>1</td><td>22,711,030.23 ns</td><td>627,252.329 ns</td><td>1,769,176.323 ns</td><td>22,553,101.56 ns</td><td>93.7500</td><td>-</td><td>0.8750</td><td>31.2500</td><td>31.2500</td><td>40823 B</td>
+</tr><tr><td>V2_WaitAndHandleSequential</td><td>100</td><td>1</td><td>21,415,346.86 ns</td><td>606,802.435 ns</td><td>1,721,397.510 ns</td><td>21,134,464.06 ns</td><td>31.2500</td><td>-</td><td>4.7500</td><td>31.2500</td><td>31.2500</td><td>23223 B</td>
+</tr><tr><td>V3_WaitAndHandleSequential</td><td>100</td><td>1</td><td>NA</td><td>NA</td><td>NA</td><td>NA</td><td>NA</td><td>NA</td><td>NA</td><td>NA</td><td>NA</td><td>NA</td>
+</tr><tr><td>V4_WaitAndHandleSequential</td><td>100</td><td>1</td><td>24,353,115.06 ns</td><td>934,428.224 ns</td><td>2,740,516.224 ns</td><td>23,764,693.75 ns</td><td>31.2500</td><td>-</td><td>3.3438</td><td>31.2500</td><td>31.2500</td><td>24800 B</td>
+</tr><tr><td>V1_HandleOnly</td><td>100</td><td>1</td><td>235,897.49 ns</td><td>7,955.307 ns</td><td>23,456.403 ns</td><td>232,493.02 ns</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>V2_HandleOnly</td><td>100</td><td>1</td><td>4,554.24 ns</td><td>119.214 ns</td><td>345.861 ns</td><td>4,483.10 ns</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>V3_HandleOnly</td><td>100</td><td>1</td><td>4,606.04 ns</td><td>154.094 ns</td><td>449.499 ns</td><td>4,524.68 ns</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>V4_HandleOnly</td><td>100</td><td>1</td><td>5,012.10 ns</td><td>199.264 ns</td><td>584.407 ns</td><td>4,941.73 ns</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>V1_WaitAndHandleParallel</td><td>100</td><td>1</td><td>1,039,399.45 ns</td><td>28,237.967 ns</td><td>81,020.019 ns</td><td>1,017,139.55 ns</td><td>1.9531</td><td>100.0000</td><td>0.1152</td><td>-</td><td>-</td><td>18520 B</td>
+</tr><tr><td>V2_WaitAndHandleParallel</td><td>100</td><td>1</td><td>124,805.08 ns</td><td>3,238.966 ns</td><td>9,135.561 ns</td><td>122,870.90 ns</td><td>1.9531</td><td>100.0000</td><td>0.0015</td><td>-</td><td>-</td><td>18305 B</td>
+</tr><tr><td>V3_WaitAndHandleParallel</td><td>100</td><td>1</td><td>131,416.08 ns</td><td>3,808.057 ns</td><td>10,987.115 ns</td><td>130,182.02 ns</td><td>2.1973</td><td>100.0000</td><td>0.0063</td><td>-</td><td>-</td><td>18347 B</td>
+</tr><tr><td>V4_WaitAndHandleParallel</td><td>100</td><td>1</td><td>138,638.44 ns</td><td>4,580.642 ns</td><td>13,361.949 ns</td><td>135,930.48 ns</td><td>2.1973</td><td>100.0000</td><td>0.0264</td><td>-</td><td>-</td><td>18328 B</td>
+</tr><tr><td>V2_WaitAndHandleAsync_Sequential</td><td>100</td><td>1</td><td>9,760.34 ns</td><td>381.043 ns</td><td>1,105.475 ns</td><td>9,544.21 ns</td><td>0.8545</td><td>-</td><td>-</td><td>-</td><td>-</td><td>7200 B</td>
+</tr><tr><td>V2_WaitAndHandleAsync_Parallel</td><td>100</td><td>1</td><td>12,359.32 ns</td><td>355.915 ns</td><td>1,026.896 ns</td><td>12,131.97 ns</td><td>1.1597</td><td>-</td><td>-</td><td>0.0305</td><td>-</td><td>9760 B</td>
+</tr><tr><td>V1_ResponseBeforeWait</td><td>100</td><td>1</td><td>346,830.54 ns</td><td>10,237.519 ns</td><td>29,863.323 ns</td><td>336,674.66 ns</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>V2_ResponseBeforeWait</td><td>100</td><td>1</td><td>7,126.72 ns</td><td>190.306 ns</td><td>552.111 ns</td><td>6,979.86 ns</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>V3_ResponseBeforeWait</td><td>100</td><td>1</td><td>7,603.24 ns</td><td>262.758 ns</td><td>766.477 ns</td><td>7,387.28 ns</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>V4_ResponseBeforeWait</td><td>100</td><td>1</td><td>9,532.37 ns</td><td>320.567 ns</td><td>935.109 ns</td><td>9,321.38 ns</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>V1_Timeouts</td><td>100</td><td>1</td><td>1,545,671,906.67 ns</td><td>4,077,167.026 ns</td><td>3,813,784.566 ns</td><td>1,545,261,200.00 ns</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>45408 B</td>
+</tr><tr><td>V2_Timeouts</td><td>100</td><td>1</td><td>1,538,881,953.33 ns</td><td>7,753,256.075 ns</td><td>7,252,400.543 ns</td><td>1,539,698,900.00 ns</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>45408 B</td>
+</tr><tr><td>V3_Timeouts</td><td>100</td><td>1</td><td>1,539,674,526.67 ns</td><td>6,558,601.282 ns</td><td>6,134,919.709 ns</td><td>1,540,099,900.00 ns</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>45408 B</td>
+</tr><tr><td>V4_Timeouts</td><td>100</td><td>1</td><td>1,537,568,186.67 ns</td><td>8,179,497.906 ns</td><td>7,651,107.416 ns</td><td>1,540,334,500.00 ns</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>45408 B</td>
+</tr><tr><td>V1_WaitAndHandleSequential</td><td>100</td><td>4</td><td>31,752,139.79 ns</td><td>4,100,035.025 ns</td><td>11,894,945.043 ns</td><td>25,750,840.00 ns</td><td>100.0000</td><td>-</td><td>0.5000</td><td>-</td><td>-</td><td>40840 B</td>
+</tr><tr><td>V2_WaitAndHandleSequential</td><td>100</td><td>4</td><td>21,530,115.29 ns</td><td>596,144.715 ns</td><td>1,700,834.416 ns</td><td>21,284,267.19 ns</td><td>31.2500</td><td>-</td><td>3.6563</td><td>31.2500</td><td>31.2500</td><td>23223 B</td>
+</tr><tr><td>V3_WaitAndHandleSequential</td><td>100</td><td>4</td><td>21,444,053.91 ns</td><td>477,681.775 ns</td><td>1,385,841.445 ns</td><td>21,486,192.19 ns</td><td>31.2500</td><td>-</td><td>-</td><td>31.2500</td><td>31.2500</td><td>23622 B</td>
+</tr><tr><td>V4_WaitAndHandleSequential</td><td>100</td><td>4</td><td>24,074,011.93 ns</td><td>1,399,576.288 ns</td><td>3,993,069.902 ns</td><td>22,856,826.56 ns</td><td>31.2500</td><td>-</td><td>2.6563</td><td>31.2500</td><td>31.2500</td><td>25191 B</td>
+</tr><tr><td>V1_HandleOnly</td><td>100</td><td>4</td><td>260,117.82 ns</td><td>8,405.680 ns</td><td>24,519.763 ns</td><td>253,456.64 ns</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>V2_HandleOnly</td><td>100</td><td>4</td><td>5,237.05 ns</td><td>190.364 ns</td><td>555.299 ns</td><td>5,123.12 ns</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>V3_HandleOnly</td><td>100</td><td>4</td><td>5,116.90 ns</td><td>208.934 ns</td><td>616.046 ns</td><td>5,029.58 ns</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>V4_HandleOnly</td><td>100</td><td>4</td><td>5,361.53 ns</td><td>247.333 ns</td><td>729.267 ns</td><td>5,315.40 ns</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>V1_WaitAndHandleParallel</td><td>100</td><td>4</td><td>2,744,162.09 ns</td><td>54,680.448 ns</td><td>158,637.896 ns</td><td>2,763,354.30 ns</td><td>-</td><td>102.9922</td><td>0.3633</td><td>-</td><td>-</td><td>19789 B</td>
+</tr><tr><td>V2_WaitAndHandleParallel</td><td>100</td><td>4</td><td>64,098.07 ns</td><td>1,007.200 ns</td><td>892.857 ns</td><td>64,134.39 ns</td><td>2.1973</td><td>103.0000</td><td>0.0493</td><td>-</td><td>-</td><td>18896 B</td>
+</tr><tr><td>V3_WaitAndHandleParallel</td><td>100</td><td>4</td><td>95,459.05 ns</td><td>1,885.948 ns</td><td>3,400.754 ns</td><td>95,704.50 ns</td><td>2.3193</td><td>102.9999</td><td>0.4596</td><td>0.8545</td><td>-</td><td>19793 B</td>
+</tr><tr><td>V4_WaitAndHandleParallel</td><td>100</td><td>4</td><td>105,769.94 ns</td><td>2,005.327 ns</td><td>2,145.677 ns</td><td>105,184.67 ns</td><td>2.1973</td><td>102.9999</td><td>0.4338</td><td>-</td><td>-</td><td>19118 B</td>
+</tr><tr><td>V2_WaitAndHandleAsync_Sequential</td><td>100</td><td>4</td><td>11,010.64 ns</td><td>470.003 ns</td><td>1,378.437 ns</td><td>10,838.90 ns</td><td>0.8545</td><td>-</td><td>-</td><td>-</td><td>-</td><td>7200 B</td>
+</tr><tr><td>V2_WaitAndHandleAsync_Parallel</td><td>100</td><td>4</td><td>12,777.31 ns</td><td>433.714 ns</td><td>1,251.364 ns</td><td>12,566.74 ns</td><td>1.1597</td><td>-</td><td>-</td><td>0.0305</td><td>-</td><td>9760 B</td>
+</tr><tr><td>V1_ResponseBeforeWait</td><td>100</td><td>4</td><td>354,174.52 ns</td><td>8,958.250 ns</td><td>26,272.996 ns</td><td>347,865.19 ns</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>V2_ResponseBeforeWait</td><td>100</td><td>4</td><td>7,339.48 ns</td><td>187.750 ns</td><td>541.701 ns</td><td>7,197.98 ns</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>V3_ResponseBeforeWait</td><td>100</td><td>4</td><td>7,336.32 ns</td><td>146.538 ns</td><td>372.987 ns</td><td>7,283.52 ns</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>V4_ResponseBeforeWait</td><td>100</td><td>4</td><td>9,095.81 ns</td><td>218.976 ns</td><td>638.765 ns</td><td>8,950.82 ns</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>V1_Timeouts</td><td>100</td><td>4</td><td>1,542,808,526.67 ns</td><td>4,495,310.945 ns</td><td>4,204,916.647 ns</td><td>1,542,875,500.00 ns</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>45408 B</td>
+</tr><tr><td>V2_Timeouts</td><td>100</td><td>4</td><td>1,539,045,733.33 ns</td><td>6,588,283.471 ns</td><td>6,162,684.446 ns</td><td>1,537,300,900.00 ns</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>45408 B</td>
+</tr><tr><td>V3_Timeouts</td><td>100</td><td>4</td><td>1,539,095,820.00 ns</td><td>5,583,359.720 ns</td><td>5,222,678.146 ns</td><td>1,539,250,800.00 ns</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>45408 B</td>
+</tr><tr><td>V4_Timeouts</td><td>100</td><td>4</td><td>1,538,156,120.00 ns</td><td>7,886,303.797 ns</td><td>7,376,853.464 ns</td><td>1,537,125,500.00 ns</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>45408 B</td>
+</tr><tr><td>V1_WaitAndHandleSequential</td><td>100</td><td>16</td><td>23,077,121.57 ns</td><td>467,432.073 ns</td><td>1,326,026.989 ns</td><td>22,969,612.50 ns</td><td>93.7500</td><td>-</td><td>1.0625</td><td>31.2500</td><td>31.2500</td><td>40823 B</td>
+</tr><tr><td>V2_WaitAndHandleSequential</td><td>100</td><td>16</td><td>21,853,896.32 ns</td><td>557,780.723 ns</td><td>1,609,324.920 ns</td><td>21,712,848.44 ns</td><td>31.2500</td><td>-</td><td>6.8438</td><td>31.2500</td><td>31.2500</td><td>23223 B</td>
+</tr><tr><td>V3_WaitAndHandleSequential</td><td>100</td><td>16</td><td>21,872,539.57 ns</td><td>523,623.566 ns</td><td>1,535,697.277 ns</td><td>21,624,101.56 ns</td><td>31.2500</td><td>-</td><td>-</td><td>31.2500</td><td>31.2500</td><td>23712 B</td>
+</tr><tr><td>V4_WaitAndHandleSequential</td><td>100</td><td>16</td><td>21,830,288.72 ns</td><td>507,674.546 ns</td><td>1,472,855.912 ns</td><td>21,568,996.88 ns</td><td>31.2500</td><td>-</td><td>1.4688</td><td>31.2500</td><td>31.2500</td><td>24188 B</td>
+</tr><tr><td>V1_HandleOnly</td><td>100</td><td>16</td><td>235,585.07 ns</td><td>6,821.368 ns</td><td>19,790.026 ns</td><td>232,687.52 ns</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>V2_HandleOnly</td><td>100</td><td>16</td><td>4,358.72 ns</td><td>85.900 ns</td><td>161.340 ns</td><td>4,363.92 ns</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>V3_HandleOnly</td><td>100</td><td>16</td><td>4,610.42 ns</td><td>125.105 ns</td><td>356.931 ns</td><td>4,513.59 ns</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>V4_HandleOnly</td><td>100</td><td>16</td><td>4,662.64 ns</td><td>122.447 ns</td><td>359.116 ns</td><td>4,601.27 ns</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>V1_WaitAndHandleParallel</td><td>100</td><td>16</td><td>2,671,135.63 ns</td><td>74,064.063 ns</td><td>216,048.349 ns</td><td>2,659,357.81 ns</td><td>-</td><td>115.0000</td><td>0.0859</td><td>-</td><td>-</td><td>25855 B</td>
+</tr><tr><td>V2_WaitAndHandleParallel</td><td>100</td><td>16</td><td>96,793.00 ns</td><td>2,558.373 ns</td><td>7,462.893 ns</td><td>96,631.70 ns</td><td>2.4414</td><td>110.3770</td><td>2.2021</td><td>-</td><td>-</td><td>20852 B</td>
+</tr><tr><td>V3_WaitAndHandleParallel</td><td>100</td><td>16</td><td>122,643.44 ns</td><td>3,313.808 ns</td><td>9,770.837 ns</td><td>121,968.98 ns</td><td>2.4414</td><td>109.7576</td><td>2.6809</td><td>0.4883</td><td>-</td><td>21374 B</td>
+</tr><tr><td>V4_WaitAndHandleParallel</td><td>100</td><td>16</td><td>157,418.61 ns</td><td>6,475.436 ns</td><td>19,092.970 ns</td><td>153,642.02 ns</td><td>2.4414</td><td>109.2759</td><td>3.1897</td><td>-</td><td>-</td><td>20892 B</td>
+</tr><tr><td>V2_WaitAndHandleAsync_Sequential</td><td>100</td><td>16</td><td>8,708.57 ns</td><td>220.124 ns</td><td>628.025 ns</td><td>8,646.32 ns</td><td>0.8545</td><td>-</td><td>-</td><td>-</td><td>-</td><td>7200 B</td>
+</tr><tr><td>V2_WaitAndHandleAsync_Parallel</td><td>100</td><td>16</td><td>11,608.62 ns</td><td>327.637 ns</td><td>960.903 ns</td><td>11,391.35 ns</td><td>1.1597</td><td>-</td><td>-</td><td>0.0305</td><td>-</td><td>9760 B</td>
+</tr><tr><td>V1_ResponseBeforeWait</td><td>100</td><td>16</td><td>343,194.83 ns</td><td>8,950.112 ns</td><td>26,249.128 ns</td><td>340,016.11 ns</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>V2_ResponseBeforeWait</td><td>100</td><td>16</td><td>6,937.45 ns</td><td>169.311 ns</td><td>491.203 ns</td><td>6,843.87 ns</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>V3_ResponseBeforeWait</td><td>100</td><td>16</td><td>7,261.04 ns</td><td>150.538 ns</td><td>429.494 ns</td><td>7,166.52 ns</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>V4_ResponseBeforeWait</td><td>100</td><td>16</td><td>9,009.91 ns</td><td>290.552 ns</td><td>809.941 ns</td><td>8,962.55 ns</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr><tr><td>V1_Timeouts</td><td>100</td><td>16</td><td>1,539,485,353.33 ns</td><td>6,933,089.857 ns</td><td>6,485,216.554 ns</td><td>1,540,515,300.00 ns</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>45408 B</td>
+</tr><tr><td>V2_Timeouts</td><td>100</td><td>16</td><td>1,541,457,106.67 ns</td><td>5,837,766.261 ns</td><td>5,460,650.182 ns</td><td>1,542,523,400.00 ns</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>45408 B</td>
+</tr><tr><td>V3_Timeouts</td><td>100</td><td>16</td><td>1,542,962,173.33 ns</td><td>3,662,148.438 ns</td><td>3,425,575.921 ns</td><td>1,542,107,700.00 ns</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>45408 B</td>
+</tr><tr><td>V4_Timeouts</td><td>100</td><td>16</td><td>1,543,314,253.33 ns</td><td>6,706,336.806 ns</td><td>6,273,111.609 ns</td><td>1,542,958,900.00 ns</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>45408 B</td>
+</tr></tbody></table>
+</body>
+</html>

@@ -234,6 +234,22 @@ namespace JamaaTech.Smpp.Net.Client
         }
 
         /// <summary>
+        /// Send PDU to a remote SMPP server asynchronously
+        /// </summary>
+        /// <param name="pdu"><see cref="RequestPDU"/></param>
+        /// <param name="timeout">A value in miliseconds after which the send operation times out</param>
+        /// <param name="cancellationToken">Cancellation token</param>
+        /// <returns><see cref="ResponsePDU"/></returns>
+        public virtual async Task<ResponsePDU> SendPduAsync(RequestPDU pdu, int timeout, CancellationToken cancellationToken = default)
+        {
+            var resp = await vTrans.SendPduAsync(pdu, timeout, cancellationToken).ConfigureAwait(false);
+            if (resp.Header.ErrorCode != SmppErrorCode.ESME_ROK)
+            { throw new SmppException(resp.Header.ErrorCode); }
+
+            return resp;
+        }
+
+        /// <summary>
         /// Sends message to a remote SMPP server
         /// </summary>
         /// <param name="message">A message to send</param>
@@ -248,9 +264,34 @@ namespace JamaaTech.Smpp.Net.Client
         /// <param name="message">A message to send</param>
         /// <param name="timeout">A value in miliseconds after which the send operation times out</param>
         /// <returns>A task representing the asynchronous send message operation</returns>
-        public virtual async Task SendMessageAsync(ShortMessage message, int timeout)
+        public virtual async Task SendMessageAsync(ShortMessage message, int timeout, CancellationToken cancellationToken = default)
         {
-            await Task.Run(() => vSendMessageCallBack(message, timeout));
+            if (message == null) { throw new ArgumentNullException("message"); }
+
+            //Check if connection is open
+            if (vState != SmppConnectionState.Connected)
+            { throw new SmppClientException("Sending message operation failed because the SmppClient is not connected"); }
+
+            string messageId = message.ReceiptedMessageId;
+            var srcAddress = new SmppAddress(vProperties.AddressTon, vProperties.AddressNpi, string.IsNullOrWhiteSpace(message.SourceAddress) ? Properties.SourceAddress : message.SourceAddress);
+            var destAddress = new SmppAddress(){ Address = message.DestinationAddress};
+            
+            foreach (SendSmPDU pdu in message.GetMessagePDUs(vProperties.DefaultEncoding, vSmppEncodingService,destAddress, srcAddress))
+            {
+                if (_Log.IsDebugEnabled) _Log.DebugFormat("SendMessage SendSmPDU: {0}", LoggingExtensions.DumpString(pdu, vSmppEncodingService));
+                ResponsePDU resp = await SendPduAsync(pdu, timeout, cancellationToken).ConfigureAwait(false);
+                var submitSmResp = resp as SubmitSmResp;
+                if (submitSmResp != null)
+                {
+                    if (_Log.IsDebugEnabled) _Log.DebugFormat("SendMessage Response: {0}", LoggingExtensions.DumpString(resp, vSmppEncodingService));
+                    messageId = ((SubmitSmResp)resp).MessageID;
+                }
+                message.ReceiptedMessageId = messageId;
+                RaiseMessagePduSentEvent(message, pdu);
+            }
+
+            RaiseMessageSentEvent(message);
+
         }
 
         /// <summary>

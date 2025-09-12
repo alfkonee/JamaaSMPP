@@ -5,6 +5,7 @@ using System.Threading;
 using JamaaTech.Smpp.Net.Lib;
 using JamaaTech.Smpp.Net.Lib.Protocol;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace DemoClient
 {
@@ -107,7 +108,7 @@ namespace DemoClient
             }
         }
 
-        private static void SendMessage(string command)
+        private static async Task SendMessage(string command)
         {
             var parts = command.Split(' ');
             var dest = parts[1];
@@ -115,6 +116,14 @@ namespace DemoClient
 
             if (string.IsNullOrEmpty(msgTxt))
                 msgTxt = @"السلام عليكم ورحمة الله وبركاته
+هذه رسالة عربية
+متعددة الاسطرالسلام عليكم ورحمة الله وبركاته
+هذه رسالة عربية
+متعددة الاسطرالسلام عليكم ورحمة الله وبركاته
+هذه رسالة عربية
+متعددة الاسطرالسلام عليكم ورحمة الله وبركاته
+هذه رسالة عربية
+متعددة الاسطرالسلام عليكم ورحمة الله وبركاته
 هذه رسالة عربية
 متعددة الاسطر";
 
@@ -130,7 +139,8 @@ namespace DemoClient
 
             try
             {
-                client.SendMessage(msg);
+                //client.SendMessage(msg);
+                await client.SendMessageAsync(msg);
             }
             catch (SmppException smppEx)
             {
@@ -141,7 +151,6 @@ namespace DemoClient
             {
                 _Log.Error("SendMessage:" + e.Message, e);
             }
-            //client.BeginSendMessage(msg, SendMessageCompleteCallback, client);
         }
 
         private static string GenerateUserMessageReference(UserMessageReferenceType userMessageReferenceType)
@@ -156,20 +165,6 @@ namespace DemoClient
                     return RND.Next(0, int.MaxValue).ToString("X");
                 default:
                     return null;
-            }
-        }
-
-
-        private static void SendMessageCompleteCallback(IAsyncResult result)
-        {
-            try
-            {
-                SmppClient client = (SmppClient)result.AsyncState;
-                client.EndSendMessage(result);
-            }
-            catch (Exception e)
-            {
-                _Log.Error("SendMessageCompleteCallback:" + e.Message, e);
             }
         }
 

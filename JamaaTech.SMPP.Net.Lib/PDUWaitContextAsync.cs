@@ -35,12 +35,7 @@ namespace JamaaTech.Smpp.Net.Lib
                     if (!vCompleted)
                     {
                         vCompleted = true;
-#if NET40
-                        // In .NET 4.0, we don't have TrySetCanceled with CancellationToken
-                        vTaskCompletionSource.TrySetCanceled();
-#else
                         vTaskCompletionSource.TrySetCanceled(cancellationToken);
-#endif
                         Cleanup();
                     }
                 }
@@ -109,12 +104,7 @@ namespace JamaaTech.Smpp.Net.Lib
                 if (!vCompleted)
                 {
                     vCompleted = true;
-#if NET40
-                    // In .NET 4.0, we don't have TrySetCanceled with CancellationToken
-                    vTaskCompletionSource.TrySetCanceled();
-#else
-                        vTaskCompletionSource.TrySetCanceled(vCancellationToken);
-#endif
+                    vTaskCompletionSource.TrySetCanceled(vCancellationToken);
                     Cleanup();
                 }
             }

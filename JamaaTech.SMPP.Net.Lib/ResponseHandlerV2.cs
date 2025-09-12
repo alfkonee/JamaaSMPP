@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Threading;
 using System;
 using JamaaTech.Smpp.Net.Lib.Protocol;
@@ -65,13 +65,13 @@ namespace JamaaTech.Smpp.Net.Lib
         public void Handle(ResponsePDU pdu)
         {
             uint sequenceNumber = pdu.Header.SequenceNumber;
-
+            
             // First, add the response to the queue
             lock (vResponseLock)
             {
                 vResponseQueue[sequenceNumber] = pdu;
             }
-
+            
             // Then check for waiting contexts and notify them
             lock (vWaitingLock)
             {
@@ -81,17 +81,14 @@ namespace JamaaTech.Smpp.Net.Lib
                     if (waitContext is PDUWaitContext syncContext)
                     {
                         syncContext.AlertResponseReceived();
-                        if (syncContext.TimedOut)
-                        {
-                            // Remove from waiting queue since it's been processed
-                            RemoveWaitingQueue(sequenceNumber);
-                        }
+                        // Always remove after signaling (success or timeout) to avoid leaks
+                        vWaitingQueue.Remove(sequenceNumber);
                     }
                     else if (waitContext is PDUWaitContextAsync asyncContext)
                     {
                         asyncContext.AlertResponseReceived(pdu);
                         // Remove from waiting queue since it's been processed
-                        RemoveWaitingQueue(sequenceNumber);
+                        vWaitingQueue.Remove(sequenceNumber);
                     }
                 }
             }
@@ -105,84 +102,94 @@ namespace JamaaTech.Smpp.Net.Lib
         public ResponsePDU WaitResponse(RequestPDU pdu, int timeOut)
         {
             uint sequenceNumber = pdu.Header.SequenceNumber;
-
+            
             // Check if response already exists
             ResponsePDU resp = FetchResponse(sequenceNumber);
             if (resp != null) { return resp; }
-
+            
             if (timeOut < sMinTimeout) { timeOut = vDefaultResponseTimeout; }
             PDUWaitContext waitContext = new PDUWaitContext(sequenceNumber, timeOut);
-
-            // Add to waiting queue
+            
+            // Register waiter (no nested locks with response lock)
             lock (vWaitingLock)
             {
-                // Double-check if response arrived while we were waiting for the lock
-                resp = FetchResponse(sequenceNumber);
-                if (resp != null) { return resp; }
-
                 vWaitingQueue[sequenceNumber] = waitContext;
             }
 
-            // Wait for the response
-            bool responseReceived = waitContext.WaitForAlert();
-
-            // Fetch the response after waiting
+            // Double-check after registration without holding waiting lock
             resp = FetchResponse(sequenceNumber);
-
-            // Clean up the waiting queue entry only if we didn't get a response (timeout case)
-            if (resp == null)
+            if (resp != null)
             {
+                // Remove waiter and return immediately
                 lock (vWaitingLock)
                 {
-                    RemoveWaitingQueue(sequenceNumber);
+                    vWaitingQueue.Remove(sequenceNumber);
                 }
-                throw new SmppResponseTimedOutException();
+                return resp;
+            }
+            
+            // Wait for the response
+            bool responseReceived = waitContext.WaitForAlert();
+            
+            // Fetch the response after waiting
+            resp = FetchResponse(sequenceNumber);
+            
+            // Clean up the waiting queue entry if still present
+            lock (vWaitingLock)
+            {
+                vWaitingQueue.Remove(sequenceNumber);
             }
 
+            if (resp == null)
+            {
+                throw new SmppResponseTimedOutException();
+            }
+            
             return resp;
         }
 
-#if !NET40
         public async Task<ResponsePDU> WaitResponseAsync(RequestPDU pdu, int timeOut, CancellationToken cancellationToken = default)
         {
             uint sequenceNumber = pdu.Header.SequenceNumber;
-
+            
             // Check if response already exists
             ResponsePDU resp = FetchResponse(sequenceNumber);
             if (resp != null) { return resp; }
-
+            
             if (timeOut < sMinTimeout) { timeOut = vDefaultResponseTimeout; }
-
-            var tcs = new TaskCompletionSource<ResponsePDU>();
+            
+            var tcs = new TaskCompletionSource<ResponsePDU>(TaskCreationOptions.RunContinuationsAsynchronously);
             var waitContext = new PDUWaitContextAsync(sequenceNumber, timeOut, tcs, cancellationToken);
-
-            // Add to waiting queue
+            
+            // Register waiter first
             lock (vWaitingLock)
             {
-                // Double-check if response arrived while we were waiting for the lock
-                resp = FetchResponse(sequenceNumber);
-                if (resp != null)
-                {
-                    waitContext.Dispose(); // Clean up the context
-                    return resp;
-                }
-
                 vWaitingQueue[sequenceNumber] = waitContext;
             }
 
+            // After registration, re-check without holding waiting lock
+            resp = FetchResponse(sequenceNumber);
+            if (resp != null)
+            {
+                // Response already available; clean up and return
+                waitContext.Dispose();
+                lock (vWaitingLock)
+                {
+                    vWaitingQueue.Remove(sequenceNumber);
+                }
+                return resp;
+            }
+            
             try
             {
                 return await tcs.Task.ConfigureAwait(false);
             }
             finally
             {
-                // Clean up the waiting queue entry if the task completed (timeout or cancellation)
-                if (tcs.Task.IsCompleted)
+                // Ensure removal of the waiting entry on completion (success/timeout/cancel)
+                lock (vWaitingLock)
                 {
-                    lock (vWaitingLock)
-                    {
-                        vWaitingQueue.Remove(sequenceNumber);
-                    }
+                    vWaitingQueue.Remove(sequenceNumber);
                 }
             }
         }
@@ -191,7 +198,6 @@ namespace JamaaTech.Smpp.Net.Lib
         {
             return await WaitResponseAsync(pdu, vDefaultResponseTimeout, cancellationToken).ConfigureAwait(false);
         }
-#endif
         #endregion
 
         #region Helper Methods
@@ -215,6 +221,7 @@ namespace JamaaTech.Smpp.Net.Lib
 
         private void RemoveWaitingQueue(uint sequenceNumber)
         {
+            // Callers must hold vWaitingLock
             vWaitingQueue.Remove(sequenceNumber);
         }
 

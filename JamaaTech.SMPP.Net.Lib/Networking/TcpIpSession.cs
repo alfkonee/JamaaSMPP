@@ -17,6 +17,8 @@
 using System;
 using System.Net;
 using System.Net.Sockets;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace JamaaTech.Smpp.Net.Lib.Networking
 {
@@ -207,13 +209,24 @@ namespace JamaaTech.Smpp.Net.Lib.Networking
 
         private void RaiseSessionClosedEvent(SessionCloseReason reason, Exception ex)
         {
-            // SEE_ISSUE: Issue #34 https://github.com/AdhamAwadhi/JamaaSMPP/issues/34 
             if (SessionClosed == null) { return; }
             var delegates = SessionClosed.GetInvocationList();
             foreach (EventHandler<TcpIpSessionClosedEventArgs> del in delegates)
             {
                 if (del == null) continue;
-                System.Threading.Tasks.Task.Run(() => del.Invoke(this, new TcpIpSessionClosedEventArgs(reason, ex)));
+                Task.Factory.StartNew(() => 
+                {
+                    try
+                    {
+                        del.Invoke(this, new TcpIpSessionClosedEventArgs(reason, ex));
+                    }
+                    catch (Exception eventEx)
+                    {
+                        // Log the exception but don't let it propagate to avoid crashing the application
+                        // Note: We can't use _Log here as it might not be available in this context
+                        System.Diagnostics.Debug.WriteLine($"Exception in TcpIpSession SessionClosed event handler: {eventEx.Message}");
+                    }
+                }, TaskCreationOptions.DenyChildAttach);
             }
         }
 
@@ -222,7 +235,18 @@ namespace JamaaTech.Smpp.Net.Lib.Networking
             if (SessionException == null) { return; }
             foreach (EventHandler<TcpIpSessionExceptionEventArgs> del in SessionException.GetInvocationList())
             {
-                System.Threading.Tasks.Task.Run(() => del.Invoke(this, new TcpIpSessionExceptionEventArgs(ex)));
+                Task.Factory.StartNew(() => 
+                {
+                    try
+                    {
+                        del.Invoke(this, new TcpIpSessionExceptionEventArgs(ex));
+                    }
+                    catch (Exception eventEx)
+                    {
+                        // Log the exception but don't let it propagate to avoid crashing the application
+                        System.Diagnostics.Debug.WriteLine($"Exception in TcpIpSession SessionException event handler: {eventEx.Message}");
+                    }
+                }, TaskCreationOptions.DenyChildAttach);
             }
         }
 
@@ -241,6 +265,28 @@ namespace JamaaTech.Smpp.Net.Lib.Networking
         {
             CheckSession();
             try { vSocket.Send(buffer, start, length, SocketFlags.None); }
+            catch (SocketException ex)
+            { HandleException(ex); }
+        }
+
+        public async Task SendAsync(byte[] buffer, CancellationToken cancellationToken = default)
+        {
+            CheckSession();
+            try 
+            { 
+                await vSocket.SendAsync(new ArraySegment<byte>(buffer), SocketFlags.None).ConfigureAwait(false);
+            }
+            catch (SocketException ex)
+            { HandleException(ex); }
+        }
+
+        public async Task SendAsync(byte[] buffer, int start, int length, CancellationToken cancellationToken = default)
+        {
+            CheckSession();
+            try 
+            { 
+                await vSocket.SendAsync(new ArraySegment<byte>(buffer, start, length), SocketFlags.None).ConfigureAwait(false);
+            }
             catch (SocketException ex)
             { HandleException(ex); }
         }

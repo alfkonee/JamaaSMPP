@@ -15,6 +15,8 @@
  ************************************************************************/
 
 using System;
+using System.Threading;
+using System.Threading.Tasks;
 using JamaaTech.Smpp.Net.Lib.Protocol;
 using JamaaTech.Smpp.Net.Lib.Networking;
 
@@ -40,6 +42,13 @@ namespace JamaaTech.Smpp.Net.Lib
             if (pdu == null) { throw new ArgumentNullException("pdu"); }
             byte[] bytesToSend = pdu.GetBytes();
             vTcpIpSession.Send(bytesToSend);
+        }
+
+        public async Task SendAsync(PDU pdu, CancellationToken cancellationToken = default)
+        {
+            if (pdu == null) { throw new ArgumentNullException("pdu"); }
+            byte[] bytesToSend = pdu.GetBytes();
+            await vTcpIpSession.SendAsync(bytesToSend, cancellationToken).ConfigureAwait(false);
         }
         #endregion
     }

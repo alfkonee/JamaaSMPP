@@ -67,8 +67,17 @@ namespace JamaaTech.Smpp.Net.Lib.Util
                 vStopOnNextCycle = true; //Prevent running thread from continue looping
                 if (!allowCompleteCycle)
                 {
-                    vRunningThread.Abort(); //Abort owner thread
-                    vRunningThread.Join(); //Wait until thread abort is complete
+                    // Use cooperative cancellation instead of Thread.Abort()
+                    // The thread will check vStopOnNextCycle in CanContinue() and exit gracefully
+                    if (vRunningThread != null && vRunningThread.IsAlive)
+                    {
+                        vRunningThread.Join(5000); // Wait up to 5 seconds for graceful shutdown
+                        if (vRunningThread.IsAlive)
+                        {
+                            // Log warning but don't force abort - let it finish naturally
+                            System.Diagnostics.Debug.WriteLine("Warning: Thread did not stop gracefully within timeout");
+                        }
+                    }
                     vRunning = false;
                     vRunningThread = null;
                 }

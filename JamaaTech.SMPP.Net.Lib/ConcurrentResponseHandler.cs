@@ -16,10 +16,27 @@ namespace JamaaTech.Smpp.Net.Lib
         private readonly IDictionary<uint, PDUWaitContext> _waiters = new Dictionary<uint, PDUWaitContext>(32);
         private readonly object _responsesLock = new object();
         private readonly object _waitersLock = new object();
+        // Minimum enforced timeout (was hard-coded 5000). Made adjustable for testing.
+        private static int sMinTimeout = 5000;
+
+        #region Testing Helpers
+        /// <summary>
+        /// Adjust minimum timeout (intended for unit testing). Use cautiously in production.
+        /// </summary>
+        public static void SetMinimumTimeoutForTesting(int milliseconds)
+        {
+            if (milliseconds < 1) { milliseconds = 1; }
+            Interlocked.Exchange(ref sMinTimeout, milliseconds);
+        }
+        /// <summary>
+        /// Returns current minimum enforced timeout.
+        /// </summary>
+        public static int GetMinimumTimeoutForTesting() { return sMinTimeout; }
+        #endregion
 
         public ConcurrentResponseHandler()
         {
-            vDefaultResponseTimeout = 5000;
+            vDefaultResponseTimeout = sMinTimeout; //Default min
         }
 
         public ConcurrentResponseHandler(ResponseHandlerOptions options)
@@ -36,7 +53,7 @@ namespace JamaaTech.Smpp.Net.Lib
             get => vDefaultResponseTimeout;
             set
             {
-                var min = 5000;
+                var min = sMinTimeout;
                 if (value > min) min = value;
                 Interlocked.Exchange(ref vDefaultResponseTimeout, min);
             }
@@ -100,7 +117,7 @@ namespace JamaaTech.Smpp.Net.Lib
             var existing = Fetch(seq);
             if (existing != null) return existing;
 
-            if (timeOut < 5000) timeOut = vDefaultResponseTimeout;
+            if (timeOut < sMinTimeout) timeOut = vDefaultResponseTimeout;
             var ctx = new PDUWaitContext(seq, timeOut);
 
             // Register waiter then re-check to close race
