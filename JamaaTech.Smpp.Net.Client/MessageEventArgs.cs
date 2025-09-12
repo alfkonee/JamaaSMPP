@@ -14,6 +14,7 @@
  *
  ************************************************************************/
 
+using JamaaTech.Smpp.Net.Lib.Protocol;
 using System;
 
 namespace JamaaTech.Smpp.Net.Client
@@ -45,6 +46,39 @@ namespace JamaaTech.Smpp.Net.Client
         public ShortMessage ShortMessage
         {
             get { return vShortMessage; }
+        }
+        #endregion
+    }
+
+    /// <summary>
+    /// Provides data for <see cref="SmppClient.MessagePduSent"/> event
+    /// </summary>
+    public class MessagePduEventArgs : MessageEventArgs
+    {
+        #region Variables
+        private SendSmPDU vPdu;
+        #endregion
+
+        #region Constructors
+        /// <summary>
+        /// Creates a new instance of <see cref="MessagePduEventArgs"/>
+        /// </summary>
+        /// <param name="message">The message associated with the message event</param>
+        public MessagePduEventArgs(ShortMessage message, SendSmPDU pdu)
+            : base(message)
+        {
+            vPdu = pdu;
+        }
+        #endregion
+
+        #region Properties        
+
+        /// <summary>
+        /// Gets the PDU associated with this event
+        /// </summary>
+        public SendSmPDU Pdu
+        {
+            get { return vPdu; }
         }
         #endregion
     }
