@@ -14,6 +14,7 @@
  *
  ************************************************************************/
 
+using System.Text;
 using JamaaTech.Smpp.Net.Lib.Protocol;
 
 namespace JamaaTech.Smpp.Net.Lib;
@@ -27,7 +28,7 @@ namespace JamaaTech.Smpp.Net.Lib;
 /// should also contain one of the enumeration members which can be used to choose appropiate scheme to decode the message.
 /// Note that, in this implementation only the SMSCDefault, ASCII, Latin1 and UCS2 encodings are supported.
 /// </remarks>
-/// <seealso cref="JamaaTech.Smpp.Net.Lib.Encoding.SmppEncoding"/>
+/// <seealso cref="Encoding.SmppEncoding"/>
 [Flags()]
 public enum DataCoding : byte
 {
