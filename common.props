@@ -1,7 +1,7 @@
 <Project>
   <PropertyGroup>
     <LangVersion>latest</LangVersion>
-    <Version>1.11.0</Version>
+    <Version>2.0.0</Version>
     <NoWarn>$(NoWarn);CS1591</NoWarn>
     <PackageProjectUrl>https://github.com/AdhamAwadhi/JamaaSMPP/</PackageProjectUrl>
     <RepositoryType>git</RepositoryType>
@@ -24,10 +24,15 @@
     <AssemblyVersion>$(Version)</AssemblyVersion>
     <FileVersion>$(Version)</FileVersion>
     <PackageReleaseNotes>
-		v1.11.0
+      v2.0.0
 
-		- Added MultiPartTextMessage
-	</PackageReleaseNotes>
+      - BREAKING: remove NET40 compatibility
+      - added: SegmentIdGenerator
+      - fix: ReceiptedMessageId submitting
+      - improve: ResponseHandlers
+      - fix: some Threading issues
+      - fix: SubmitSmMultiPart HasResponse
+    </PackageReleaseNotes>
   </PropertyGroup>
 
   <PropertyGroup>
