@@ -181,7 +181,7 @@ namespace JamaaTech.Smpp.Net.Lib.Tests
                 var seqs = Enumerable.Range(1, n).Select(i => (uint)i).ToArray();
                 var tasks = seqs.Select(s => Task.Run(() => handler.WaitResponse(new TestRequestPDU(s)))).ToArray();
                 // deliver in reverse order
-                foreach (var s in seqs.Reverse())
+                foreach (var s in seqs.AsEnumerable().Reverse())
                 {
                     handler.Handle(new TestResponsePDU(s));
                 }
