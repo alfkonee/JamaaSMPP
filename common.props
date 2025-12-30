@@ -23,10 +23,14 @@
         <PackageReleaseNotes>
             v2023.10.0
 
-            - Improve handling of multiple messageIds in SmppClient
-        </PackageReleaseNotes>
-
-    </PropertyGroup>
+      - BREAKING: remove NET40 compatibility
+      - added: SegmentIdGenerator
+      - fix: ReceiptedMessageId submitting
+      - improve: ResponseHandlers
+      - fix: some Threading issues
+      - fix: SubmitSmMultiPart HasResponse
+    </PackageReleaseNotes>
+  </PropertyGroup>
 
     <PropertyGroup>
         <SignAssembly>true</SignAssembly>

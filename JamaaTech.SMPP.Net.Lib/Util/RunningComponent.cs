@@ -14,135 +14,131 @@
  *
  ************************************************************************/
 
-namespace JamaaTech.Smpp.Net.Lib.Util;
-
-public abstract class RunningComponent
+namespace JamaaTech.Smpp.Net.Lib.Util
 {
-  #region Variables
-
-  protected bool vRunning;
-  protected object vSyncRoot;
-  protected Thread vRunningThread;
-  private bool vStopOnNextCycle;
-
-  #endregion
-
-  #region Constructors
-
-  public RunningComponent()
-  {
-    //Initit vSyncRoot
-    vSyncRoot = new object();
-    //vRunning = false; //false is the default boolean value anyway,  not need to set it
-  }
-
-  #endregion
-
-  #region Properties
-
-  public bool Running
-  {
-    get
+    public abstract class RunningComponent
     {
-      lock (vSyncRoot)
-      {
-        return vRunning;
-      }
+        internal static readonly global::Common.Logging.ILog _Log = global::Common.Logging.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
+        #region Variables
+        protected bool vRunning;
+        protected object vSyncRoot;
+        protected Thread vRunningThread;
+        private bool vStopOnNextCycle;
+        #endregion
+
+        #region Constructors
+        public RunningComponent()
+        {
+            //Initit vSyncRoot
+            vSyncRoot = new object();
+            //vRunning = false; //false is the default boolean value anyway,  not need to set it
+        }
+
+        #endregion
+
+        #region Properties
+        public bool Running
+        {
+            get { lock (vSyncRoot) { return vRunning; } }
+        }
+        #endregion
+
+        #region Methods
+        #region Interface Methods
+        public void Start()
+        {
+            lock (vSyncRoot) { if (vRunning) { return; } } //If this component is already running, do nothing
+            //Initialize component before running owner thread
+            InitializeComponent();
+            RunThread();
+        }
+
+        public void Stop()
+        {
+            Stop(false);
+        }
+
+        public void Stop(bool allowCompleteCycle)
+        {
+            lock (vSyncRoot)
+            {
+                if (!vRunning) { return; } //If this component is stopped, do nothing
+                vStopOnNextCycle = true; //Prevent running thread from continue looping
+                if (!allowCompleteCycle)
+                {
+                    // Use cooperative cancellation instead of Thread.Abort()
+                    // The thread will check vStopOnNextCycle in CanContinue() and exit gracefully
+                    if (vRunningThread != null && vRunningThread.IsAlive)
+                    {
+                        vRunningThread.Join(5000); // Wait up to 5 seconds for graceful shutdown
+                        if (vRunningThread.IsAlive)
+                        {
+                            // Log warning but don't force abort - let it finish naturally
+                            System.Diagnostics.Debug.WriteLine("Warning: Thread did not stop gracefully within timeout");
+                        }
+                    }
+                    vRunning = false;
+                    vRunningThread = null;
+                }
+            }
+        }
+
+        protected abstract void RunNow();
+
+        protected virtual void ThreadCallback()
+        {
+            lock (vSyncRoot) { vRunning = true; vStopOnNextCycle = false; }
+            try
+            {
+                RunNow();
+            }
+            catch (System.Threading.ThreadAbortException)
+            {
+                // Ensure state is reset even if an abort was requested (legacy behavior)
+                Thread.ResetAbort();
+            }
+            catch (System.Exception ex)
+            {
+                // Swallow to prevent crashing the process, but log for diagnostics
+                System.Diagnostics.Debug.WriteLine($"RunningComponent terminated due to exception: {ex}");
+                _Log.Error("RunningComponent terminated due to exception", ex);
+            }
+            finally
+            {
+                lock (vSyncRoot)
+                {
+                    vRunning = false;
+                    vRunningThread = null;
+                    vStopOnNextCycle = true;
+                }
+            }
+        }
+
+        protected virtual void InitializeComponent() { }
+
+        protected virtual bool CanContinue()
+        {
+            lock (vSyncRoot) { return !vStopOnNextCycle; }
+        }
+
+        protected virtual void StopOnNextCycle()
+        {
+            lock (vSyncRoot) { vStopOnNextCycle = true; }
+        }
+        #endregion
+
+        #region Helper Methods
+        private void RunThread()
+        {
+            vRunningThread = new Thread(new ThreadStart(ThreadCallback));
+            //Make it a background thread so that it does not keep the
+            //application running after the main threads exit
+            vRunningThread.IsBackground = true;
+            //Start the thread
+            vRunningThread.Start();
+        }
+        #endregion
+        #endregion
     }
-  }
-
-  #endregion
-
-  #region Methods
-
-  #region Interface Methods
-
-  public void Start()
-  {
-    lock (vSyncRoot)
-    {
-      if (vRunning) return;
-    } //If this component is already running, do nothing
-
-    //Initialize component before running owner thread
-    InitializeComponent();
-    RunThread();
-  }
-
-  public void Stop()
-  {
-    Stop(false);
-  }
-
-  public void Stop(bool allowCompleteCycle)
-  {
-    lock (vSyncRoot)
-    {
-      if (!vRunning) return; //If this component is stopped, do nothing
-
-      vStopOnNextCycle = true; //Prevent running thread from continue looping
-      if (!allowCompleteCycle)
-      {
-        vRunningThread.Abort(); //Abort owner thread
-        vRunningThread.Join(); //Wait until thread abort is complete
-        vRunning = false;
-        vRunningThread = null;
-      }
-    }
-  }
-
-  protected abstract void RunNow();
-
-  protected virtual void ThreadCallback()
-  {
-    lock (vSyncRoot)
-    {
-      vRunning = true;
-    }
-
-    RunNow();
-    lock (vSyncRoot)
-    {
-      vRunning = false;
-      vRunningThread = null;
-    }
-  }
-
-  protected virtual void InitializeComponent()
-  {
-  }
-
-  protected virtual bool CanContinue()
-  {
-    lock (vSyncRoot)
-    {
-      return !vStopOnNextCycle;
-    }
-  }
-
-  protected virtual void StopOnNextCycle()
-  {
-    lock (vSyncRoot)
-    {
-      vStopOnNextCycle = true;
-    }
-  }
-
-  #endregion
-
-  #region Helper Methods
-
-  private void RunThread()
-  {
-    vRunningThread = new Thread(new ThreadStart(ThreadCallback));
-    //Make it a background thread so that it does not keep the
-    //application running after the main threads exit
-    vRunningThread.IsBackground = true;
-    //Start the thread
-    vRunningThread.Start();
-  }
-
-  #endregion
-
-  #endregion
 }

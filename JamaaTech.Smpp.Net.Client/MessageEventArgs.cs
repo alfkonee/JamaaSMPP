@@ -14,40 +14,72 @@
  *
  ************************************************************************/
 
+using JamaaTech.Smpp.Net.Lib.Protocol;
 using System;
 
-namespace JamaaTech.Smpp.Net.Client;
-
-/// <summary>
-/// Provides data for <see cref="SmppClient.MessageReceived"/>, <see cref="SmppClient.MessageDelivered"/> and <see cref="SmppClient.MessageSent"/> events
-/// </summary>
-public class MessageEventArgs : EventArgs
+namespace JamaaTech.Smpp.Net.Client
 {
-  #region Variables
+    /// <summary>
+    /// Provides data for <see cref="SmppClient.MessageReceived"/>, <see cref="SmppClient.MessageDelivered"/> and <see cref="SmppClient.MessageSent"/> events
+    /// </summary>
+    public class MessageEventArgs : EventArgs
+    {
+        #region Variables
+        private ShortMessage vShortMessage;
+        #endregion
 
-  private ShortMessage _vShortMessage;
+        #region Constructors
+        /// <summary>
+        /// Creates a new instance of <see cref="MessageEventArgs"/>
+        /// </summary>
+        /// <param name="message">The message associated with the message event</param>
+        public MessageEventArgs(ShortMessage message)
+        {
+            vShortMessage = message;
+        }
+        #endregion
 
-  #endregion
+        #region Properties
+        /// <summary>
+        /// Gets the message associated with this event
+        /// </summary>
+        public ShortMessage ShortMessage
+        {
+            get { return vShortMessage; }
+        }
+        #endregion
+    }
 
-  #region Constructors
+    /// <summary>
+    /// Provides data for <see cref="SmppClient.MessagePduSent"/> event
+    /// </summary>
+    public class MessagePduEventArgs : MessageEventArgs
+    {
+        #region Variables
+        private SendSmPDU vPdu;
+        #endregion
 
-  /// <summary>
-  /// Creates a new instance of <see cref="MessageEventArgs"/>
-  /// </summary>
-  /// <param name="message">The message associated with the message event</param>
-  public MessageEventArgs(ShortMessage message)
-  {
-    _vShortMessage = message;
-  }
+        #region Constructors
+        /// <summary>
+        /// Creates a new instance of <see cref="MessagePduEventArgs"/>
+        /// </summary>
+        /// <param name="message">The message associated with the message event</param>
+        public MessagePduEventArgs(ShortMessage message, SendSmPDU pdu)
+            : base(message)
+        {
+            vPdu = pdu;
+        }
+        #endregion
 
-  #endregion
+        #region Properties        
 
-  #region Properties
-
-  /// <summary>
-  /// Gets the message associated with this event
-  /// </summary>
-  public ShortMessage ShortMessage => _vShortMessage;
-
-  #endregion
+        /// <summary>
+        /// Gets the PDU associated with this event
+        /// </summary>
+        public SendSmPDU Pdu
+        {
+            get { return vPdu; }
+        }
+        #endregion
+    }
 }

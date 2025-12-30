@@ -26,6 +26,25 @@ This is created based on  https://www.nuget.org/packages/JammaSMPP
 
 - Improve handling of multiple messageIds in SmppClient
 
+### v2.0.0
+
+- **BREAKING: remove NET40 compatibility**
+- Added: SegmentIdGenerator
+- Fixed: `ReceiptedMessageId` submitting
+- Improved: ResponseHandlers
+- Fixed: some Threading issues
+- Fixed: `SubmitSmMultiPart` HasResponse
+
+### v1.11.0
+
+- Added MultiPartTextMessage
+
+### v1.10.0
+
+- Improve SmppClient to respect AddressNPI and AddressTON for Source Addresses
+- (fix) Fallback Source to Config Value
+- Bump .Net Versions
+
 ### v1.9.1
 
 - Modified: allow some methods to be overridden in `SmppClient`

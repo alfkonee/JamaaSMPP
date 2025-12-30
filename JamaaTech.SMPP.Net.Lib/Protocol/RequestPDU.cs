@@ -14,28 +14,28 @@
  *
  ************************************************************************/
 
-namespace JamaaTech.Smpp.Net.Lib.Protocol;
-
-public abstract class RequestPDU : PDU
+namespace JamaaTech.Smpp.Net.Lib.Protocol
 {
-  #region Constructors
+    public abstract class RequestPDU : PDU
+    {
+        #region Constructors
+        internal RequestPDU(PDUHeader header, SmppEncodingService smppEncodingService)
+            : base(header, smppEncodingService) { }
+        #endregion
 
-  internal RequestPDU(PDUHeader header, SmppEncodingService smppEncodingService)
-    : base(header, smppEncodingService)
-  {
-  }
+        #region Properties
+        public virtual bool HasResponse
+        {
+            get { return true; }
+        }
+        public virtual bool EmptyResponse
+        {
+            get { return false; }
+        }
+        #endregion
 
-  #endregion
-
-  #region Properties
-
-  public virtual bool HasResponse => true;
-
-  #endregion
-
-  #region Methods
-
-  public abstract ResponsePDU CreateDefaultResponse();
-
-  #endregion
+        #region Methods
+        public abstract ResponsePDU CreateDefaultResponse();
+        #endregion
+    }
 }

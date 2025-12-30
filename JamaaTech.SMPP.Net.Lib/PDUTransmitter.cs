@@ -14,37 +14,40 @@
  *
  ************************************************************************/
 
+using System.Threading.Tasks;
 using JamaaTech.Smpp.Net.Lib.Protocol;
 using JamaaTech.Smpp.Net.Lib.Networking;
 
-namespace JamaaTech.Smpp.Net.Lib;
-
-public class PDUTransmitter
+namespace JamaaTech.Smpp.Net.Lib
 {
-  #region Variables
+    public class PDUTransmitter
+    {
+        #region Variables
+        private TcpIpSession vTcpIpSession;
+        #endregion
 
-  private TcpIpSession vTcpIpSession;
+        #region Constructors
+        public PDUTransmitter(TcpIpSession session)
+        {
+            if (session == null) { throw new ArgumentNullException("session"); }
+            vTcpIpSession = session;
+        }
+        #endregion
 
-  #endregion
+        #region Methods
+        public void Send(PDU pdu)
+        {
+            if (pdu == null) { throw new ArgumentNullException("pdu"); }
+            byte[] bytesToSend = pdu.GetBytes();
+            vTcpIpSession.Send(bytesToSend);
+        }
 
-  #region Constructors
-
-  public PDUTransmitter(TcpIpSession session)
-  {
-    if (session == null) throw new ArgumentNullException("session");
-    vTcpIpSession = session;
-  }
-
-  #endregion
-
-  #region Methods
-
-  public void Send(PDU pdu)
-  {
-    if (pdu == null) throw new ArgumentNullException("pdu");
-    var bytesToSend = pdu.GetBytes();
-    vTcpIpSession.Send(bytesToSend);
-  }
-
-  #endregion
+        public async Task SendAsync(PDU pdu, CancellationToken cancellationToken = default)
+        {
+            if (pdu == null) { throw new ArgumentNullException("pdu"); }
+            byte[] bytesToSend = pdu.GetBytes();
+            await vTcpIpSession.SendAsync(bytesToSend, cancellationToken).ConfigureAwait(false);
+        }
+        #endregion
+    }
 }

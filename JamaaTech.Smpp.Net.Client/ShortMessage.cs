@@ -16,152 +16,170 @@
 
 using System;
 using System.Collections.Generic;
-using JamaaTech.Smpp.Net.Lib;
 using JamaaTech.Smpp.Net.Lib.Protocol;
+using JamaaTech.Smpp.Net.Lib;
 
-namespace JamaaTech.Smpp.Net.Client;
-
-/// <summary>
-/// Defines a base class for different types of messages that can be used with <see cref="SmppClient"/>
-/// </summary>
-public abstract class ShortMessage
+namespace JamaaTech.Smpp.Net.Client
 {
-    #region Variables
-    protected string _sourceAddress;
-    protected string _destinationAddress;
-    private int _messageCount;
-    private int _segmentId;
-    private int _sequenceNumber;
-    private bool _registerDeliveryNotification;
-    private string _receiptedMessageId;
-    private string _userMessageReference;
-    private bool _submitUserMessageReference;
-    private MessageState? _messageState;
-    private byte[] _networkErrorCode;
-    #endregion
-
-    #region Constructors
-    protected ShortMessage()
-    {
-        _sourceAddress = string.Empty;
-        _destinationAddress = string.Empty;
-        _segmentId = -1;
-        _submitUserMessageReference = true;
-    }
-
-    protected ShortMessage(int segmentId, int messageCount, int sequenceNumber)
-        : this()
-    {
-        _segmentId = segmentId;
-        _messageCount = messageCount;
-        _sequenceNumber = sequenceNumber;
-    }
-    #endregion
-
-    #region Properties
     /// <summary>
-    /// Gets or sets a <see cref="ShortMessage"/> source address
+    /// Defines a base class for diffent types of messages that can be used with <see cref="SmppClient"/>
     /// </summary>
-    public string SourceAddress
+    public abstract class ShortMessage
     {
-        get => _sourceAddress;
-        set => _sourceAddress = value;
+        #region Variables
+        protected string vSourceAddress;
+        protected string vDestinatinoAddress;
+        protected int vMessageCount;
+        protected int vSegmentID;
+        protected int vSequenceNumber;
+        protected bool vRegisterDeliveryNotification;
+        protected string vReceiptedMessageId;
+        protected string vUserMessageReference;
+        protected bool vSubmitUserMessageReference;
+        protected bool vSubmitReceiptedMessageId;
+        protected MessageState? vMessageState;
+        protected byte[] vNetworkErrorCode;
+        #endregion
+
+        #region Constructors
+        public ShortMessage()
+        {
+            vSourceAddress = "";
+            vDestinatinoAddress = "";
+            vSegmentID = -1;
+            vSubmitUserMessageReference = true;
+            vSubmitReceiptedMessageId = true;
+        }
+
+        public ShortMessage(int segmentId, int messageCount, int sequenceNumber)
+            : base()
+        {
+            vSegmentID = segmentId;
+            vMessageCount = messageCount;
+            vSequenceNumber = sequenceNumber;
+        }
+        #endregion
+
+        #region Properties
+        /// <summary>
+        /// Gets or sets a <see cref="ShortMessage"/> source address
+        /// </summary>
+        public string SourceAddress
+        {
+            get { return vSourceAddress; }
+            set { vSourceAddress = value; }
+        }
+        /// <summary>
+        /// Gets or sets a <see cref="ShortMessage"/> destination address
+        /// </summary>
+        public string DestinationAddress
+        {
+            get { return vDestinatinoAddress; }
+            set { vDestinatinoAddress = value; }
+        }
+        /// <summary>
+        /// Gets or sets a <see cref="ShortMessage"/> receipted message identifier.
+        /// </summary>
+        /// <value>
+        /// The receipted message identifier.
+        /// </value>
+        public string ReceiptedMessageId
+        {
+            get { return vReceiptedMessageId; }
+            set { vReceiptedMessageId = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets a <see cref="ShortMessage"/> user message reference.
+        /// </summary>
+        /// <value>
+        /// The user message reference.
+        /// </value>
+        public string UserMessageReference
+        {
+            get { return vUserMessageReference; }
+            set { vUserMessageReference = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets a <see cref="System.Boolean"/> value that indicates if the <see cref="UserMessageReference"/> should be sent to SMSC.
+        /// </summary>
+        public bool SubmitUserMessageReference
+        {
+            get { return vSubmitUserMessageReference; }
+            set { vSubmitUserMessageReference = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets a <see cref="System.Boolean"/> value that indicates if the <see cref="ReceiptedMessageId"/> should be sent to SMSC.
+        /// </summary>
+        public bool SubmitReceiptedMessageId
+        {
+            get { return vSubmitReceiptedMessageId; }
+            set { vSubmitReceiptedMessageId = value; }
+        }
+
+        /// <summary>
+        /// Gets the index of this message segment in a group of contatenated message segements
+        /// </summary>
+        public int SegmentID
+        {
+            get { return vSegmentID; }
+        }
+
+        /// <summary>
+        /// Gets the sequence number for a group of concatenated message segments
+        /// </summary>
+        public int SequenceNumber
+        {
+            get { return vSequenceNumber; }
+        }
+
+        /// <summary>
+        /// Gets a value indicating the total number of message segments in a concatenated message
+        /// </summary>
+        public int MessageCount
+        {
+            get { return vMessageCount; }
+        }
+
+        /// <summary>
+        /// Gets or sets a <see cref="System.Boolean"/> value that indicates if a delivery notification should be sent for <see cref="ShortMessage"/>
+        /// </summary>
+        public bool RegisterDeliveryNotification
+        {
+            get { return vRegisterDeliveryNotification; }
+            set { vRegisterDeliveryNotification = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets a <see cref="MessageStateType"/> value that indicates the ESME the final message state for an SMSC Delivery Receipt.
+        /// </summary>
+        public MessageState? MessageState
+        {
+            get { return vMessageState; }
+            set { vMessageState = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets a <see cref="Byte[]"/> value that indicates Network error code.  May be present for SMSC Delivery Receipts and
+		/// Intermediate Notifications.  See section 5.3.2.31 for more information.
+        /// </summary>
+        public byte[] NetworkErrorCode
+        {
+            get { return vNetworkErrorCode; }
+            set { vNetworkErrorCode = value; }
+        }
+        #endregion
+
+        #region Methods       
+        internal IEnumerable<SendSmPDU> GetMessagePDUs(DataCoding defaultEncoding, SmppEncodingService smppEncodingService, SmppAddress destAddress, SmppAddress srcAddress)
+        {
+            return GetPDUs(defaultEncoding, smppEncodingService, destAddress, srcAddress);
+        }
+
+        protected abstract IEnumerable<SendSmPDU> GetPDUs(DataCoding defaultEncoding, SmppEncodingService smppEncodingService, SmppAddress destAddress = null, SmppAddress srcAddress = null);
+
+        #endregion
     }
-
-    /// <summary>
-    /// Gets or sets a <see cref="ShortMessage"/> destination address
-    /// </summary>
-    public string DestinationAddress
-    {
-        get => _destinationAddress;
-        set => _destinationAddress = value;
-    }
-
-    /// <summary>
-    /// Gets or sets a <see cref="ShortMessage"/> receipted message identifier.
-    /// </summary>
-    /// <value>
-    /// The receipted message identifier.
-    /// </value>
-    public string ReceiptedMessageId
-    {
-        get => _receiptedMessageId;
-        set => _receiptedMessageId = value;
-    }
-
-    /// <summary>
-    /// Gets or sets a <see cref="ShortMessage"/> user message reference.
-    /// </summary>
-    /// <value>
-    /// The user message reference.
-    /// </value>
-    public string UserMessageReference
-    {
-        get => _userMessageReference;
-        set => _userMessageReference = value;
-    }
-
-    /// <summary>
-    /// Gets or sets a <see cref="System.Boolean"/> value that indicates if the <see cref="UserMessageReference"/> should be sent to SMSC.
-    /// </summary>
-    public bool SubmitUserMessageReference
-    {
-        get => _submitUserMessageReference;
-        set => _submitUserMessageReference = value;
-    }
-
-    /// <summary>
-    /// Gets the index of this message segment in a group of concatenated message segments
-    /// </summary>
-    public int SegmentId => _segmentId;
-
-    /// <summary>
-    /// Gets the sequence number for a group of concatenated message segments
-    /// </summary>
-    public int SequenceNumber => _sequenceNumber;
-
-    /// <summary>
-    /// Gets a value indicating the total number of message segments in a concatenated message
-    /// </summary>
-    public int MessageCount => _messageCount;
-
-    /// <summary>
-    /// Gets or sets a <see cref="System.Boolean"/> value that indicates if a delivery notification should be sent for <see cref="ShortMessage"/>
-    /// </summary>
-    public bool RegisterDeliveryNotification
-    {
-        get => _registerDeliveryNotification;
-        set => _registerDeliveryNotification = value;
-    }
-
-    /// <summary>
-    /// Gets or sets a <see cref="MessageStateType"/> value that indicates the ESME the final message state for an SMSC Delivery Receipt.
-    /// </summary>
-    public MessageState? MessageState
-    {
-        get => _messageState;
-        set => _messageState = value;
-    }
-
-    /// <summary>
-    /// Gets or sets a <see cref="Byte[]"/> value that indicates Network error code.  May be present for SMSC Delivery Receipts and
-    /// Intermediate Notifications.  See section 5.3.2.31 for more information.
-    /// </summary>
-    public byte[] NetworkErrorCode
-    {
-        get => _networkErrorCode;
-        set => _networkErrorCode = value;
-    }
-    #endregion
-
-    #region Methods
-    internal IEnumerable<SendSmPDU> GetMessagePDUs(DataCoding defaultEncoding, SmppEncodingService smppEncodingService,
-        SmppAddress destAddress, SmppAddress srcAddress)
-    {
-        return GetPDUs(defaultEncoding, smppEncodingService, destAddress, srcAddress);
-    }
-
-    protected abstract IEnumerable<SendSmPDU> GetPDUs(DataCoding defaultEncoding, SmppEncodingService smppEncodingService,
-        SmppAddress destAddress = null, SmppAddress srcAddress = null);
-    #endregion
 }

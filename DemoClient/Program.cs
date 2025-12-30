@@ -4,10 +4,8 @@ using System;
 using System.Threading;
 using JamaaTech.Smpp.Net.Lib;
 using JamaaTech.Smpp.Net.Lib.Protocol;
-#if NET40
-using SettingsReader.Readers;
-#endif
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace DemoClient
 {
@@ -47,6 +45,7 @@ namespace DemoClient
             //Trace.Listeners.Add(new ConsoleTraceListener());
 
             smppConfig = GetSmppConfiguration();
+            smppConfig = GetLocalhostConfig();
 
             //SMPPEncodingUtil.UCS2Encoding = Encoding.UTF8;
 
@@ -109,7 +108,7 @@ namespace DemoClient
             }
         }
 
-        private static void SendMessage(string command)
+        private static async Task SendMessage(string command)
         {
             var parts = command.Split(' ');
             var dest = parts[1];
@@ -117,6 +116,14 @@ namespace DemoClient
 
             if (string.IsNullOrEmpty(msgTxt))
                 msgTxt = @"السلام عليكم ورحمة الله وبركاته
+هذه رسالة عربية
+متعددة الاسطرالسلام عليكم ورحمة الله وبركاته
+هذه رسالة عربية
+متعددة الاسطرالسلام عليكم ورحمة الله وبركاته
+هذه رسالة عربية
+متعددة الاسطرالسلام عليكم ورحمة الله وبركاته
+هذه رسالة عربية
+متعددة الاسطرالسلام عليكم ورحمة الله وبركاته
 هذه رسالة عربية
 متعددة الاسطر";
 
@@ -132,7 +139,8 @@ namespace DemoClient
 
             try
             {
-                client.SendMessage(msg);
+                //client.SendMessage(msg);
+                await client.SendMessageAsync(msg);
             }
             catch (SmppException smppEx)
             {
@@ -143,7 +151,6 @@ namespace DemoClient
             {
                 _Log.Error("SendMessage:" + e.Message, e);
             }
-            //client.BeginSendMessage(msg, SendMessageCompleteCallback, client);
         }
 
         private static string GenerateUserMessageReference(UserMessageReferenceType userMessageReferenceType)
@@ -161,26 +168,29 @@ namespace DemoClient
             }
         }
 
-
-        private static void SendMessageCompleteCallback(IAsyncResult result)
+        private static ISmppConfiguration GetLocalhostConfig()
         {
-            try
+            return new SmppConfiguration()
             {
-                SmppClient client = (SmppClient)result.AsyncState;
-                client.EndSendMessage(result);
-            }
-            catch (Exception e)
-            {
-                _Log.Error("SendMessageCompleteCallback:" + e.Message, e);
-            }
+                SystemID = "sysId",
+                Password = "sysPass",
+                Host = "127.0.0.1",
+                Port = 3775,
+                SystemType = "",
+                DefaultServiceType = "5750",
+                SourceAddress = "5750",
+                Encoding = DataCoding.UCS2,
+                AddressNpi = NumberingPlanIndicator.Unknown,
+                AddressTon = TypeOfNumber.Unknown,
+                UserMessageReferenceType = UserMessageReferenceType.Int,
+                RegisterDeliveryNotification = true,
+                UseSeparateConnections = false,
+                //SplitMethod = SplitMethodType.UDH
+            };
         }
 
         private static ISmppConfiguration GetSmppConfiguration()
         {
-#if NET40
-            var reader = new AppSettingsReader();
-            return reader.Read<SmppConfiguration>();
-#else
             return new SmppConfiguration()
             {
                 SystemID = "smppclient1",
@@ -197,7 +207,6 @@ namespace DemoClient
                 RegisterDeliveryNotification = true,
                 UseSeparateConnections = true
             };
-#endif
         }
 
         static SmppClient CreateSmppClient(ISmppConfiguration config)
