@@ -54,7 +54,6 @@ public static class LogManager
 {
     private static ILoggerFactory _loggerFactory = LoggerFactory.Create(builder =>
     {
-        builder.AddConsole();
         builder.SetMinimumLevel(LogLevel.Trace);
     });
 
