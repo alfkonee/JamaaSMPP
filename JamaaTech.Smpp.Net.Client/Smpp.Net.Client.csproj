@@ -15,7 +15,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\JamaaTech.Smpp.Net.Lib\Smpp.Net.Lib.csproj"/>
+    <ProjectReference Include="..\JamaaTech.Smpp.Net.Lib\Smpp.Net.Lib.csproj">
+      <ReferenceOutputAssembly Condition="'$(Configuration)' == 'Release' ">true</ReferenceOutputAssembly>
+      <IncludeAssets Condition="'$(Configuration)' == 'Release' ">Smpp.Net.Lib.dll</IncludeAssets>
+    </ProjectReference>
   </ItemGroup>
   <Target DependsOnTargets="ResolveReferences" Name="CopyProjectReferencesToPackage">
     <Message Text="@(ReferenceCopyLocalPaths)" />
