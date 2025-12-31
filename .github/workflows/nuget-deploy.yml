@@ -25,7 +25,7 @@ jobs:
       - name: Restore dependencies
         run: dotnet restore ./JamaaTech.Smpp.Net.Client/Smpp.Net.Client.csproj
       - name: Build
-        run: dotnet build --no-restore ./JamaaTech.Smpp.Net.Client/Smpp.Net.Client.csproj
+        run: dotnet build --configuration Release ./JamaaTech.Smpp.Net.Client/Smpp.Net.Client.csproj
       - name: Pack
         run: dotnet pack --configuration Release ./JamaaTech.Smpp.Net.Client/Smpp.Net.Client.csproj --output nupkgs
       - name: Upload artifact for Publish job
